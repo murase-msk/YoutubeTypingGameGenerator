@@ -10,7 +10,7 @@
 ## 動作要件
   - OS : Ubuntu16.04
   - Web Server, AP Server : Apache2.4
-  - RDBMS : PostgreSQL
+  - RDBMS : PostgreSQL 9.x
 
 ## 使用技術
   - PHP7.2
@@ -23,9 +23,10 @@
       - slim-csrf
       - slim-flash
     - Goutte (Web Crawler)
-  - Vue2.5
-    - Vue CLI3
-    - vue-youtube
+  - Javascript ES2015(ES6) (babel transpiled)
+    - Vue2.5
+      - Vue CLI3
+      - vue-youtube
   - Bootstrap 3.3.6
   - Web API
     - Yahoo API (https://developer.yahoo.co.jp/webapi/jlp/furigana/v1/furigana.html)
