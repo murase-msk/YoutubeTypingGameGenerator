@@ -1,0 +1,95 @@
+{% extends "layout/layout.html.twig" %}
+
+{% block title %}sampleApp{% endblock %}
+
+{% block content %}
+
+    <!-- 見出し -->
+    <div class="container">
+
+        <!-- ジャンボトロン-->
+        <!-- Main component for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <h1><span style="color: red;">T</span>yping Game <span style="color: red;">A</span>utomatic Generator for <span style="color: red;">Y</span>outube</h1>
+            <p>あなたの好きな動画でタイピングゲームをしよう</p>
+            {% if (flash is not empty) and (flash.error[0] is not empty) %}
+                <span class="label label-danger">{{ flash.error[0] }}</span>
+            {% endif %}
+            <form class="form-inline" action="/content1/register" method="post">
+                {# CSRF #}
+                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                <input type="url" class="form-control" id="InputURL" name="youtube_url" size="80" placeholder="Youtubeの動画URLを入力してください(例: https://www.youtube.com/watch?v=xxxxx)">
+                <div class="radio">
+                    <label><input type="radio" name="radio" value="Japanese" checked>日本語</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="radio" value="English">English</label>
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary">生成</button>
+            </form>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+        <h1> タイピングゲームは3Stepで始めよう</h1>
+        <div class="row">
+            <div class="col-lg-4">
+                <h3>Step1</h3>
+                <p>Youtubeの動画URLをコピー</p><br>
+                <img class="img-thumbnail" src="./asset/img/step1.jpeg" alt="Generic placeholder image" style="width: 100%;">
+            </div><!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+                <h3>Step2</h3>
+                <p>動画URLペースト＆日本語か英語どちらかをチェックして生成ボタンを押す</p>
+                <img class="img-thumbnail" src="./asset/img/step2.png" alt="Generic placeholder image" style="width: 100%; ">
+            </div><!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+                <h3>Step3</h3>
+                <p>タイピングゲーム開始</p><br>
+                <img class="img-thumbnail" src="./asset/img/step3.png" alt="Generic placeholder image" style="width: 100%;">
+            </div><!-- /.col-lg-4 -->
+        </div>
+
+
+        <!-- 説明 -->
+        <div class="row featurette">
+            <div class="col-md-7">
+                <h2 class="featurette-heading">みんなが登録した動画を見てみよう</h2>
+                <p class="lead">説明</p>
+            </div>
+            <div class="col-md-5">
+                <img class="featurette-image img-responsive" data-src="#" alt="500x500" src="./asset/img/func1.png"
+                     data-holder-rendered="true">
+            </div>
+        </div>
+
+        <div class="row featurette">
+            <div class="col-md-5">
+                <img class="featurette-image img-responsive" data-src="#" alt="500x500" src="./asset/img/func2.png"
+                     data-holder-rendered="true">
+            </div>
+            <div class="col-md-7">
+                <h2 class="featurette-heading">スコア機能（仮）</h2>
+                <p class="lead">説明</p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="main">
+        メイン
+    </div>
+
+    <aside>
+        サブメニュー
+    </aside>
+
+    <footer>
+        フッター
+    </footer>
+
+{% endblock %}

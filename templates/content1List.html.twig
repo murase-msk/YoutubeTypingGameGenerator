@@ -1,0 +1,31 @@
+{% extends "layout/layout.html.twig" %}
+
+{% block title %}content1{% endblock %}
+
+{% block content %}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 content" id="mainApp">
+                {% for video in videoList %}
+                    <div class="col-xs-6 col-md-4">
+                        <div class="thumbnail">
+                            <img src="{{ video['thumbnail'] }}">
+                            <div class="caption">
+                                <span>{{ video['title'] }}</span>
+                                <a href="./watch/{{ video['video_code'] }}" class="thumbnailLink"></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <br>
+            </div>
+            <div class="col-md-2 sidebar">
+                サイドバーの表示
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
