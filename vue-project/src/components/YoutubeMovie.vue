@@ -1,14 +1,18 @@
 <template>
-    <div class="youtube-sec">
-        <button @click="playVideo">play</button>
-        <br>
-        <youtube :videoId="videoId" ref="youtube" @playing="playing"></youtube>
+    <div class="youtube-sec" ref="r">
+        <!--<div id="blockPanel" style="position:absolute; left: 50%; transform: translateX(-50%);height:360px;width:640px; z-index:0;"></div>-->
+        <youtube :videoId="videoId" :player-vars="playerVars" ref="youtube" @playing="playing" style="z-index:99;"></youtube>
         <br>
         <button @click="startType">start</button>
         <br>
         <span>{{displayText}}</span>
         <br>
-        <span id="inputtedText">{{ inputtedText }}</span><span id="restText">{{ restText }}</span>
+        <span id="topInputtedText">
+            <span class="inputtedText" v-for="oneInputedText in inputtedText ">{{ oneInputedText }}</span>
+        </span>
+        <span id="topRestText">
+            <span class="restText" v-for="oneRestText in restText2" >{{ oneRestText }}</span>
+        </span>
         <br>
         <span>{{ inputRoman }}</span>
 
@@ -27,18 +31,27 @@ export default {
   },
   data() {
     return {
+      // vue-youtubeの設定
+      playerVars:{
+        controls: 0,
+        disablekb: 1,
+        fs: 0,
+        modestbranding: 1,
+        showinfo: 0,
+      },
       // すべてのテキスト.{startTime:..., endEtime:..., hurigana:..., text:...}
       allPhraseData: "",
       /** 表示するテキスト */
-      displayText:"c’-c’-c ",//"あっとおどろく",//"るどむーびーみたしねま",
-      /** 入力するテキスト */
-      inputText: "c’-c’-c",//"あっとおどろく",//"るどむーびーみたしねま",
+      displayText:"あっと おどろく",//"るどむーびーみたしねま",
+      /** 入力するテキスト (スペースで区切った配列)*/
+      inputText: ["aa", "aa"],//"るどむーびーみたしねま",
       /** 入力したかな文字数 */
       inputtedKanaNum: 0,
       /** 入力したカナ文字 */
-      inputtedText: "",
-      /** 残りの入力するテキスト */
-      restText: "c’-c’-c",//"あっとおどろく",//"るどむーびーみたしねま",
+      inputtedText: [],
+      /** 残りの入力するテキスト (スペースで区切った配列)　*/
+      restText: ["aa", "aa"],//"るどむーびーみたしねま",
+      restText2: [],
       /** 入力したローマ字(画面に表示する) */
       inputRoman: "",
       /** マッチしたチャンク */
@@ -47,16 +60,23 @@ export default {
       romanChunkCandidate: [],
       /** キー入力禁止フラグ(キー入力を受け付けない) */
       finishFlg: false,
-      /** 1フレーム入力完了 */
-      phraseEndFlg:false,
+      /** 1フレーズ入力完了 */
+      //phraseEndFlg:false,
+      /** パート */
+      textPart : 0,
 
       // typing中の変数
       /** タイマー */
       timer : 0,
       /** 現在再生している動画の再生時間 */
       movieTime:0,
-      /** 次のフレーズNo */
+      /** 次のフレーズNo*/
       nextPhraseNo : 0,
+    }
+  },
+  computed: {
+    player() {
+      return this.$refs.youtube.player;
     }
   },
   beforeMount() {
@@ -77,25 +97,37 @@ export default {
     window.removeEventListener("keydown", this.onKeyDownEvent);
   },
   methods: {
-    playVideo() {
-      this.player.playVideo();
-    },
+    // 再生ボタンを押したときの実行される(vue-youtube).
     playing() {
-      console.log("we are watching!!!");
-      console.log(this.player.getCurrentTime());
+      if(this.movieTime === 0) {
+        this.startingType();
+      }
+      // フォーカス変更. TODO: できてない
+      console.log(document.getElementsByTagName('body')[0]);
+      this.$nextTick(() => document.getElementsByTagName('body')[0].focus())
     },
     // タイピング開始.
     startType(event) {
       // 動画再生.
-      this.player.playVideo();
-      this.startingType();
-
-      console.log("start");
+      if(this.movieTime === 0) {
+         this.player.playVideo();
+         this.startingType();
+      }
+    },
+    //
+    deleteEmptyText(textArr) {
+      let item = [];
+      for(let i=0; i<textArr.length; i++){
+        if(textArr[i] !== ""){
+          item.push(textArr[i]);
+        }
+      }
+      return item;
     },
     startingType(){
       let now = Date.now();
       if (now - this.timer > FRAME_TIME) {
-        // ループ処理開始 //
+        // ループ処理ここから //
         // 現在の再生時間取得.
         this.player.getCurrentTime().then((cTime)=>this.movieTime= cTime);
         // TODO: 後ろに巻き戻したら戻る.
@@ -103,26 +135,31 @@ export default {
         // テキスト表示時間になったら次のフレーズを表示する.
         if(this.allPhraseData.length > this.nextPhraseNo
           && this.movieTime > this.allPhraseData[this.nextPhraseNo]['startTime']){
+            console.log('next phrase');
+            // 次のフレーズが来たときの初期化処理.
             // 次のフレーズを表示する.
             this.displayText = this.allPhraseData[this.nextPhraseNo]['text'];
             /** 入力するテキスト */
-            this.inputText = this.allPhraseData[this.nextPhraseNo]['Furigana'];
+            this.inputText = this.allPhraseData[this.nextPhraseNo]['Furigana'].split(' ');
             /** 入力したかな文字数 */
             this.inputtedKanaNum = 0;
             /** 入力したカナ文字 */
-            this.inputtedText = "";
+            this.inputtedText = [];
             /** 残りの入力するテキスト */
-            this.restText = this.inputText;
+            this.restText = this.inputText.concat();// 値渡し.
+            this.restText2= this.inputText.concat();// 値渡し.
             /** 入力したローマ字(画面に表示する) */
             this.inputRoman = "";
-            /** マッチしたチャンク */
+            /** マッチしたチャンク  チャンク・・・ローマ字入力された文字の内、ひらがなに変換される塊 */
             this.matchedChunk = "";
             /** ローマ字入力の候補(インデックスは入力するひらがな文字数). */
             this.romanChunkCandidate = [];
-            this.phraseEndFlg = false;
+            //.
+            this.textPart = 0;
+            //this.phraseEndFlg = false;
             this.nextPhraseNo++;
         }
-        // ループ処理終了 //
+        // ループ処理ここまで //
         this.timer = now;
       }
       let requestId = requestAnimationFrame(this.startingType);
@@ -134,7 +171,7 @@ export default {
       // 入力された文字が入力文字候補に当てはまるか.
       if (this.finishFlg) return;
       if (this.romanChunkCandidate.length === 0) {
-        this.romanChunkCandidate = this.searchNextRomanChunkCandidate(this.restText);
+        this.romanChunkCandidate = this.searchNextRomanChunkCandidate(this.restText[this.textPart]);
       }
       // マッチング中.
       // マッチング始め.
@@ -148,21 +185,28 @@ export default {
         let matchFlg = false;
         candidateArray.forEach((candidate, index, array2) => {
           if (matchFlg === true) return;//
-          // 入力文字が入力候補と合うか.
-          console.log("input key   "+event.key);
           if (candidate.indexOf(this.matchedChunk + event.key) === 0) {
             this.inputRoman += event.key;
             this.matchedChunk += event.key;
-            console.log("チャンク部分マッチ");
+            // console.log("チャンク部分マッチ");
             // 入力候補と完全一致したらそのチャンクは入力完了.
-            console.log(candidate.length +"  "+ this.matchedChunk.length);
+            // console.log(candidate.length +"  "+ this.matchedChunk.length);
             if (candidate.length === this.matchedChunk.length) {
               this.matchedChunk = "";
               this.romanChunkCandidate = [];
-              this.restText = this.restText.slice(hiraganaNum + 1);
+              // 残りの入力テキストを減らす.
+              this.restText[this.textPart] = this.restText[this.textPart].slice(hiraganaNum + 1);
+              this.restText2 = this.deleteEmptyText(this.restText);
+              // 入力済みテキストを追加.
               this.inputtedKanaNum += hiraganaNum + 1;
-              this.inputtedText = this.inputText.slice(0, this.inputtedKanaNum);
-              this.phraseEndFlg = this.restText.length === 0;
+              this.inputtedText.length <= this.textPart ? this.inputtedText.push("") : null ;
+              this.inputtedText[this.textPart] = this.inputText[this.textPart].slice(0, this.inputtedKanaNum);
+              //this.phraseEndFlg = this.restText[this.textPart].length === 0;
+              // 次のテキストパートに行くか.
+              if(this.restText[this.textPart].length === 0){
+                this.textPart++;
+                this.inputtedKanaNum = 0;
+              }
               matchFlg = true;
             }
           }
@@ -170,6 +214,7 @@ export default {
       });
     },
     // テキストから次のローマ字入力候補を出力.
+    // インデックスは文字数.
     searchNextRomanChunkCandidate(text) {
       // 残りの入力テキストのうち最初の文字.
       let firstChar = text.slice(0, 1);
@@ -185,13 +230,13 @@ export default {
       let tripleRoman = this.convertHiraganaToRoman(firstChar + secondChar + thirdChar);
       // 半角はそのまま入力.
       if (this.isHankakuEisuuzi(firstChar)) {
-        console.log("半角");
+        // console.log("半角");
         return [[firstChar]];
       }
       // 全角ひらがなは5パターンに分けてローマ字変換.
       // ひらがな１文字のみ.
       if (text.length === 1) {
-        console.log('ひらがな1文字');
+        // console.log('ひらがな1文字');
         return [singleRoman];
       }
       if (this.isOOmozi(firstChar)) {
@@ -201,12 +246,12 @@ export default {
         }
         // 全角大文字＋全角大文字 は最初の文字をローマ字変換して返す.
         else if (this.isOOmozi(secondChar)) {
-          console.log("ひらがな2文字以上");
+          // console.log("ひらがな2文字以上");
           return [singleRoman];
         }
         // 大文字＋小文字
         else if (this.isKomozi(secondChar)) {
-          console.log("大文字＋小文字");
+          // console.log("大文字＋小文字");
           return [singleRoman, doubleRoman];
         }
         // それ以外
@@ -254,7 +299,7 @@ export default {
       // ひらがなをローマ字に変換する変換表.
       const roman = HiraganToRoman.data().roman;
       for (const indexName in roman) {
-        if (indexName == hiragana) {
+        if (indexName === hiragana) {
           if (sokuonFlg && hiragana !== "っ") {
             // 先頭に「っ」(促音)がありかつ「っ」のみでなければ直前の文字を重ねる.
             return roman[indexName].map(char => char.slice(0, 1) + char);
@@ -266,19 +311,15 @@ export default {
       return -1;
     }
   },
-  computed: {
-    player() {
-      return this.$refs.youtube.player;
-    }
-  }
 };
 </script>
 
 <style scoped>
-#restText {
-}
-
-#inputtedText {
+.inputtedText {
   font-weight: bolder;
+}
+#topInputtedText > span.inputtedText:not(:first-child),
+#topRestText > span.restText:not(:first-child){
+    margin-left: 5px;
 }
 </style>

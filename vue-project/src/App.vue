@@ -8,8 +8,8 @@
 </template>
 
 <script>
-    import HelloWorld from "./components/HelloWorld.vue";
-    import Countdown from "vuejs-countdown";
+    // import HelloWorld from "./components/HelloWorld.vue";
+    // import Countdown from "vuejs-countdown";
 
     import YoutubeMovie from "./components/YoutubeMovie.vue";
     import Vue from 'vue'
@@ -20,7 +20,7 @@
     export default {
         name: "app",
         components: {
-            HelloWorld, Countdown, YoutubeMovie
+            YoutubeMovie
         },
         data() {
             return {

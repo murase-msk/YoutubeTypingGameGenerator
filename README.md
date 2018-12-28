@@ -54,8 +54,7 @@ cd vue-project
 windows Hostとファイル共有する場合のみ
 node_modulesを共有しないディレクトリに作成し、シンボリックリンクを貼る
 mkdir -p ~slim_app_node_modules/node_modules
-ln -s ~slim_app_node_modules/node_modules node_modules
-
+ln -s ~/slim_app_node_modules/node_modules/ node_modules
 
 npm install
 
