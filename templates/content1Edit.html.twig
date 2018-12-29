@@ -1,0 +1,23 @@
+{% extends "layout/layout.html.twig" %}
+
+{% block title %}content1{% endblock %}
+
+{% block content %}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 content" id="mainApp">
+                メインの表示
+                <br>
+                <input type="hidden" name="videoId" value="{{ videoId }}">
+                <div id="edit"></div>
+            </div>
+            <div class="col-md-2 sidebar">
+                サイドバーの表示
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

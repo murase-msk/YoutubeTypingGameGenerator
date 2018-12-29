@@ -200,6 +200,32 @@ class Content1 extends BaseController
     }
 
     /**
+     * 個別のコンテンツの編集画面
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    function editView(/** @noinspection PhpUnusedParameterInspection */
+        Request $request,
+        /** @noinspection PhpUnusedParameterInspection */
+        Response $response,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $args)
+    {
+        // リクエストパラメータ受け取り.
+        $videoId = $args['id'];
+
+        return $this->view->render($response, 'content1Edit.html.twig', [
+            'activeHeader' => 'edit',
+            'isAuth' => $this->session->get('isAuth'),
+            'account' => $this->session->get('account'),
+
+            'videoId'=>$videoId
+        ]);
+    }
+
+    /**
      * タイピングテキストを取得するWebAPI
      * @param Request $request
      * @param Response $response

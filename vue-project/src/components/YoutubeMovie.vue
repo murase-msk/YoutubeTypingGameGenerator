@@ -3,16 +3,12 @@
         <!--<div id="blockPanel" style="position:absolute; left: 50%; transform: translateX(-50%);height:360px;width:640px; z-index:0;"></div>-->
         <youtube :videoId="videoId" :player-vars="playerVars" ref="youtube" @playing="playing" style="z-index:99;"></youtube>
         <br>
-        <button @click="startType">start</button>
+        <button class="btn btn-secondary" @click="startType">start</button>
         <br>
         <span>{{displayText}}</span>
         <br>
-        <span id="topInputtedText">
-            <span class="inputtedText" v-for="oneInputedText in inputtedText ">{{ oneInputedText }}</span>
-        </span>
-        <span id="topRestText">
-            <span class="restText" v-for="oneRestText in restText2" >{{ oneRestText }}</span>
-        </span>
+        <span class="inputtedText" v-for="oneInputedText in inputtedText ">{{ oneInputedText+" " }}</span>
+        <span class="restText" v-for="oneRestText in restText" >{{ oneRestText+" " }}</span>
         <br>
         <span>{{ inputRoman }}</span>
 
@@ -44,14 +40,13 @@ export default {
       /** 表示するテキスト */
       displayText:"あっと おどろく",//"るどむーびーみたしねま",
       /** 入力するテキスト (スペースで区切った配列)*/
-      inputText: ["aa", "aa"],//"るどむーびーみたしねま",
+      inputText: "",//["aa", "aa"],//"るどむーびーみたしねま",
       /** 入力したかな文字数 */
       inputtedKanaNum: 0,
       /** 入力したカナ文字 */
-      inputtedText: [],
+      inputtedText: "",
       /** 残りの入力するテキスト (スペースで区切った配列)　*/
       restText: ["aa", "aa"],//"るどむーびーみたしねま",
-      restText2: [],
       /** 入力したローマ字(画面に表示する) */
       inputRoman: "",
       /** マッチしたチャンク */
@@ -114,16 +109,16 @@ export default {
          this.startingType();
       }
     },
-    //
-    deleteEmptyText(textArr) {
-      let item = [];
-      for(let i=0; i<textArr.length; i++){
-        if(textArr[i] !== ""){
-          item.push(textArr[i]);
-        }
-      }
-      return item;
-    },
+    // //
+    // deleteEmptyText(textArr) {
+    //   let item = [];
+    //   for(let i=0; i<textArr.length; i++){
+    //     if(textArr[i] !== ""){
+    //       item.push(textArr[i]);
+    //     }
+    //   }
+    //   return item;
+    // },
     startingType(){
       let now = Date.now();
       if (now - this.timer > FRAME_TIME) {
@@ -147,7 +142,6 @@ export default {
             this.inputtedText = [];
             /** 残りの入力するテキスト */
             this.restText = this.inputText.concat();// 値渡し.
-            this.restText2= this.inputText.concat();// 値渡し.
             /** 入力したローマ字(画面に表示する) */
             this.inputRoman = "";
             /** マッチしたチャンク  チャンク・・・ローマ字入力された文字の内、ひらがなに変換される塊 */
@@ -196,7 +190,6 @@ export default {
               this.romanChunkCandidate = [];
               // 残りの入力テキストを減らす.
               this.restText[this.textPart] = this.restText[this.textPart].slice(hiraganaNum + 1);
-              this.restText2 = this.deleteEmptyText(this.restText);
               // 入力済みテキストを追加.
               this.inputtedKanaNum += hiraganaNum + 1;
               this.inputtedText.length <= this.textPart ? this.inputtedText.push("") : null ;
@@ -204,6 +197,8 @@ export default {
               //this.phraseEndFlg = this.restText[this.textPart].length === 0;
               // 次のテキストパートに行くか.
               if(this.restText[this.textPart].length === 0){
+//                this.inputtedText[this.textPart] += " ";
+                this.inputRoman += " ";
                 this.textPart++;
                 this.inputtedKanaNum = 0;
               }
@@ -320,6 +315,6 @@ export default {
 }
 #topInputtedText > span.inputtedText:not(:first-child),
 #topRestText > span.restText:not(:first-child){
-    margin-left: 5px;
+    /*margin-left: 5px;*/
 }
 </style>

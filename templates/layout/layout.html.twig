@@ -43,16 +43,16 @@
 {# my js #}
 <script src="/asset/js/change.js"></script>
 {% if activeHeader == 'content2'  %}
-    <script src="/asset/js/vueSample.js"></script>
 {% endif %}
-{% if activeHeader == 'sampleMv'  %}
-    <script src="/asset/js/youtubeIframePlayerApi.js"></script>
-    <script src="/asset/js/moviePage.js"></script>
-
-    <link href="/asset/vueDist/css/index.css" rel="stylesheet">
+{% if activeHeader == 'watch'  %}
+    <link href="/asset/vueDist/css/watch.css" rel="stylesheet">
     <script src="/asset/vueDist/js/chunk-vendors.js"></script>
-    <script src="/asset/vueDist/js/index.js"></script>
+    <script src="/asset/vueDist/js/watch.js"></script>
 {% endif %}
-
+{% if activeHeader == 'edit'  %}
+    <link href="/asset/vueDist/css/edit.css" rel="stylesheet">
+    <script src="/asset/vueDist/js/chunk-vendors.js"></script>
+    <script src="/asset/vueDist/js/edit.js"></script>
+{% endif %}
 </body>
 </html>

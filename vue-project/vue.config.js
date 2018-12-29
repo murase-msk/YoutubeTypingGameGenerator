@@ -1,17 +1,22 @@
 const path = require('path');
 
 module.exports = {
-    baseUrl: process.env.NODE_ENV === 'production'
-        ? '/asset/vueDist/'
-        : '/asset/vueDist/',
+    // baseUrl: process.env.NODE_ENV === 'production'
+    //     ? '/asset/vueDist/'
+    //     : '/asset/vueDist/',
     outputDir: __dirname+'/../public/asset/vueDist/', // 2. 出力先
     assetsDir: './',
     filenameHashing: false,
     pages: {
-        index: {
+        watch: {
             entry: 'src/main.js', // エントリーポイント
             template: './public/index.html', //3. index.htmlテンプレート
-            filename: 'index.html' // 省略可
+            filename: 'index.html' // outputFilename 省略可
+        },
+        edit:{
+            entry: 'src/edit.js', // エントリーポイント
+            template: './public/edit.html', //3. index.htmlテンプレート
+            filename: 'edit.html' // 省略可
         }
     },
     // ホットリロード.
@@ -21,6 +26,12 @@ module.exports = {
         port: '8083',
         watchOptions: {
             poll: true
+        },
+        historyApiFallback: {
+            rewrites: [
+                { from: /\/index/, to: '/index.html' }, // index.html に飛ばす
+                { from: /\/edit/, to: '/edit.html' }
+            ]
         }
     }
 };
