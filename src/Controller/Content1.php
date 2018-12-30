@@ -98,6 +98,7 @@ class Content1 extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         array $args)
     {
+        $settings = require __DIR__ . '/../settings.php';
         $youtubeUrl = $request->getParsedBody()['youtube_url'];
         // youtubeの動画URLであるかチェック
         $isMatch = preg_match('/^(http|https):\/\/(www\.youtube\.com\/watch\?v=)([A-Z0-9_-]+)(&.*)?/i', $youtubeUrl, $matchResult);
@@ -123,10 +124,10 @@ class Content1 extends BaseController
             return $response->withRedirect((string)$uri, 301);
         }
         $downloadSubUrl = $scrappingTypeText->getSrtUrl($langListIndex);
-        $captionData = $scrappingTypeText->downloadSrtFile($downloadSubUrl);
+        $captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
         // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
         // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
-        $youtubeData = $scrappingTypeText->getYoutubeData();
+        $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
         // データベース追加.
         $this->typingGameModel->insertData(
             [
@@ -135,15 +136,18 @@ class Content1 extends BaseController
                 'title' =>$youtubeData['title'],
                 'thumbnail'=>$youtubeData['thumbnail']
             ]);
-        // TODO:登録設定画面へ移動.
-        // TODO:コンテンツ画面へ遷移(リダイレクトで)
-        return $this->view->render($response, 'content1Content.html.twig', [
-            'activeHeader' => 'sampleMv',
+
+        // リダイレクト.
+        $uri = $request->getUri()->withPath($this->router->pathFor('watch', [
+            'activeHeader' => 'watch',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
+            'id'=>$videoId,
             'videoId'=>$videoId
-        ]);
+        ]));
+        return $response->withRedirect((string)$uri, 301);
+
     }
 
     /**
@@ -191,7 +195,7 @@ class Content1 extends BaseController
         $videoId = $args['id'];
 
         return $this->view->render($response, 'content1Content.html.twig', [
-            'activeHeader' => 'sampleMv',
+            'activeHeader' => 'watch',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
@@ -220,9 +224,42 @@ class Content1 extends BaseController
             'activeHeader' => 'edit',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
             'videoId'=>$videoId
         ]);
+    }
+
+    /**
+     * 編集結果の保存
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    function saveContent(/** @noinspection PhpUnusedParameterInspection */
+        Request $request,
+        /** @noinspection PhpUnusedParameterInspection */
+        Response $response,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $args)
+    {
+        $videoId = $request->getParsedBody()['videoId'];
+        $typeInfo= $request->getParsedBody()['typeInfo'];
+        // jsonにしてDB保存.
+        $this->typingGameModel->updateTypeInfo($videoId, $typeInfo);
+
+        // リダイレクト.
+        $uri = $request->getUri()->withPath($this->router->pathFor('watch', [
+            'activeHeader' => 'watch',
+            'isAuth' => $this->session->get('isAuth'),
+            'account' => $this->session->get('account'),
+
+            'id'=>$videoId,
+            'videoId'=>$videoId
+        ]));
+        return $response->withRedirect((string)$uri, 301);
+
     }
 
     /**

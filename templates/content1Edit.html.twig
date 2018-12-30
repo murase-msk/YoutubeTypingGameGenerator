@@ -11,6 +11,8 @@
                 メインの表示
                 <br>
                 <input type="hidden" name="videoId" value="{{ videoId }}">
+                <input id="csrf_name" type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                <input id="csrf_value" type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 <div id="edit"></div>
             </div>
             <div class="col-md-2 sidebar">

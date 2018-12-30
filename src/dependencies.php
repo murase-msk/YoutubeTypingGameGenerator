@@ -65,47 +65,28 @@ $container['view'] = function ($container) {
 
     return $view;
 };
-
-//$container['db'] = function ($container) {
-//    $db = $container['settings']['db'];
-//    $pdo = new PDO('mysql:host=' . $db['host'] . ';dbname=' . $db['dbname'], $db['user'], $db['pass']);
-//    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-//    return $pdo;
-//};
-$container['db_psql'] = function ($container) {
-    $db = $container['settings']['db_psql'];
-    $pdo = new PDO('pgsql:host=' . $db['host'] . ';dbname=' . $db['dbname'], $db['user'], $db['pass']);
+// DB.
+$container['db'] = function ($container) {
+    $db = $container['settings']['db'];
+    $dsn = 'pgsql:host=' . $db['host']. '; port='.$db['port'].';dbname=' . $db['dbname'];
+    $pdo = new PDO($dsn, $db['user'], $db['pass']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
-$container['db_psql_typing_game'] = function ($container) {
-    $db = $container['settings']['db_psql_typing_game'];
-    $pdo = new PDO('pgsql:host=' . $db['host'] . ';dbname=' . $db['dbname'], $db['user'], $db['pass']);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    return $pdo;
-};
-
 
 //
 // Model
 //
 
 $container['accountModel'] = function ($container) {
-    $accountModel = new \src\Model\AccountModel($container['db_psql']);
+    $accountModel = new \src\Model\AccountModel($container['db']);
     return $accountModel;
 };
 $container['TypingGameModel'] = function ($container) {
-    $typingGameModel = new \src\Model\TypingGameModel($container['db_psql_typing_game']);
+    $typingGameModel = new \src\Model\TypingGameModel($container['db']);
     return $typingGameModel;
 };
-
-//$container['sampleModel'] = function ($container) {
-//    $sampleModel = new \src\Model\SampleModel($container['db']);
-//    return $sampleModel;
-//};
 
 //
 // Controller

@@ -14,7 +14,7 @@ class ScrappingTypeText
 {
 
     // youtubeのURL.
-    public $youtubeUrl = '';//'https://www.youtube.com/watch?v=sr--GVIoluU';
+    public $youtubeUrl = '';
     public $crawler;
     public $videoCode;
 
@@ -45,7 +45,10 @@ class ScrappingTypeText
         return $crawler;
     }
 
-    // 取得できる言語リストを取得.
+    /**
+     * 取得できる言語リストを取得.
+     * @return array 言語リストの配列([lang1, lang2 ,lang3....])
+     */
     public function getScriptLanguageList()
     {
         // 字幕の言語（国名）を取得.
@@ -57,7 +60,11 @@ class ScrappingTypeText
         return $languageList;
     }
 
-    // 字幕ダウンロードサイトから字幕データのURLを取得
+    /**
+     * 字幕ダウンロードサイトから字幕データのURLを取得
+     * @param int $languageIndex ダウンロードページの上から何番目か
+     * @return string ダウンロードURL
+     */
     public function getSrtUrl($languageIndex)
     {
         // 字幕ファイル(srt)リンクのURL取得
@@ -74,11 +81,15 @@ class ScrappingTypeText
         return $downloadSubUrl;
     }
 
-    // 歌詞データ取得.
-    public function downloadSrtFile($downloadSubUrl){
+    /**
+     * SrtファイルのダウンロードURLを配列データに変換する
+     * @param string $downloadSubUrl 字幕ダウンロードのURL
+     * @param string $yahooApiKey Yahoo APIのAPI Key
+     * @return array 左のような形式で返す [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
+     */
+    public function convertToArrayDataFromSrtSubUrl($downloadSubUrl, $yahooApiKey){
         $downloadFilePath = './subtitle.srt';
         $this->download($downloadSubUrl, $downloadFilePath);
-
         // srt処理.
         $captionData = array();
         try {
@@ -94,11 +105,11 @@ class ScrappingTypeText
                         'startTime'=>$caption->startTime,
                         'endTime'=>$caption->endTime,
                         'text'=>$caption->text,
-                        'Furigana'=>ConvertTypeText::convertSentence($caption->text)['Furigana']
+                        'Furigana'=>ConvertTypeText::convertToHiragana($caption->text, $yahooApiKey)
                     )
                 );
             }
-        }catch(Exception $e){
+        }catch(\Benlipp\SrtParser\Exceptions\FileNotFoundException $e){
             $e->getMessage();
         }
 
@@ -130,12 +141,15 @@ class ScrappingTypeText
         return $size;
     }
 
-    // YoutubeDataAPIからデータを取得.
-    public function getYoutubeData(){
+    /**
+     * YoutubeDataAPIからデータを取得.
+     * @param string $youtubeApiKey Youtube のAPI key
+     * @return array
+     */
+    public function getYoutubeData($youtubeApiKey){
         $videoId = $this->videoCode;
-        // TODO: 環境変数に隠す
-        $apiKey = '';
-        $url = 'https://www.googleapis.com/youtube/v3/videos?id='.$videoId.'&key='.$apiKey.'&fields=items(id,snippet(channelTitle,title,thumbnails),statistics)&part=snippet,contentDetails,statistics';
+        // YoutubeAPIのAPIkey
+        $url = 'https://www.googleapis.com/youtube/v3/videos?id='.$videoId.'&key='.$youtubeApiKey.'&fields=items(id,snippet(channelTitle,title,thumbnails),statistics)&part=snippet,contentDetails,statistics';
         $json = file_get_contents($url);
         $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
         $arr = json_decode($json,true);

@@ -2,6 +2,8 @@
 
 あなたの好きな動画でタイピングゲームをしよう
 
+URL(未定)
+
 ## 機能
   - Youtubeの動画URLからタイピングゲームを自動生成
   - タイピングゲーム
@@ -33,33 +35,29 @@
     - Youtube Data API(https://developers.google.com/youtube/v3/getting-started)
 
 ## 環境構築方法
-vagrantでUbuntu16.04を作成
-
-cd /var/www/html
-
-git clone https://github.com/murase-msk/YoutubeTypingGameGenerator.git
-
-sh ./provision.sh
-
-cd /var/www/html/YoutubeTypingGnameGenerator
-
-composer install
-
-php database/init/initDatabase.php
-
-sudo chown -R www-data:www-data /var/www/html/YoutubeTypingGameGenerator/
-
+vagrantでUbuntu16.04を作成  
+cd /var/www/html  
+git clone https://github.com/murase-msk/YoutubeTypingGameGenerator.git  
+sh ./provision.sh  
+cd /var/www/html/YoutubeTypingGnameGenerator  
+composer install  
+// DB初期化  
+php database/init/initDatabase.php  
+sudo chown -R www-data:www-data /var/www/html/YoutubeTypingGameGenerator/  
 cd vue-project
 
-windows Hostとファイル共有する場合のみ
-node_modulesを共有しないディレクトリに作成し、シンボリックリンクを貼る
-mkdir -p ~slim_app_node_modules/node_modules
-ln -s ~/slim_app_node_modules/node_modules/ node_modules
+//windows Hostとファイル共有する場合のみ  
+//node_modulesを共有しないディレクトリに作成し、シンボリックリンクを貼る  
+mkdir -p ~slim_app_node_modules/node_modules  
+ln -s ~/slim_app_node_modules/node_modules/ node_modules  
+npm install  
 
-npm install
+//provision.shに追加する  
+sudo vim /etc/postgresql/9.5/main/postgresql.conf  
+//listen_address=* にする設定
 
-
-# provision.shに追加する
-sudo vim /etc/postgresql/9.5/main/postgresql.conf
-listen_address=* にする設定
+## testing
+cd ~  
+./start_selenium.sh  
+vendor/bin/phpunit --testdox --colors tests/
 

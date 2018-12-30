@@ -19,7 +19,8 @@ class E2EBaseTest extends \PHPUnit\Framework\TestCase
      */
     public function dummy()
     {
-        $this->markTestSkipped();
+        $this->assertEquals('', '');
+        //$this->markTestSkipped();
     }
 //    protected static function initApp()
 //    {

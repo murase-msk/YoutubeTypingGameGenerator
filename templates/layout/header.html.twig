@@ -16,13 +16,10 @@
                     <a href="{{ path_for('index', {'active-header': 'index'}) }}" id="home_button">Home</a>
                 </li>
                 <li {{ activeHeader == 'content1' ? 'class=active' : '' }}>
-                    <a href="{{ path_for('contentsList', {'active-header': 'content1'}) }}" id="content1_button">コンテンツ1</a>
+                    <a href="{{ path_for('contentsList', {'active-header': 'content1'}) }}" id="content1_button">登録一覧</a>
                 </li>
                 <li {{ activeHeader == 'content2' ? 'class=active' : '' }}>
-                    <a href="{{ path_for('content2', {'active-header': 'content2'}) }}" id="content2_button">コンテンツ2</a>
-                </li>
-                <li {{ activeHeader == 'sampleMv' ? 'class=active' : '' }}>
-                    <a href="{{ path_for('sampleMv', {'active-header': 'sampleMv', 'id': 'sr--GVIoluU'}) }}" id="sampleMv_button">sampleMv</a>
+                    <a href="{{ path_for('content2', {'active-header': 'content2'}) }}" id="content2_button">YTGGとは</a>
                 </li>
             </ul>
             {% if (isAuth is same as (true)) %}

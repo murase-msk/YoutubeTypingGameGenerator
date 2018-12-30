@@ -8,7 +8,11 @@
 
 namespace database\init;
 
-
+/**
+ * タイピング情報を入ったテーブル
+ * Class TypeTextTable
+ * @package database\init
+ */
 class TypeTextTable extends BaseTable
 {
     // カラム名.

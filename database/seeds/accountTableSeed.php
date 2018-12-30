@@ -10,17 +10,17 @@
 return [
     'data1' => [
         'email' => 'aaa@example.com',
-        'account' => 'root',
+        'account_name' => 'root',
         'password' => 'root'
     ],
     'data2' => [
         'email' => 'bbb@ggg.com',
-        'account' => 'user1',
+        'account_name' => 'user1',
         'password' => 'user1234'
     ],
     'data3' => [
         'email' => 'sss@ggg.com',
-        'account' => 'user2',
+        'account_name' => 'user2',
         'password' => 'hgfdse'
     ],
 ];

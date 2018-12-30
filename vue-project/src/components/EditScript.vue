@@ -2,8 +2,17 @@
     <div id="editScript">
         <youtube :videoId="videoId" :player-vars="playerVars" ref="youtube" @playing="playing" style="z-index:99;"></youtube>
         <br>
-        <button class="btn btn-secondary" @click="saveContent">保存</button>
-        <form action="/edit/editPhrase" method="post" name="editPhrase">
+        <!--実際に送る用-->
+        <form action="/content1/saveContent" method="post" name="saveTypeInfo">
+            <input type="hidden" name="csrf_name" :value=csrf.csrf_name>
+            <input type="hidden" name="csrf_value" :value=csrf.csrf_value>
+            <input type="hidden" name="videoId" :value=videoId>
+            <input type="hidden" name="typeInfo" :value=JSON.stringify(allPhraseData)>
+            <input type="submit" value="保存" class="btn btn-secondary">
+        </form>
+
+        <form action="/content1/saveContent" method="post" name="editPhrase">
+            <input type="hidden" name="videoId" :value="videoId">
             <div style="width:100%;height:200px;overflow:auto;">
                 <table align="center">
                     <thead class="table_head">
@@ -21,16 +30,16 @@
                                 {{ phraseData.index}}
                             </td>
                             <td class="start">
-                                <input type="text" name="startTime" :value="phraseData.startTime" size="3">
+                                <input v-model="phraseData.startTime" type="text" name="startTime" :value="phraseData.startTime" size="3">
                             </td>
                             <td class="end">
-                                <input type="text" name="endTime" :value="phraseData.endTime" size="3">
+                                <input v-model="phraseData.endTime"  type="text" name="endTime" :value="phraseData.endTime" size="3">
                             </td>
                             <td class="displayText">
-                                <input type="text" name="typeText" :value="phraseData.text" size="40">
+                                <input v-model="phraseData.text"  type="text" name="typeText" :value="phraseData.text" size="40">
                             </td>
                             <td class="inputText">
-                                <input type="text" name="typeText" :value="phraseData.Furigana" size="40">
+                                <input v-model="phraseData.Furigana"  type="text" name="typeText" :value="phraseData.Furigana" size="40">
                             </td>
                         </tr>
                     </tbody>
@@ -61,6 +70,11 @@
                 movieTime:0,
                 /** タイマー */
                 timer : 0,
+
+                csrf: {
+                    csrf_name:document.getElementsByName('csrf_name')[0].value,
+                    csrf_value:document.getElementsByName('csrf_value')[0].value
+                }
             }
         },
         computed: {
@@ -106,10 +120,6 @@
                     this.timer = now;
                  }
                  let requestId = requestAnimationFrame(this.checkPhraseNo);
-            },
-            // TODO:編集した内容を保存する.
-            saveContent(){
-                document.editPhrase.submit();
             },
         }
     }

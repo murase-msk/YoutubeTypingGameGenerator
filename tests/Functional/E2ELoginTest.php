@@ -41,7 +41,7 @@ class E2ELoginTest extends E2EBaseTest
         // 設定読み込み.
         $settings = require __DIR__ . '/../../src/settings.php';
         self::$settings = $settings['settings'];
-        self::$HOST_NAME = $settings['settings']['env'] === 'dev' ? 'slim_app.test' : 'localhost';
+        self::$HOST_NAME = 'localhost';
 
         // selenium
         $host = 'http://localhost:4444/wd/hub';
@@ -52,7 +52,7 @@ class E2ELoginTest extends E2EBaseTest
     public static function tearDownAfterClass()
     {
         // 新規登録したアカウントの削除
-        $db = self::$settings['db_psql'];
+        $db = self::$settings['db'];
         $pdo = new PDO('pgsql:host=' . $db['host'] . ';dbname=' . $db['dbname'], $db['user'], $db['pass']);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);

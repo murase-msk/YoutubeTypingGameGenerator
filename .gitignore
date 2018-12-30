@@ -2,4 +2,5 @@
 /logs/*
 /.*
 /vue-project/node_modules/
+/public/phpinfo.php
 !.gitignore

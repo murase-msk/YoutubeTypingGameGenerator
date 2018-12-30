@@ -8,21 +8,30 @@
 
 namespace src\Model\typingGame;
 
-
+/**
+ * テキストを様々な形に変換するクラス
+ * Class ConvertTypeText
+ * @package src\Model\typingGame
+ */
 class ConvertTypeText
 {
 
-    public static $appid = '';
-
-    public function __construct($sentence)
+    public function __construct()
     {
     }
 
-    // 連想配列で取得.
-    // {'Surface'=>'...', 'Furigana'=>'...', 'Roman'=>'...', }.
-    public static function convertSentence($sentence)
+    /**
+     * 文章をひらがなに変換
+     * @param string $sentence
+     *                 変換する文章
+     * @param string $appId
+     *                 Yahoo APIのAPI key
+     * @return string
+     *                ひらがなに変換した文字列（半角英数字はそのまま出力）
+     */
+    public static function convertToHiragana($sentence, $appId)
     {
-        $url = 'https://jlp.yahooapis.jp/FuriganaService/V1/furigana?appid='.ConvertTypeText::$appid.'&sentence='.$sentence;
+        $url = 'https://jlp.yahooapis.jp/FuriganaService/V1/furigana?appid='.$appId.'&sentence='.$sentence;
 
         $xml = simplexml_load_file($url); //XML ファイルの URL を指定
         $oneSentence = array('Surface'=>'', 'Furigana'=>'', 'Roman'=>'');
@@ -31,15 +40,13 @@ class ConvertTypeText
             if (isset($word->Furigana)) {
                 $oneSentence['Furigana'] .= $word->Furigana;
                 //$oneSentence['Roman'] .= $word->Roman;
-            }else{
+            }else{  // ふりがながなければ英数字なのでそのまま返す.
                 //英数字以外削除する.
                 $lowerStr=preg_replace('/[^a-z0-9\s]/', '',mb_strtolower($word->Surface));
-
-
                 $oneSentence['Furigana'] .= $lowerStr;
                 //$oneSentence['Roman'] .= mb_strtolower($word->Surface);
             }
         }
-        return $oneSentence;
+        return $oneSentence['Furigana'];
     }
 }

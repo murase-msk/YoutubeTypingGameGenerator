@@ -8,6 +8,11 @@
 
 namespace database\init;
 
+/**
+ * テーブル初期化クラスの共通クラス
+ * Class BaseTable
+ * @package database\init
+ */
 abstract class BaseTable
 {
 

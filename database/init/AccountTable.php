@@ -9,6 +9,7 @@
 namespace database\init;
 
 /**
+ * アカウント情報テーブル
  * Class AccountTable
  * @property \PDO $con
  */
@@ -60,8 +61,8 @@ class AccountTable extends BaseTable
             .') '
             .'values(:account_name, :email, :hashed_password)';
         $stmt = $this->con->prepare($sql);
-        $stmt->bindParam(':account_name', $data['account']);
-        $stmt->bindParam(':email', $data['email']);
+        $stmt->bindParam(':account_name', $data[AccountTable::ACCOUNT_NAME]);
+        $stmt->bindParam(':email', $data[AccountTable::EMAIL]);
         $stmt->bindParam(':hashed_password', $hashedPass);
         $stmt->execute();
     }

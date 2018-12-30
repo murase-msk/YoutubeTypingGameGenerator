@@ -12,22 +12,25 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 // マイグレーション.
 
-// slim_app DB.
+// DB.
 $settings = require __DIR__ . '/../../src/settings.php';
-$dbName = 'slim_app';
+$settings = $settings['settings'];
+$dbName = $settings['db']['dbname'];
 
 $slimAppDb = new DatabaseConnection($dbName);
 $con = $slimAppDb->connectDb();
 
+// AccountTable初期化.
+
 // テーブル初期化.
 $accountTable = new AccountTable($con);
-$content1Table = new Content1Table($con);
+//$content1Table = new Content1Table($con);
 // 削除順 content1, account.
-$content1Table->deleteTable();
+//$content1Table->deleteTable();
 $accountTable->deleteTable();
 // 作成順 account, content1.
 $accountTable->createTable();
-$content1Table->createTable();
+//$content1Table->createTable();
 
 // シードデータインサート.
 // accountテーブルデータ
@@ -35,17 +38,13 @@ $seeds = require  __DIR__ . '/../seeds/accountTableSeed.php';
 foreach($seeds as $key => $value){
     $accountTable->insertData(
         [
-            'email'=>$value['email'],
-            'account'=>$value['account'],
+            AccountTable::EMAIL=>$value[AccountTable::EMAIL],
+            AccountTable::ACCOUNT_NAME=>$value[AccountTable::ACCOUNT_NAME],
             'password'=>$value['password']
         ]);
 }
 
-// typing_game_auto_generator用.
-$dbName = 'typing_game_auto_generator';
-
-$DbConnection = new DatabaseConnection($dbName);
-$con = $DbConnection->connectDb();
+// TypeTextTable初期化
 
 // テーブル初期化.
 $typeTextTable = new TypeTextTable($con);
@@ -61,10 +60,10 @@ $seeds = require  __DIR__ . '/../seeds/typeTextTableSeed.php';
 foreach($seeds as $key => $value){
     $typeTextTable->insertData(
         [
-            'type_text'=>$value['type_text'],
-            'video_code'=>$value['video_code'],
-            'title'=>$value['title'],
-            'thumbnail'=>$value['thumbnail']
+            TypeTextTable::TYPE_TEXT=>$value[TypeTextTable::TYPE_TEXT],
+            TypeTextTable::VIDEO_CODE=>$value[TypeTextTable::VIDEO_CODE],
+            TypeTextTable::TITLE=>$value[TypeTextTable::TITLE],
+            TypeTextTable::THUMBNAIL=>$value[TypeTextTable::THUMBNAIL]
         ]);
 }
 

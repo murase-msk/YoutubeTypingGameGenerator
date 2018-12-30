@@ -22,28 +22,20 @@ return [
 //        ],
         'db' => [
             'host' => 'localhost',
-            'user' => 'root',
-            'pass' => 'root',
-            'dbname'=> 'testdb'
-        ],
-        'db_psql' => [
-            'host' => 'localhost',
-            'user' => 'postgres',
-            'pass' => 'postgres',
-            'dbname'=> 'slim_app'
-       ],
-        'db_psql_typing_game'=>[
-            'host' => 'localhost',
-            'user' => 'postgres',
-            'pass' => 'postgres',
-            'dbname'=> 'typing_game_auto_generator'
+            'user' => getenv('DB_user'),
+            'pass' => getenv('DB_pass'),
+            'dbname'=> 'youtube_typing_game_generator',
+            'port' => '5432'
         ],
         'root_account'=>[
             'name'=>getenv('ROOT_NAME'),
             'pass'=>getenv('ROOT_PASS')
         ],
         'youtube_api'=>[
-            'key'=>getenv('YOUTUBE_API_KEY')
+            'key'=>getenv('youtubeApiKey')
+        ],
+        'yahoo_api' =>[
+            'key'=>getenv('yahooApiKey')
         ]
     ],
 ];

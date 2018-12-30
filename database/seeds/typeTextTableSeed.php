@@ -55,7 +55,9 @@ return [
                 }
                 ]
             }',
-        'video_code' => 'efg'
+        'video_code' => 'efg',
+        'title'=>'title22',
+        'thumbnail'=>'thumbnail2'
     ],
     'data3' => [
         'type_text' =>
@@ -82,7 +84,7 @@ return [
                 ]
             }',
         'video_code' => 'hij',
-        'title'=>'title2',
-        'thumbnail'=>'thumbnail2'
+        'title'=>'title33',
+        'thumbnail'=>'thumbnail33'
     ],
 ];

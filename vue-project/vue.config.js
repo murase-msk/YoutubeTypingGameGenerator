@@ -11,7 +11,7 @@ module.exports = {
         watch: {
             entry: 'src/main.js', // エントリーポイント
             template: './public/index.html', //3. index.htmlテンプレート
-            filename: 'index.html' // outputFilename 省略可
+            filename: 'watch.html' // outputFilename 省略可
         },
         edit:{
             entry: 'src/edit.js', // エントリーポイント

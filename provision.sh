@@ -200,7 +200,7 @@ else
 fi
 
 ##              ##
-## selenium関係 ##
+## selenium関係 ## dev環境のときのみ
 ##              ##
 cd ~/
 # openJDK
@@ -254,8 +254,8 @@ if [ ! -e ${StartSelenium} ]; then
   echo '# chrome用' >> ${StartSelenium}
   echo "java -jar ${SELENIUM_SERVER} &" >> ${StartSelenium}
 fi
-chmod u+x ${StartSelenium}
-# 自動起動させる
+chmod 755 ${StartSelenium}
+# TODO:自動起動させる
 
 # selenium killコマンド sudo sh kill_selenium.sh
 KillSelenium=kill_selenium.sh
@@ -270,7 +270,7 @@ if [ ! -e ${KillSelenium} ]; then
   echo '# geckodriverのkill' >> ${KillSelenium}
   echo 'ps aux | grep [g]eckodriver | awk '\''{ print "kill -9", $2 }'\'' | sh' >> ${KillSelenium}
 fi
-chmod u+x ${KillSelenium}
+chmod 755 ${KillSelenium}
 
 # アプリ初期設定
 #echo 'installing appication....'

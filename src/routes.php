@@ -25,8 +25,11 @@ $app->group('', function () use ($app) {
     $app->get('/content1/watch/{id}', 'Content1' . ':content')->setName('watch');
     // タイピング編集画面.
     $app->get('/content1/edit/{id}', 'Content1' . ':editView')->setName('edit');
+    // 編集結果の保存.
+    $app->post('/content1/saveContent', 'Content1' . ':saveContent')->setName('saveContent');
     // タイピングテキストを取得(web API).
     $app->get('/getTypeText', 'Content1' . ':getTypeTextApi');
+
     // コンテンツ1.
     $app->get('/content1', 'Content1' . ':index')->setName('content1');
     // コンテンツ2.
@@ -44,50 +47,3 @@ $app->group('', function () use ($app) {
 
 // GitHubからWebHook.
 $app->post('/gitHubWebHook','DeployController'.':gitHubWebHook');
-
-//
-//$app->get('/noCsrfPage', function (Psr\Http\Message\ServerRequestInterface $request, Psr\Http\Message\ResponseInterface $response, array $args) {
-//    return $this->view->render($response, 'noCsrfPage.html.twig', []);
-//});
-//$app->post('/noCsrf', function (Psr\Http\Message\ServerRequestInterface $request, Psr\Http\Message\ResponseInterface $response, array $args) {
-//    return $this->view->fetchFromString('<p>Pushed button</p>', []);
-//});
-//
-//$app->get('/csrfPage', function (Psr\Http\Message\ServerRequestInterface $request, Psr\Http\Message\ResponseInterface $response, array $args) {
-//    // CSRF用Key-Value生成.
-//    $csrfNameKey = $this->csrf->getTokenNameKey();
-//    $csrfValueKey = $this->csrf->getTokenValueKey();
-//    $csrfName = $request->getAttribute($csrfNameKey);
-//    $csrfValue = $request->getAttribute($csrfValueKey);
-//
-//    return $this->view->render($response, 'csrfPage.html.twig', [
-//        'csrf' => [
-//            'keys' => [
-//                'name' => $csrfNameKey,
-//                'value' => $csrfValueKey
-//            ],
-//            'name' => $csrfName,
-//            'value' => $csrfValue
-//        ]
-//    ]);
-//});
-//$app->post('/csrf', function (Psr\Http\Message\ServerRequestInterface $request, Psr\Http\Message\ResponseInterface $response, array $args) {
-//    $str = $this->view->fetchFromString('<p>Pushed button</p>', []);
-//    return $response->getBody()->write($str);
-//});
-
-//$app->get('/[{name}]', function (Psr\Http\Message\ServerRequestInterface $request, Psr\Http\Message\ResponseInterface $response, array $args) {
-//    // Sample log message
-//    $this->logger->info("Slim-Skeleton '/' route");
-//
-//    // Render index view
-//    return $this->view->render($response, 'index.html', [
-//        'name' => $args['name']
-//    ]);
-//});
-
-
-
-//$app->get('/','src\BaseController\MainApp:aaa')->setName('aaa');
-
-

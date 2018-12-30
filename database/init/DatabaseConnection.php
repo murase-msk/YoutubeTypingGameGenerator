@@ -47,8 +47,8 @@ class DatabaseConnection
      */
     private function connect($dbName = '')
     {
-        $db = $this->setting['db_psql'];
-        $dsn = 'pgsql:host=' . $db['host']. ' port=5432';
+        $db = $this->setting['db'];
+        $dsn = 'pgsql:host=' . $db['host']. ' port='.$db['port'];
         $dsn .= strcmp($dbName, '') !== 0 ? ' dbname='.$this->dbName : '';
         $pdo = new \PDO($dsn, $db['user'], $db['pass']);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);

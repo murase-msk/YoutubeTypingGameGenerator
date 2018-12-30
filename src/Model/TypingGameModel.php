@@ -62,6 +62,23 @@ class TypingGameModel
 
     }
 
+    // 情報の更新.
+    public function updateTypeInfo($videoId, $typeInfo)
+    {
+        $nowData = date("Y-m-d H:i:s");
+        $sql = 'update '.TypeTextTable::tableName
+            .' set '
+            .' '.TypeTextTable::TYPE_TEXT.'=:type_text, '
+            .' '.TypeTextTable::VIDEO_CODE.'=:video_code, '
+            .' '.TypeTextTable::LAST_UPDATE.'=:last_update '
+            .' '.'where '.TypeTextTable::VIDEO_CODE.' = \''.$videoId.'\'';
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':type_text', $typeInfo);
+        $stmt->bindParam(':video_code', $videoId);
+        $stmt->bindParam(':last_update', $nowData);
+        $stmt->execute();
+    }
+
     /**
      * データ挿入
      * @param $data [type_text=>..., video_code=>..., title=>..., thumbnail=>...,]
