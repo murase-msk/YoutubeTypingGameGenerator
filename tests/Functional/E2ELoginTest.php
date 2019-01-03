@@ -8,12 +8,8 @@
 
 namespace Tests\Functional;
 
-use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
-use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\WebDriverBy;
 use src\Model\AccountModel;
-use PDO;
 
 /**
  * Class HomePageTest
@@ -23,45 +19,24 @@ use PDO;
 class E2ELoginTest extends E2EBaseTest
 {
 
-    /** @var RemoteWebDriver */
-    protected static $driver;
-
-    /** @var array */
-    protected static $setting;
-
     /** テストアカウント */
     protected const EMAIL = 'test@test.com';
     protected const ACCOUNT = 'testaccount';
     protected const PASS = 'test123';
-    /** ホスト名 */
-    protected static $HOST_NAME = 'localhost';
+
 
     public static function setUpBeforeClass()
     {
-        // 設定読み込み.
-        $settings = require __DIR__ . '/../../src/settings.php';
-        self::$settings = $settings['settings'];
-        self::$HOST_NAME = 'localhost';
-
-        // selenium
-        $host = 'http://localhost:4444/wd/hub';
-        // chrome ドライバーの起動
-        self::$driver = RemoteWebDriver::create($host, DesiredCapabilities::chrome());
+        parent::setUpBeforeClass();
     }
 
     public static function tearDownAfterClass()
     {
         // 新規登録したアカウントの削除
-        $db = self::$settings['db'];
-        $pdo = new PDO('pgsql:host=' . $db['host'] . ';dbname=' . $db['dbname'], $db['user'], $db['pass']);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        $accountModel = new AccountModel($pdo);
+        $accountModel = new AccountModel(self::$pdo);
         $accountModel->deleteAccount(self::ACCOUNT, self::PASS);
 
-
-        // ブラウザを閉じる
-        self::$driver->close();
+        parent::tearDownAfterClass();
     }
 
     /**

@@ -105,4 +105,16 @@ class TypingGameModel
         $stmt->bindParam(':last_update', $nowData);
         $stmt->execute();
     }
+
+    /**
+     * 動画データ削除
+     * @param String $videoId
+     */
+    public function delete($videoId)
+    {
+        $sql = 'delete from '.TypeTextTable::tableName.' where '.TypeTextTable::VIDEO_CODE.' = :videoId';
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':videoId', $videoId);
+        $stmt->execute();
+    }
 }

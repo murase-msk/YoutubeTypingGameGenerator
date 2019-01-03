@@ -46,7 +46,7 @@
     },
     "scripts": {
         "start": "php -S localhost:8080 -t public",
-        "test": "vendor/bin/phpunit --testdox --colors tests/",
+        "test": "vendor/bin/phpunit --testdox --colors tests/Functional/E2EGameTest",
         "coverage": "vendor/bin/phpunit --coverage-html .coverage tests",
         "reload": "composer dumpautoload"
     }

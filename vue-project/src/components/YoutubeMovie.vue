@@ -3,13 +3,16 @@
         <!--<div id="blockPanel" style="position:absolute; left: 50%; transform: translateX(-50%);height:360px;width:640px; z-index:0;"></div>-->
         <youtube :videoId="videoId" :player-vars="playerVars" ref="youtube" @playing="playing" style="z-index:99;"></youtube>
         <br>
-        <button class="btn btn-secondary" @click="startType">start</button>
-        <br>
-        <span>{{displayText}}</span>
-        <br>
-        <span class="inputtedText" v-for="oneInputedText in inputtedText ">{{ oneInputedText+" " }}</span>
-        <span class="restText" v-for="oneRestText in restText" >{{ oneRestText+" " }}</span>
-        <br>
+        <button id="type_start" class="btn btn-secondary" @click="startType">start</button>
+        <div>{{displayText}}</div>
+        <div id="inputPhrase">
+            <span id="inputtedPhrase">
+                <span class="inputtedText" v-for="oneInputedText in inputtedText ">{{ oneInputedText+" " }}</span>
+            </span>
+            <span id="restPhrase">
+               <span class="restText" v-for="oneRestText in restText" >{{ oneRestText+" " }}</span>
+            </span>
+        </div>
         <span>{{ inputRoman }}</span>
 
         <br>
@@ -38,7 +41,7 @@ export default {
       // すべてのテキスト.{startTime:..., endEtime:..., hurigana:..., text:...}
       allPhraseData: "",
       /** 表示するテキスト */
-      displayText:"あっと おどろく",//"るどむーびーみたしねま",
+      displayText:"",//"るどむーびーみたしねま",
       /** 入力するテキスト (スペースで区切った配列)*/
       inputText: "",//["aa", "aa"],//"るどむーびーみたしねま",
       /** 入力したかな文字数 */
@@ -46,7 +49,7 @@ export default {
       /** 入力したカナ文字 */
       inputtedText: "",
       /** 残りの入力するテキスト (スペースで区切った配列)　*/
-      restText: ["aa", "aa"],//"るどむーびーみたしねま",
+      restText: [],//["aa", "aa"],//"るどむーびーみたしねま",
       /** 入力したローマ字(画面に表示する) */
       inputRoman: "",
       /** マッチしたチャンク */
@@ -80,7 +83,7 @@ export default {
   created() {
     console.log("created");
     // サーバからajaxでデータ取得.
-    let url = "http://localhost:8081/getTypeText?videoId="+this.videoId;
+    let url = "http://"+location.host+"/getTypeText?videoId="+this.videoId;
     fetch(url).then(function (response) {
       return response.json();
     }).then(function (json) {

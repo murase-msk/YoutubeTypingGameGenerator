@@ -8,11 +8,48 @@
 
 namespace Tests\Functional;
 
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use PDO;
 
 class E2EBaseTest extends \PHPUnit\Framework\TestCase
 {
-    protected static $app;
+    /** @var RemoteWebDriver */
+    protected static $driver;
+    /** @var array */
     protected static $settings;
+    /**  */
+    protected static $pdo;
+
+    /** ホスト名 */
+    protected static $HOST_NAME = 'localhost';
+
+    public static function setUpBeforeClass()
+    {
+        // 設定読み込み.
+        $settings = require __DIR__ . '/../../src/settings.php';
+        self::$settings = $settings['settings'];
+        self::$HOST_NAME = 'localhost';
+
+        // DB接続.
+        $db = self::$settings['db'];
+        self::$pdo = new PDO('pgsql:host=' . $db['host'] . ';dbname=' . $db['dbname'], $db['user'], $db['pass']);
+        self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        // selenium
+        $host = 'http://localhost:4444/wd/hub';
+        // chrome ドライバーの起動
+        self::$driver = RemoteWebDriver::create($host, DesiredCapabilities::chrome());
+    }
+
+    public static function tearDownAfterClass()
+    {
+
+        // ブラウザを閉じる
+        self::$driver->close();
+    }
+
 
     /**
      * @test
