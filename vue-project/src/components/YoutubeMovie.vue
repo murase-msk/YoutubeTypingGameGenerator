@@ -83,7 +83,7 @@ export default {
   created() {
     console.log("created");
     // サーバからajaxでデータ取得.
-    let url = "http://"+location.host+"/getTypeText?videoId="+this.videoId;
+    let url = location.protocol+"//"+location.host+"/getTypeText?videoId="+this.videoId;
     fetch(url).then(function (response) {
       return response.json();
     }).then(function (json) {

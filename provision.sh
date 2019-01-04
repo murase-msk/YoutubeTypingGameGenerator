@@ -18,7 +18,7 @@ fi
 
 # システム最新化
 sudo apt-get update
-sudo apt-get -y upgrade
+sudo apt-get -y upgrade > /dev/null
 
 # ... > /dev/null 2>&1は、コンソールには結果が表示されなくなります。
 

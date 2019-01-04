@@ -41,6 +41,16 @@ git clone https://github.com/murase-msk/YoutubeTypingGameGenerator.git
 ./provision.sh production   
 cd /var/www/html/YoutubeTypingGnameGenerator  
 composer install  
+
+//環境変数を設定する  
+//PostgreSQL用アカウント  
+DB_user="xxxx"  
+DB_pass="xxxx"  
+//youtubeAPIのAPIkey  
+youtubeApiKey="xxxx"  
+//YahooAPIのAPIkey  
+yahooApiKey="xxxx"  
+
 // DB初期化  
 php database/init/initDatabase.php  
 sudo chown -R www-data:www-data /var/www/html/YoutubeTypingGameGenerator/  
@@ -56,8 +66,29 @@ npm install
 sudo vim /etc/postgresql/9.5/main/postgresql.conf  
 //listen_address=* にする設定
 
+
+// ssl有効化.
+sudo a2enmod ssl  
+service apache2 restart  
+
+sudo vi /etc/apache2/sites-available/default-ssl.conf  
+        ServerAdmin xxx@yyy.zzz <- 変更  
+        ServerName xxx.yyy.zzz <- 追加  
+        DocumentRoot /var/www/html/YoutubeTypingGameGenerator/public  
+sudo a2ensite default-ssl  
+service apache2 reload  
+
+//Lets EncryptでSSL証明書取得  
+sudo add-apt-repository ppa:certbot/certbot  
+sudo apt-get update  
+apt-get install letsencrypt python-letsencrypt-apache  
+sudo letsencrypt run --apache  
+
+
+
+
 ## testing
 cd ~  
 ./start_selenium.sh  
-vendor/bin/phpunit --testdox --colors tests/
+composer test
 
