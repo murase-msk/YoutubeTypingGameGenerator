@@ -1,5 +1,5 @@
 /vendor/
-/logs/
+/logs/*
 /.*
 /vue-project/node_modules/
 !.gitignore

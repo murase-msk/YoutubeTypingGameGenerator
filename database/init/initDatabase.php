@@ -49,9 +49,9 @@ $con = $DbConnection->connectDb();
 
 // テーブル初期化.
 $typeTextTable = new TypeTextTable($con);
-// 削除順 content1, account.
+// 削除
 $typeTextTable->deleteTable();
-// 作成順 account, content1.
+// 作成
 $typeTextTable->createTable();
 
 

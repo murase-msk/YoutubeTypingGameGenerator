@@ -9,7 +9,7 @@ rm node_modules
 cd my-project dist
 
 # node_modulesの場所変更(vagrantの場合)
-mkdir ~slim_app_node_modules/node_modules
+mkdir -p ~slim_app_node_modules/node_modules
 ln -s ~slim_app_node_modules/node_modules node_modules
 
 # 設定ファイルは vue.config.js

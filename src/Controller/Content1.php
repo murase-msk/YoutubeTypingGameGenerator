@@ -136,7 +136,7 @@ class Content1 extends BaseController
                 'thumbnail'=>$youtubeData['thumbnail']
             ]);
         // TODO:登録設定画面へ移動.
-        // TODO:コンテンツ画面へ遷移
+        // TODO:コンテンツ画面へ遷移(リダイレクトで)
         return $this->view->render($response, 'content1Content.html.twig', [
             'activeHeader' => 'sampleMv',
             'isAuth' => $this->session->get('isAuth'),

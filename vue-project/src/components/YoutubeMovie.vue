@@ -30,15 +30,15 @@ export default {
       // すべてのテキスト.{startTime:..., endEtime:..., hurigana:..., text:...}
       allPhraseData: "",
       /** 表示するテキスト */
-      displayText:"あっとおどろく",//"るどむーびーみたしねま",
+      displayText:"c’-c’-c ",//"あっとおどろく",//"るどむーびーみたしねま",
       /** 入力するテキスト */
-      inputText: "あっとおどろく",//"るどむーびーみたしねま",
+      inputText: "c’-c’-c",//"あっとおどろく",//"るどむーびーみたしねま",
       /** 入力したかな文字数 */
       inputtedKanaNum: 0,
       /** 入力したカナ文字 */
       inputtedText: "",
       /** 残りの入力するテキスト */
-      restText: "あっとおどろく",//"るどむーびーみたしねま",
+      restText: "c’-c’-c",//"あっとおどろく",//"るどむーびーみたしねま",
       /** 入力したローマ字(画面に表示する) */
       inputRoman: "",
       /** マッチしたチャンク */
@@ -149,6 +149,7 @@ export default {
         candidateArray.forEach((candidate, index, array2) => {
           if (matchFlg === true) return;//
           // 入力文字が入力候補と合うか.
+          console.log("input key   "+event.key);
           if (candidate.indexOf(this.matchedChunk + event.key) === 0) {
             this.inputRoman += event.key;
             this.matchedChunk += event.key;
@@ -183,7 +184,7 @@ export default {
       // 残りの入力テキストのうち3文字目までをローマ字返還した時の候補の配列
       let tripleRoman = this.convertHiraganaToRoman(firstChar + secondChar + thirdChar);
       // 半角はそのまま入力.
-      if (!this.isHiragana(firstChar)) {
+      if (this.isHankakuEisuuzi(firstChar)) {
         console.log("半角");
         return [[firstChar]];
       }
@@ -194,7 +195,7 @@ export default {
         return [singleRoman];
       }
       if (this.isOOmozi(firstChar)) {
-        // んなの場合
+        // 「んな」の場合
         if (firstChar === "ん" && secondChar === "な"){
           return [["nn"]]
         }
@@ -222,6 +223,10 @@ export default {
         console.log("小文字+それ以外");
       }
       console.log("例外発生");
+    },
+    // 半角英数字であるか.
+    isHankakuEisuuzi(input){
+      return input.match(/^[a-z0-9]/) ? true : false;
     },
     // 全角のひらがなかどうか.
     isHiragana(input) {

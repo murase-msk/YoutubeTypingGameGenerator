@@ -30,11 +30,14 @@ class ConvertTypeText
             $oneSentence['Surface'] .=$word->Surface;
             if (isset($word->Furigana)) {
                 $oneSentence['Furigana'] .= $word->Furigana;
-                $oneSentence['Roman'] .= $word->Roman;
+                //$oneSentence['Roman'] .= $word->Roman;
             }else{
-                // TODO:英数字以外削除する.
-                $oneSentence['Furigana'] .= mb_strtolower($word->Surface);
-                $oneSentence['Roman'] .= mb_strtolower($word->Surface);
+                //英数字以外削除する.
+                $lowerStr=preg_replace('/[^a-z0-9\s]/', '',mb_strtolower($word->Surface));
+
+
+                $oneSentence['Furigana'] .= $lowerStr;
+                //$oneSentence['Roman'] .= mb_strtolower($word->Surface);
             }
         }
         return $oneSentence;

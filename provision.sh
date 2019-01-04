@@ -71,7 +71,7 @@ if [ $? -eq 127 ]; then
   sudo apt-get install -y apache2
   ## 設定
   ## virtualHost
-  PROJECT=slim_app
+  PROJECT=YoutubeTypingGameGenerator
   HOST_NAME=localhost
   # document root を /var/www/html/{project}/publicに変更する
   CONF=/etc/apache2/sites-available/${PROJECT}.conf
@@ -120,11 +120,22 @@ exit 0
   sudo apt-get install -y php7.2 php7.2-curl php7.2-mbstring php7.2-pgsql php7.2-xml php7.2-zip
 
   ## xdebug
-  # TODO
-  # if [ ${ENV} = 'development' ]; then
-  #   # sudo apt-get install -y php7.2-dev
-  #   # sudo apt-get install -y php-xdeubg
-  # fi
+   if [ ${ENV} = 'development' ]; then
+      sudo apt-get install -y php7.2-dev
+      sudo apt-get install -y php-xdebug
+      phpIni=/etc/php/7.2/apache2/php.ini
+      echo 'zend_extension=/usr/lib/php/20170718/xdebug.so' | sudo tee -a ${phpIni}
+      echo '[XDebug]' | sudo tee -a ${phpIni}
+      echo 'xdebug.remote_autostart=1' | sudo tee -a ${phpIni}
+      echo 'xdebug.remote_enable=1' | sudo tee -a ${phpIni}
+      echo 'xdebug.remote_host=10.0.2.2' | sudo tee -a ${phpIni}
+      echo 'xdebug.remote_port=9000' | sudo tee -a ${phpIni}
+      echo 'xdebug.remote_log=/var/log/xdebug.log' | sudo tee -a ${phpIni}
+      echo 'xdebug.idekey="PHPSTORM"' | sudo tee -a ${phpIni}
+      echo '[Date] | sudo tee -a ${phpIni}'
+      echo 'date.timezone = Asia/Tokyo' | sudo tee -a ${phpIni}
+      sudo service apache2 restart
+   fi
   # ## 設定
   # if [ ${ENV} = 'development' ]; then
   # fi
@@ -144,10 +155,12 @@ if [ $? -eq 127 ]; then
 else
   echo '---- already installed Composer ----'
 fi
-# PostgreSQL
+##################
+## PostgreSQL##
+################
 psql -V > /dev/null 2>&1
 if [ $? -eq 127 ]; then
-  echo '---- installing Composer ----';
+  echo '---- installing PostgreSQL ----';
   sudo apt-get install -y postgresql-9.5
   # Postgres 設定
   SettingFile=/etc/postgresql/9.5/main/pg_hba.conf
@@ -286,11 +299,11 @@ cd ~
 curl -L git.io/nodebrew | perl - setup
 # パスを通す
 echo 'export PATH=$HOME/.nodebrew/current/bin:$PATH' >> ~/.profile
-# .profile読み込み
-source ~/.profile
+# .profile読み込み  「.」はsourceコマンド
+. ~/.profile
 # nodeインストール
-nodebrew install-binary v6.11.1
-nodebrew use v6.11.1
+nodebrew install-binary v10.14.1
+nodebrew use v10.14.1
 # http://secon.hatenablog.com/entry/2017/09/24/021055
 npm i -D --no-bin-links --no-optional
 #
@@ -298,4 +311,3 @@ npm i -D --no-bin-links --no-optional
 #
 # Vue CLI 3
 npm install -g @vue/cli
-# npm install
