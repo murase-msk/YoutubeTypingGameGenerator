@@ -4,6 +4,7 @@ namespace src\Model\typingGame;
 
 use Goutte\Client;
 use Benlipp\SrtParser\Parser;
+use PhpParser\Node\Expr\Array_;
 
 /**
  * スクレイピングでYoutubeの情報を取得
@@ -49,7 +50,7 @@ class ScrappingTypeText
      * 取得できる言語リストを取得.
      * @return array 言語リストの配列([lang1, lang2 ,lang3....])
      */
-    public function getScriptLanguageList()
+    public function getScriptLanguageList(): array
     {
         // 字幕の言語（国名）を取得.
         $language = $this->crawler->filter('#show')->text();
@@ -65,7 +66,7 @@ class ScrappingTypeText
      * @param int $languageIndex ダウンロードページの上から何番目か
      * @return string ダウンロードURL
      */
-    public function getSrtUrl($languageIndex)
+    public function getSrtUrl(int $languageIndex)
     {
         // 字幕ファイル(srt)リンクのURL取得
         $subtitleUrl = $this->crawler
@@ -87,7 +88,8 @@ class ScrappingTypeText
      * @param string $yahooApiKey Yahoo APIのAPI Key
      * @return array 左のような形式で返す [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
      */
-    public function convertToArrayDataFromSrtSubUrl($downloadSubUrl, $yahooApiKey){
+    public function convertToArrayDataFromSrtSubUrl(string $downloadSubUrl, string $yahooApiKey): array
+    {
         $downloadFilePath = './subtitle.srt';
         $this->download($downloadSubUrl, $downloadFilePath);
         // srt処理.
@@ -146,7 +148,8 @@ class ScrappingTypeText
      * @param string $youtubeApiKey Youtube のAPI key
      * @return array
      */
-    public function getYoutubeData($youtubeApiKey){
+    public function getYoutubeData(string $youtubeApiKey): array
+    {
         $videoId = $this->videoCode;
         // YoutubeAPIのAPIkey
         $url = 'https://www.googleapis.com/youtube/v3/videos?id='.$videoId.'&key='.$youtubeApiKey.'&fields=items(id,snippet(channelTitle,title,thumbnails),statistics)&part=snippet,contentDetails,statistics';

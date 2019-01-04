@@ -25,8 +25,10 @@ class TypingGameModel
 
     /**
      * video ID からタイピングテキストを取得
+     * @param string $videoId
+     * @return array
      */
-    public function searchTypeText($videoId)
+    public function searchTypeText(string $videoId): array
     {
         $sql = 'select * from '.TypeTextTable::tableName.' where '.TypeTextTable::VIDEO_CODE.' = :videoId';
         $stmt = $this->con->prepare($sql);
@@ -39,8 +41,9 @@ class TypingGameModel
 
     /**
      * 動画情報を取得
+     * @return array
      */
-    public function getAllVideoList()
+    public function getAllVideoList(): array
     {
         $sql = 'select * from '.TypeTextTable::tableName;
         $stmt = $this->con->prepare($sql);
@@ -52,7 +55,7 @@ class TypingGameModel
     /**
      * すべてのVideoIdを取得する
      */
-    public function listVideoId()
+    public function listVideoId(): array
     {
         $sql = 'select '.TypeTextTable::VIDEO_CODE.' from '.TypeTextTable::tableName;
         $stmt = $this->con->prepare($sql);
@@ -62,8 +65,12 @@ class TypingGameModel
 
     }
 
-    // 情報の更新.
-    public function updateTypeInfo($videoId, $typeInfo)
+    /**
+     * 情報の更新.
+     * @param string $videoId
+     * @param string $typeInfo
+     */
+    public function updateTypeInfo(string $videoId, string $typeInfo): void
     {
         $nowData = date("Y-m-d H:i:s");
         $sql = 'update '.TypeTextTable::tableName
@@ -83,7 +90,7 @@ class TypingGameModel
      * データ挿入
      * @param $data [type_text=>..., video_code=>..., title=>..., thumbnail=>...,]
      */
-    public function insertData($data)
+    public function insertData(array $data): void
     {
         echo 'insert data' . PHP_EOL;
         $nowData = date("Y-m-d H:i:s");
@@ -110,7 +117,7 @@ class TypingGameModel
      * 動画データ削除
      * @param String $videoId
      */
-    public function delete($videoId)
+    public function delete(string $videoId): void
     {
         $sql = 'delete from '.TypeTextTable::tableName.' where '.TypeTextTable::VIDEO_CODE.' = :videoId';
         $stmt = $this->con->prepare($sql);

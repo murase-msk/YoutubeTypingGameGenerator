@@ -21,7 +21,7 @@ $app->group('', function () use ($app) {
     // コンテンツ1にコンテンツ登録.
     $app->post('/content1/register', 'Content1' . ':register')->setName('content1Register');
     $app->get('/content1/list', 'Content1' . ':list')->setName('contentsList');
-    // sampleMv
+    // タイピング画面
     $app->get('/content1/watch/{id}', 'Content1' . ':content')->setName('watch');
     // タイピング編集画面.
     $app->get('/content1/edit/{id}', 'Content1' . ':editView')->setName('edit');

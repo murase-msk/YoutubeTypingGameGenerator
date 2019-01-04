@@ -84,7 +84,7 @@
         },
         created() {
             // サーバからajaxでデータ取得.
-            let url = "http://localhost:8081/getTypeText?videoId="+this.videoId;
+            let url = "http://"+location.host+"/getTypeText?videoId="+this.videoId;
             fetch(url).then(function (response) {
                 return response.json();
             }).then(function (json) {

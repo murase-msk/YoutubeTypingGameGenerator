@@ -29,7 +29,7 @@ class ConvertTypeText
      * @return string
      *                ひらがなに変換した文字列（半角英数字はそのまま出力）
      */
-    public static function convertToHiragana($sentence, $appId)
+    public static function convertToHiragana(string $sentence, string $appId): string
     {
         $url = 'https://jlp.yahooapis.jp/FuriganaService/V1/furigana?appid='.$appId.'&sentence='.$sentence;
 

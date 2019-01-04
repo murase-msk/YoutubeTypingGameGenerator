@@ -8,14 +8,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-10 content" id="mainApp">
-                メインの表示
-                <br>
                 <input type="hidden" name="videoId" value="{{ videoId }}">
                 <div id="app"></div>
             </div>
             <div class="col-md-2 sidebar">
-                サイドバーの表示
-                <a href="{{ path_for('edit', {'active-header': 'edit', 'id': videoId }) }}">編集</a>
+                <br>
+                <a id="editText" class="btn btn-success col-md-12" href="{{ path_for('edit', {'active-header': 'edit', 'id': videoId }) }}">テキストを編集する</a>
             </div>
         </div>
     </div>

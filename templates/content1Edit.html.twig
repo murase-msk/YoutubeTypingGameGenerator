@@ -8,7 +8,6 @@
     <div class="container">
         <div class="row">
             <div class="col-md-10 content" id="mainApp">
-                メインの表示
                 <br>
                 <input type="hidden" name="videoId" value="{{ videoId }}">
                 <input id="csrf_name" type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
@@ -16,8 +15,8 @@
                 <div id="edit"></div>
             </div>
             <div class="col-md-2 sidebar">
-                サイドバーの表示
-
+                <br>
+                <a id="backType" class="btn btn-success col-md-12" href="{{ path_for('watch', {'active-header': 'watch', 'id': videoId }) }}">戻る</a>
             </div>
         </div>
     </div>
