@@ -6,9 +6,15 @@
 # vagrant init 名前
 # vagrant up
 
+# ./provision.sh production
 # ENV=production: 本番環境, ENV=development: 開発環境
 #ENV=production
-ENV=development
+#ENV=development
+ENV=$1
+if [ ${ENV} != 'development' -a ${ENV} != 'production' ]; then
+    echo "第一引数は[development]か[production]を指定してください"
+    exit 1
+fi
 
 # システム最新化
 sudo apt-get update
@@ -202,76 +208,77 @@ fi
 ##              ##
 ## selenium関係 ## dev環境のときのみ
 ##              ##
-cd ~/
-# openJDK
-IS_INSTALLED=`dpkg -l | grep openjdk-8-jdk`
-if [ -z "${IS_INSTALLED}" ];then
-  echo '---- installing OpenJDK ----';
-  sudo apt-get install -y openjdk-8-jdk
-  sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-  sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-  sudo apt-get update
-else
-  echo '---- already installed OpenJDK ----'
-fi
+if [ ${ENV} = 'development' ]; then
+    cd ~/
+    # openJDK
+    IS_INSTALLED=`dpkg -l | grep openjdk-8-jdk`
+    if [ -z "${IS_INSTALLED}" ];then
+      echo '---- installing OpenJDK ----';
+      sudo apt-get install -y openjdk-8-jdk
+      sudo wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+      sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+      sudo apt-get update
+    else
+      echo '---- already installed OpenJDK ----'
+    fi
 
-# google chrome
-IS_INSTALLED=`dpkg -l | grep google-chrome-stable`
-if [ -z "${IS_INSTALLED}" ];then
-  cd ~/
-  sudo apt-get install -y google-chrome-stable
-  # # google chrome ドライバ
-  wget -N https://chromedriver.storage.googleapis.com/2.42/chromedriver_linux64.zip
-  unzip chromedriver_linux64.zip
-  sudo rm chromedriver_linux64.zip
-  sudo mv chromedriver /usr/local/bin/
-  sudo chmod +x /usr/local/bin/chromedriver
-fi
+    # google chrome
+    IS_INSTALLED=`dpkg -l | grep google-chrome-stable`
+    if [ -z "${IS_INSTALLED}" ];then
+      cd ~/
+      sudo apt-get install -y google-chrome-stable
+      # # google chrome ドライバ
+      wget -N https://chromedriver.storage.googleapis.com/2.42/chromedriver_linux64.zip
+      unzip chromedriver_linux64.zip
+      sudo rm chromedriver_linux64.zip
+      sudo mv chromedriver /usr/local/bin/
+      sudo chmod +x /usr/local/bin/chromedriver
+    fi
 
-# selenium
-cd ~/
-SELENIUM_SERVER=selenium-server-standalone-3.9.1.jar
-if [ ! -e ${SELENIUM_SERVER} ]; then
-  sudo wget http://selenium-release.storage.googleapis.com/3.9/${SELENIUM_SERVER}
-  # Xvfb & 日本語フォント のインストール
-  sudo apt-get install -y xvfb
-  sudo apt-get install -y xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic
-  sudo apt-get install -y fonts-ipafont-gothic fonts-ipafont-mincho
-fi
+    # selenium
+    cd ~/
+    SELENIUM_SERVER=selenium-server-standalone-3.9.1.jar
+    if [ ! -e ${SELENIUM_SERVER} ]; then
+      sudo wget http://selenium-release.storage.googleapis.com/3.9/${SELENIUM_SERVER}
+      # Xvfb & 日本語フォント のインストール
+      sudo apt-get install -y xvfb
+      sudo apt-get install -y xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic
+      sudo apt-get install -y fonts-ipafont-gothic fonts-ipafont-mincho
+    fi
 
-# selenium起動コマンド sudo sh start_selenium.sh
-StartSelenium=start_selenium.sh
-cd ~/
-if [ ! -e ${StartSelenium} ]; then
-  touch ${StartSelenium}
-  echo '#!/bin/bash' >> ${StartSelenium}
-  echo '# Xvfbの起動' >> ${StartSelenium}
-  echo 'sudo Xvfb :1 -screen 0 1366x768x24 &' >> ${StartSelenium}
-  echo 'export DISPLAY=:1' >> ${StartSelenium}
-  echo '# seleniumの起動' >> ${StartSelenium}
-#  echo '# firefox用？' >> ${StartSelenium}
-#  echo "# java -Dwebdriver.gecko.driver=/usr/local/bin/geckodriver -jar ${SELENIUM_SERVER} &" >> ${StartSelenium}
-  echo '# chrome用' >> ${StartSelenium}
-  echo "java -jar ${SELENIUM_SERVER} &" >> ${StartSelenium}
-fi
-chmod 755 ${StartSelenium}
-# TODO:自動起動させる
+    # selenium起動コマンド sudo sh start_selenium.sh
+    StartSelenium=start_selenium.sh
+    cd ~/
+    if [ ! -e ${StartSelenium} ]; then
+      touch ${StartSelenium}
+      echo '#!/bin/bash' >> ${StartSelenium}
+      echo '# Xvfbの起動' >> ${StartSelenium}
+      echo 'sudo Xvfb :1 -screen 0 1366x768x24 &' >> ${StartSelenium}
+      echo 'export DISPLAY=:1' >> ${StartSelenium}
+      echo '# seleniumの起動' >> ${StartSelenium}
+    #  echo '# firefox用？' >> ${StartSelenium}
+    #  echo "# java -Dwebdriver.gecko.driver=/usr/local/bin/geckodriver -jar ${SELENIUM_SERVER} &" >> ${StartSelenium}
+      echo '# chrome用' >> ${StartSelenium}
+      echo "java -jar ${SELENIUM_SERVER} &" >> ${StartSelenium}
+    fi
+    chmod 755 ${StartSelenium}
+    # TODO:自動起動させる
 
-# selenium killコマンド sudo sh kill_selenium.sh
-KillSelenium=kill_selenium.sh
-cd ~/
-if [ ! -e ${KillSelenium} ]; then
-  touch ${KillSelenium}
-  echo '#!/bin/bash' >> ${KillSelenium}
-  echo '# Xvfb(仮想ディスプレイ)のkill' >> ${KillSelenium}
-  echo 'ps aux | grep [X]vfb | awk '\''{ print "sudo kill -9", $2 }'\'' | sh' >> ${KillSelenium}
-  echo '# seleniumのkill' >> ${KillSelenium}
-  echo 'ps aux | grep [s]elenium-server-standalone | awk '\''{ print "kill -9", $2 }'\'' | sh' >> ${KillSelenium}
-  echo '# geckodriverのkill' >> ${KillSelenium}
-  echo 'ps aux | grep [g]eckodriver | awk '\''{ print "kill -9", $2 }'\'' | sh' >> ${KillSelenium}
+    # selenium killコマンド sudo sh kill_selenium.sh
+    KillSelenium=kill_selenium.sh
+    cd ~/
+    if [ ! -e ${KillSelenium} ]; then
+      touch ${KillSelenium}
+      echo '#!/bin/bash' >> ${KillSelenium}
+      echo '# Xvfb(仮想ディスプレイ)のkill' >> ${KillSelenium}
+      echo 'ps aux | grep [X]vfb | awk '\''{ print "sudo kill -9", $2 }'\'' | sh' >> ${KillSelenium}
+      echo '# seleniumのkill' >> ${KillSelenium}
+      echo 'ps aux | grep [s]elenium-server-standalone | awk '\''{ print "kill -9", $2 }'\'' | sh' >> ${KillSelenium}
+      echo '# geckodriverのkill' >> ${KillSelenium}
+      echo 'ps aux | grep [g]eckodriver | awk '\''{ print "kill -9", $2 }'\'' | sh' >> ${KillSelenium}
+    fi
+    chmod 755 ${KillSelenium}
 fi
-chmod 755 ${KillSelenium}
-
 # アプリ初期設定
 #echo 'installing appication....'
 #cd /var/www/html/

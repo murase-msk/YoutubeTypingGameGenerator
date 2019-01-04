@@ -38,7 +38,7 @@ URL(未定)
 vagrantでUbuntu16.04を作成  
 cd /var/www/html  
 git clone https://github.com/murase-msk/YoutubeTypingGameGenerator.git  
-sh ./provision.sh  
+./provision.sh production   
 cd /var/www/html/YoutubeTypingGnameGenerator  
 composer install  
 // DB初期化  
