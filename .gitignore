@@ -1,6 +1,6 @@
-/vendor/
+/vendor/*
 /logs/*
 /.*
-/vue-project/node_modules/
+/vue-project/node_modules/*
 /public/phpinfo.php
 !.gitignore

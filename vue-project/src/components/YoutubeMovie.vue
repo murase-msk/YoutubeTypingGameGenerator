@@ -1,5 +1,6 @@
 <template>
     <div class="youtube-sec" ref="r">
+        test
         <!--<div id="blockPanel" style="position:absolute; left: 50%; transform: translateX(-50%);height:360px;width:640px; z-index:0;"></div>-->
         <youtube :videoId="videoId" :player-vars="playerVars" ref="youtube" @playing="playing" style="z-index:99;"></youtube>
         <br>
