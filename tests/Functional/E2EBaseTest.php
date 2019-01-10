@@ -18,7 +18,7 @@ class E2EBaseTest extends \PHPUnit\Framework\TestCase
     public static $driver;
     /** @var array */
     protected static $settings;
-    /**  */
+    /** PDO */
     protected static $pdo;
 
     /** ホスト名 */
@@ -29,7 +29,6 @@ class E2EBaseTest extends \PHPUnit\Framework\TestCase
         // 設定読み込み.
         $settings = require __DIR__ . '/../../src/settings.php';
         self::$settings = $settings['settings'];
-        self::$HOST_NAME = 'localhost';
 
         // DB接続.
         $db = self::$settings['db'];

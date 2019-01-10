@@ -54,7 +54,7 @@ foreach($channelList as $key => $channelId) {
         E2EGameTest::$videoId = $videoId;
         E2EGameTest::$testMovieUrl = 'https://www.youtube.com/watch?v=' . $videoId;
         E2EBaseTest::setUpBeforeClass();
-        E2EBaseTest::$HOST_NAME="ytgg.murase-msk.work";
+        //E2EBaseTest::$HOST_NAME="ytgg.murase-msk.work";
         $e2eGameTest = new E2EGameTest();
         $e2eGameTest->registerMovie();
         $e2eGameTest::$driver->close();
