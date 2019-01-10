@@ -8,6 +8,7 @@
 
 namespace Tests\Functional;
 
+use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use function PHPSTORM_META\map;
@@ -44,17 +45,29 @@ class E2EGameTest extends E2EBaseTest
     public function registerMovie()
     {
         // 指定URLへ遷移
-        self::$driver->get('http://'.self::$HOST_NAME.'/');
+        self::$driver->get('http://' . self::$HOST_NAME . '/');
 
         $element = self::$driver->findElement(WebDriverBy::name('youtube_url'));
         $element->sendKeys(self::$testMovieUrl);
         $element->submit();
-        self::$driver->wait(60);
-        // 登録後の画面へ遷移できたか.
-        $this->assertEquals('http://'.self::$HOST_NAME.'/content1/watch/'.self::$videoId, self::$driver->getCurrentURL());
+        try {
+            $driver = self::$driver;
+            self::$driver->wait(120, 1000)->until(
+                function() use($driver){
+                    // URLに"content1/watch"が含まれるようになるまで待つ(画面が遷移するまで待つ).
+                    return strpos($driver->getCurrentURL(), 'content1/watch') !== false ? true: false ;
+                });
+        }catch(WebDriverCurlException $e){
+            $e->getMessage();
+        }
+
+    // 登録後の画面へ遷移できたか.
+        $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
+        $this->assertRegExp($pattern, self::$driver->getCurrentURL());
         $element = self::$driver->findElement(WebDriverBy::id('type_start'));
         $this->assertContains('start', $element->getText());
         // TODO:登録しようとした動画が登録されていたらすでに登録されていますと表示して画面遷移する
+        //...
     }
 
     /**

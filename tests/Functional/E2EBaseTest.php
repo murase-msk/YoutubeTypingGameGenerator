@@ -15,14 +15,14 @@ use PDO;
 class E2EBaseTest extends \PHPUnit\Framework\TestCase
 {
     /** @var RemoteWebDriver */
-    protected static $driver;
+    public static $driver;
     /** @var array */
     protected static $settings;
     /**  */
     protected static $pdo;
 
     /** ホスト名 */
-    protected static $HOST_NAME = 'localhost';
+    public static $HOST_NAME = 'localhost';
 
     public static function setUpBeforeClass()
     {
@@ -40,7 +40,7 @@ class E2EBaseTest extends \PHPUnit\Framework\TestCase
         // selenium
         $host = 'http://localhost:4444/wd/hub';
         // chrome ドライバーの起動
-        self::$driver = RemoteWebDriver::create($host, DesiredCapabilities::chrome());
+        self::$driver = RemoteWebDriver::create($host, DesiredCapabilities::chrome(),120000,120000);
     }
 
     public static function tearDownAfterClass()
