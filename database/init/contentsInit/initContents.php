@@ -59,6 +59,6 @@ foreach($channelList as $key => $channelId) {
         $e2eGameTest->registerMovie();
         $e2eGameTest::$driver->close();
         // スリープ.
-        sleep(10);
+        sleep(3);
     }
 }
