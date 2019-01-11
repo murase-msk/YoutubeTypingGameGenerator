@@ -8,9 +8,10 @@
 
 namespace Tests\Functional;
 
+use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
-use function PHPSTORM_META\map;
+use FaceBook\Webdriver\Exception\NoSuchElementException;
 use src\Model\TypingGameModel;
 
 class E2EGameTest extends E2EBaseTest
@@ -37,31 +38,56 @@ class E2EGameTest extends E2EBaseTest
     }
 
     /**
-     *
-     * @test
-     * @testdox 動画の登録
+     * 動画の登録
      */
     public function registerMovie()
     {
         // 指定URLへ遷移
-        self::$driver->get('http://'.self::$HOST_NAME.'/');
+        self::$driver->get('http://' . self::$HOST_NAME . '/');
 
         $element = self::$driver->findElement(WebDriverBy::name('youtube_url'));
         $element->sendKeys(self::$testMovieUrl);
         $element->submit();
-        self::$driver->wait(60);
+        $driver = self::$driver;
+        self::$driver->wait(50, 1000)->until(
+            function() use($driver){
+                // URLに"content1/watch"が含まれるようになったら終わり(画面が遷移するまで待つ).
+                if(strpos($driver->getCurrentURL(), 'content1/watch') !== false) {
+                    return  true;
+                }
+                try {
+                    $driver->findElement(WebDriverBy::className('label-danger'));
+                    // 画面遷移せず且つ、警告が出ている・・・待たずに終了.
+                    //var_dump('警告出ています');
+                    return true;
+                }catch(NoSuchElementException $e){
+                    // 画面遷移せず且つ、警告が出ていない・・・待ち.
+                    //var_dump('警告出ていません'.PHP_EOL);
+                    return false;
+                }
+            });
+    }
+
+    /**
+     * @test
+     * @testdox 動画登録後の画面遷移ができているか
+     */
+    public function windowsTransitionAfterRegisterMovie(){
+        self::registerMovie();
         // 登録後の画面へ遷移できたか.
-        $this->assertEquals('http://'.self::$HOST_NAME.'/content1/watch/'.self::$videoId, self::$driver->getCurrentURL());
+        $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
+        $this->assertRegExp($pattern, self::$driver->getCurrentURL());
         $element = self::$driver->findElement(WebDriverBy::id('type_start'));
         $this->assertContains('start', $element->getText());
         // TODO:登録しようとした動画が登録されていたらすでに登録されていますと表示して画面遷移する
+        //...
     }
 
     /**
      *
      * @test
      * @testdox ゲーム開始
-     * @depends registerMovie
+     * @depends windowsTransitionAfterRegisterMovie
      */
     public function startTypeGame()
     {
@@ -99,7 +125,7 @@ class E2EGameTest extends E2EBaseTest
     /**
      * @test
      * @testdox 入力文字の編集
-     * @depends registerMovie
+     * @depends windowsTransitionAfterRegisterMovie
      */
     public function editTypeText(){
         self::$driver->get('http://'.self::$HOST_NAME.'/content1/watch/'.self::$videoId);
@@ -138,7 +164,7 @@ class E2EGameTest extends E2EBaseTest
     /**
      * @test
      * @testdox 登録動画一覧
-     * @depends registerMovie
+     * @depends windowsTransitionAfterRegisterMovie
      */
     public function listMovie(){
         self::$driver->get('http://'.self::$HOST_NAME.'/content1/list');

@@ -90,7 +90,7 @@ class ScrappingTypeText
      */
     public function convertToArrayDataFromSrtSubUrl(string $downloadSubUrl, string $yahooApiKey): array
     {
-        $downloadFilePath = './subtitle.srt';
+        $downloadFilePath = '/tmp/subtitle.srt';
         $this->download($downloadSubUrl, $downloadFilePath);
         // srt処理.
         $captionData = array();
@@ -111,6 +111,8 @@ class ScrappingTypeText
                     )
                 );
             }
+            // ファイル削除.
+            unlink($downloadFilePath);
         }catch(\Benlipp\SrtParser\Exceptions\FileNotFoundException $e){
             $e->getMessage();
         }

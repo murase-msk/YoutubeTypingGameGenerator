@@ -31,6 +31,8 @@ class ConvertTypeText
      */
     public static function convertToHiragana(string $sentence, string $appId): string
     {
+        // TODO: 一行ずつ変換するのではなく全部まとめて変換できるようにしたい　　
+        // TODO: 例「sentence1 ## sentence2 ## ....」→「converted1 ## converted2 ## ....」
         $url = 'https://jlp.yahooapis.jp/FuriganaService/V1/furigana?appid='.$appId.'&sentence='.$sentence;
 
         $xml = simplexml_load_file($url); //XML ファイルの URL を指定
