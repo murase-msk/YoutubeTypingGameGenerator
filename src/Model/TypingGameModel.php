@@ -40,15 +40,38 @@ class TypingGameModel
     }
 
     /**
-     * 動画情報を取得
-     * @return array
+     * 指定数の動画情報を取得
+     * @param int $page 何ページ目か
+     * @param int $movieNum 取得する数
+     * @return array 取得したデータの配列
      */
-    public function getAllVideoList(): array
+    public function getVideoList(int $page, int $movieNum): array
     {
-        $sql = 'select * from '.TypeTextTable::tableName;
+        $offsetNum = ($page - 1) * $movieNum;
+        $sql = 'select * from '.TypeTextTable::tableName.' limit :movieNum offset :offsetNum';
         $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':movieNum', $movieNum);
+        $stmt->bindParam(':offsetNum', $offsetNum);
         $stmt->execute();
         $result = $stmt->fetchAll();
+        return $result;
+    }
+
+    /**
+     * 次のページに動画があるか
+     * @param int $page
+     * @param int $movieNum
+     * @return bool 取得したデータの配列
+     */
+    public function isExistNextPageMovie(int $page, int $movieNum): bool
+    {
+        $nextPageOffsetNum = $page * $movieNum;
+        $sql = 'select * from '.TypeTextTable::tableName.' limit 1 offset :offsetNum';
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':offsetNum', $nextPageOffsetNum);
+        $stmt->execute();
+        $fetchResult = $stmt->fetch();
+        $result = !empty($fetchResult);
         return $result;
     }
 

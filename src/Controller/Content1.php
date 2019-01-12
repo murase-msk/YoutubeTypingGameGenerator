@@ -164,8 +164,14 @@ class Content1 extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         array $args)
     {
+        $page = $request->getQueryParams()['page'];
+        $page = empty($page) ? 1 : $page;
+        $movieNum=30;   // 取得する動画の数.
         // TODO: DBからリスト取得.
-        $videoList = $this->typingGameModel->getAllVideoList();
+        $videoList = $this->typingGameModel->getVideoList($page, $movieNum);
+
+        $prevPage = $page > 1 ? $page - 1 : false;
+        $nextPage = $this->typingGameModel->isExistNextPageMovie($page, $movieNum) ? $page + 1: false;
 
         // TODO: リンクを表示
         return $this->view->render($response, 'content1List.html.twig', [
@@ -173,7 +179,10 @@ class Content1 extends BaseController
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'videoList'=>$videoList
+            'videoList'=>$videoList,
+            'page'=>$page,
+            'prevPage'=>$prevPage,
+            'nextPage'=>$nextPage
         ]);
     }
 
