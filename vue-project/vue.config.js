@@ -9,8 +9,8 @@ module.exports = {
     filenameHashing: false,
     pages: {
         watch: {
-            entry: 'src/main.js', // エントリーポイント
-            template: './public/index.html', //3. index.htmlテンプレート
+            entry: 'src/watch.js', // エントリーポイント
+            template: './public/watch.html', //3. index.htmlテンプレート
             filename: 'watch.html' // outputFilename 省略可
         },
         edit:{
@@ -29,7 +29,7 @@ module.exports = {
         },
         historyApiFallback: {
             rewrites: [
-                { from: /\/index/, to: '/index.html' }, // index.html に飛ばす
+                { from: /\/watch/, to: '/watch.html' }, // watchwatch.html に飛ばす
                 { from: /\/edit/, to: '/edit.html' }
             ]
         }

@@ -2,5 +2,8 @@
 /logs/*
 /.*
 /vue-project/node_modules/*
-/public/phpinfo.php
+
+# masterにプッシュするときはvueDistをignoreしない
+/public/asset/vueDist/*
+
 !.gitignore
