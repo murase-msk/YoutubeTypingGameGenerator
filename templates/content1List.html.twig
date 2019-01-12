@@ -5,24 +5,36 @@
 {% block content %}
 
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-10 content" id="mainApp">
-                {% for video in videoList %}
-                    <div class="col-xs-6 col-md-4">
-                        <div class="thumbnail">
-                            <img src="{{ video['thumbnail'] }}">
-                            <div class="caption">
-                                <span class="movieTitle">{{ video['title'] }}</span>
-                                <a href="./watch/{{ video['video_code'] }}" class="thumbnailLink"></a>
+                <div class="row">
+                    <div class="col-md-12 moveList">
+                        {% for video in videoList %}
+                            <div class="col-xs-6 col-md-4">
+                                <div class="thumbnail">
+                                    <img src="{{ video['thumbnail'] }}">
+                                    <div class="caption line-2">
+                                        <span class="movieTitle">{{ video['title'] }}</span>
+                                        <a href="./watch/{{ video['video_code'] }}" class="thumbnailLink"></a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
-                <br>
+                    <div class="col-md-12 page" style="text-align:center;margin:50px;">
+                        <span style="font-size: x-large;">
+                            {#<a href="/content1/list?page={{ prevPage }}"> &lt; </a>#}
+                            <a {{prevPage == false ? "" : "href= /content1/list?page="}}{{ prevPage }}> &lt; </a>
+                            <span style="margin-left: 5em;margin-right:5em;">{{ page }}</span>
+                            {#<a href="/content1/list?page={{ nextPage }}"> &gt; </a>#}
+                            <a {{nextPage == false ? "" : "href= /content1/list?page="}}{{ nextPage }}> &gt; </a>
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="col-md-2 sidebar">
-                サイドバーの表示
+                サイドバー
 
             </div>
         </div>
