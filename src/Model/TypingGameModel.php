@@ -48,7 +48,7 @@ class TypingGameModel
     public function getVideoList(int $page, int $movieNum): array
     {
         $offsetNum = ($page - 1) * $movieNum;
-        $sql = 'select * from '.TypeTextTable::tableName.' limit :movieNum offset :offsetNum';
+        $sql = 'select * from '.TypeTextTable::tableName.' order by id desc limit :movieNum offset :offsetNum ' ;
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':movieNum', $movieNum);
         $stmt->bindParam(':offsetNum', $offsetNum);
@@ -66,7 +66,7 @@ class TypingGameModel
     public function isExistNextPageMovie(int $page, int $movieNum): bool
     {
         $nextPageOffsetNum = $page * $movieNum;
-        $sql = 'select * from '.TypeTextTable::tableName.' limit 1 offset :offsetNum';
+        $sql = 'select * from '.TypeTextTable::tableName.' order by id desc limit 1 offset :offsetNum';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':offsetNum', $nextPageOffsetNum);
         $stmt->execute();

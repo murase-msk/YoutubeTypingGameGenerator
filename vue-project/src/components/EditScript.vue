@@ -30,16 +30,16 @@
                                 {{ phraseData.index}}
                             </td>
                             <td class="start">
-                                <input v-model="phraseData.startTime" type="text" name="startTime" :value="phraseData.startTime" size="3">
+                                <input v-model="phraseData.startTime" type="text" name="startTime" size="3">
                             </td>
                             <td class="end">
-                                <input v-model="phraseData.endTime"  type="text" name="endTime" :value="phraseData.endTime" size="3">
+                                <input v-model="phraseData.endTime"  type="text" name="endTime" size="3">
                             </td>
                             <td class="displayText">
-                                <input v-model="phraseData.text"  type="text" name="typeText" :value="phraseData.text" size="40">
+                                <input v-model="phraseData.text"  type="text" name="typeText" size="40">
                             </td>
                             <td class="inputText">
-                                <input v-model="phraseData.Furigana"  type="text" name="typeText" :value="phraseData.Furigana" size="40">
+                                <input v-model="phraseData.Furigana"  type="text" name="typeText" size="40">
                             </td>
                         </tr>
                     </tbody>
@@ -79,12 +79,17 @@
         },
         computed: {
             player() {
+                console.log(this.$refs.youtube);
                 return this.$refs.youtube.player;
             }
         },
         created() {
             // サーバからajaxでデータ取得.
-            let url = location.protocol+"//"+location.host+"/getTypeText?videoId="+this.videoId;
+            // 8083はvue dev-serverのポート.
+            // 8081はapacheのGuest80番をHostにフォワーディングした先のポート.
+            // 開発環境(vue dev-server)の場合 port8083なのでajaxはport8081にする.
+            let port = location.port === 8083 ? 8081 : location.port;
+            let url = location.protocol + "//" + location.hostname +":"+port+ "/getTypeText?videoId=" + this.videoId;
             fetch(url).then(function (response) {
                 return response.json();
             }).then(function (json) {

@@ -96,9 +96,20 @@ class E2EGameTest extends E2EBaseTest
         // スタートボタンでスタート.
         $element = self::$driver->findElement(WebDriverBy::id('type_start'));
         $element->click();
-        self::$driver->wait(10)->until(
-            // タイピング用のテキストが表示されるまで待つ.
-            WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::className('restText'))
+        $driver = self::$driver;
+        self::$driver->wait(30)->until(
+            function() use($driver){
+                // タイピング用のテキストが表示されるまで待つ.
+                try {
+                    //WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::className('restText'))
+                    $driver->findElement(WebDriverBy::className('restText'));
+                    // restTextクラスがあれば待ち終了.
+                    return true;
+                }catch(NoSuchElementException $e){
+                    // restTextクラスがなければ待ち.
+                    return false;
+                }
+            }
         );
         // キャプチャ
 //        $file = __DIR__ . '/' . "_chrome.png";

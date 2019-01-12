@@ -83,7 +83,11 @@ export default {
   created() {
     console.log("created");
     // サーバからajaxでデータ取得.
-    let url = location.protocol+"//"+location.host+"/getTypeText?videoId="+this.videoId;
+      // 8083はvue dev-serverのポート.
+      // 8081はapacheのGuest80番をHostにフォワーディングした先のポート.
+      // 開発環境(vue dev-server)の場合 port8083なのでajaxはport8081にする.
+      let port = location.port === 8083 ? 8081 : location.port;
+      let url = location.protocol+"//"+location.hostname+":"+port+"/getTypeText?videoId="+this.videoId;
     fetch(url).then(function (response) {
       return response.json();
     }).then(function (json) {
@@ -100,9 +104,11 @@ export default {
       if(this.movieTime === 0) {
         this.startingType();
       }
+      console.log("1  " + document.activeElement);
       // フォーカス変更. TODO: できてない
       console.log(document.getElementsByTagName('body')[0]);
       this.$nextTick(() => document.getElementsByTagName('body')[0].focus())
+      console.log("2 "+document.activeElement);
     },
     // タイピング開始.
     startType(event) {
