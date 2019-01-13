@@ -75,6 +75,23 @@ class TypingGameModel
         return $result;
     }
 
+
+    /**
+     * 指定されたvideoIdが登録されているか
+     * @param int $videoId
+     * @return bool
+     */
+    public function isExistRegisteredVideo(string $videoId): bool
+    {
+        $sql = 'select * from '.TypeTextTable::tableName.' where video_code=:video_code';
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':video_code', $videoId);
+        $stmt->execute();
+        $fetchResult = $stmt->fetch();
+        $result = !empty($fetchResult);
+        return $result;
+    }
+
     /**
      * すべてのVideoIdを取得する
      */

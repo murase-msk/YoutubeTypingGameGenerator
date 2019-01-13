@@ -19,13 +19,11 @@ class ScrappingTypeText
     public $crawler;
     public $videoCode;
 
-    function __construct($url)
+    function __construct($videoId)
     {
-        $this->youtubeUrl = $url;
-        $this->crawler = $this->getCrawlerResult($url);
-        $pattern = '/v=(.*?)(&|$)/';
-        preg_match($pattern, $this->youtubeUrl, $matches);
-        $this->videoCode = $matches[1];
+        $this->youtubeUrl = 'https://www.youtube.com/watch?v='.$videoId;
+        $this->crawler = $this->getCrawlerResult($this->youtubeUrl);
+        $this->videoCode = $videoId;
     }
 
     // クローラーの結果.

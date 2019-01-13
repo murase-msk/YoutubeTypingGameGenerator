@@ -66,6 +66,8 @@ class E2EGameTest extends E2EBaseTest
                     return false;
                 }
             });
+
+
     }
 
     /**
@@ -79,8 +81,26 @@ class E2EGameTest extends E2EBaseTest
         $this->assertRegExp($pattern, self::$driver->getCurrentURL());
         $element = self::$driver->findElement(WebDriverBy::id('type_start'));
         $this->assertContains('start', $element->getText());
-        // TODO:登録しようとした動画が登録されていたらすでに登録されていますと表示して画面遷移する
-        //...
+    }
+
+    // TODO: 登録できない動画であればメッセージを表示する.
+
+    /**
+     * @test
+     * @testdox すでに登録された動画を入れると何もせずリダイレクト
+     * @depends windowsTransitionAfterRegisterMovie
+     */
+    public function redirectRegisteredVideo(){
+        // 画面遷移するが、DBに登録された数は変わらない.
+        $typingGameModel = new TypingGameModel(self::$pdo);
+        $initVideoNum=count($typingGameModel->listVideoId());
+        self::registerMovie();
+        $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
+        $this->assertRegExp($pattern, self::$driver->getCurrentURL());
+        $element = self::$driver->findElement(WebDriverBy::id('type_start'));
+        $this->assertContains('start', $element->getText());
+        $afterVideoNum=count($typingGameModel->listVideoId());
+        $this->assertEquals(true, $initVideoNum===$afterVideoNum);
     }
 
     /**

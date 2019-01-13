@@ -31,16 +31,18 @@ class ScrapingTypeTextTest extends TestCase
     {
         // 設定読み込み.
         self::$settings = require __DIR__ . '/../../src/settings.php';
-        $youtubeUrl = 'https://www.youtube.com/watch?v=sr--GVIoluU';
-        self::initScrappingTypeText($youtubeUrl);
+        $videoId='sr--GVIoluU';
+        //$youtubeUrl = 'https://www.youtube.com/watch?v='.$videoId;
+
+        self::initScrappingTypeText($videoId);
     }
 
     /**
      * 初期設定
-     * @param $youtubeUrl
+     * @param $videoId
      */
-    private static function initScrappingTypeText($youtubeUrl){
-        self::$scrappingTypeText = new ScrappingTypeText($youtubeUrl);
+    private static function initScrappingTypeText($videoId){
+        self::$scrappingTypeText = new ScrappingTypeText($videoId);
     }
 
     /**
