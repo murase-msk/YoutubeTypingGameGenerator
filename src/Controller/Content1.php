@@ -9,6 +9,7 @@
 namespace src\Controller;
 use Slim\Http\Response;
 use Slim\Http\Request;
+use src\Model\typingGame\ValidationVideo;
 use src\Model\TypingGameModel;
 use src\Model\typingGame\ConvertTypeText;
 use src\Model\typingGame\ScrappingTypeText;
@@ -100,43 +101,42 @@ class Content1 extends BaseController
     {
         $settings = require __DIR__ . '/../settings.php';
         $youtubeUrl = $request->getParsedBody()['youtube_url'];
-        // youtubeの動画URLであるかチェック
-        $isMatch = preg_match('/^(http|https):\/\/(www\.youtube\.com\/watch\?v=)([A-Z0-9_-]+)(&.*)?/i', $youtubeUrl, $matchResult);
-        if($isMatch !== 1){
+
+        $validationVideo = new ValidationVideo($youtubeUrl);
+        $videoId = $validationVideo->videoId;
+        $scrappingTypeText = new ScrappingTypeText($videoId);
+        // TODO: クライアントの日本語と英語選択を反映する
+        $result = $validationVideo->validateUrl(
+            $this->typingGameModel,
+            'Japanese',
+            $scrappingTypeText
+        );
+        // 何らかの異常があり、生成できない.
+        if($result['result'] === 'error'){
             // エラーを返す(URLが正しくない).
-            $this->flash->addMessage('error', 'URLが正しくありません');
+            $this->flash->addMessage('error', $result['msg']);
             $uri = $request->getUri()->withPath($this->router->pathFor('index'));
             return $response->withRedirect((string)$uri, 301);
         }
-        // TODO:すでに登録されている動画であるか.
-        if(true){
-
+        // 生成できるURLであった.
+        else if($result['result'] === 'ok') {
+            $downloadSubUrl = $scrappingTypeText->getSrtUrl($validationVideo->langListIndex);
+            $captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
+            // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
+            // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
+            $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
+            // データベース追加.
+            $this->typingGameModel->insertData(
+                [
+                    'type_text' => json_encode($captionData),
+                    'video_code' => $scrappingTypeText->videoCode,
+                    'title' => $youtubeData['title'],
+                    'thumbnail' => $youtubeData['thumbnail']
+                ]);
         }
-        $videoId = $matchResult[3];
-        // videoIdから字幕情報タイピング情報取得.
-        $scrappingTypeText = new ScrappingTypeText($youtubeUrl);
-        $languageList = $scrappingTypeText->getScriptLanguageList();
-        $langListIndex = array_search('Japanese', $languageList);
-        if($langListIndex === false){
-            // 対応する字幕が見つからなかった。.
-            $this->flash->addMessage('error', '対応する字幕データがありません');
-            $uri = $request->getUri()->withPath($this->router->pathFor('index'));
-            return $response->withRedirect((string)$uri, 301);
+        // すでに登録されている.
+        else if($result['result'] === 'redirect'){
         }
-        $downloadSubUrl = $scrappingTypeText->getSrtUrl($langListIndex);
-        $captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
-        // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
-        // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
-        $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
-        // データベース追加.
-        $this->typingGameModel->insertData(
-            [
-                'type_text'=>json_encode($captionData),
-                'video_code'=>$scrappingTypeText->videoCode,
-                'title' =>$youtubeData['title'],
-                'thumbnail'=>$youtubeData['thumbnail']
-            ]);
-
         // リダイレクト.
         $uri = $request->getUri()->withPath($this->router->pathFor('watch', [
             'activeHeader' => 'watch',
