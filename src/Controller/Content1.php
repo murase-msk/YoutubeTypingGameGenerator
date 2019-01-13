@@ -143,7 +143,7 @@ class Content1 extends BaseController
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'id'=>$videoId,
+            'id'=>$videoId,// リダイレクトでURLパラメータに使う.
             'videoId'=>$videoId
         ]));
         return $response->withRedirect((string)$uri, 301);
@@ -264,7 +264,7 @@ class Content1 extends BaseController
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'id'=>$videoId,
+            'id'=>$videoId,// リダイレクトでURLパラメータに使う.
             'videoId'=>$videoId
         ]));
         return $response->withRedirect((string)$uri, 301);

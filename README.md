@@ -22,7 +22,7 @@ https://ytgg.murase-msk.work
       - slim-csrf
       - slim-flash
     - Goutte (Web Crawler)
-  - Javascript ES2015(ES6) (babel transpiled)
+  - Javascript ES2015(ES6)  
     - Vue2.5
       - Vue CLI3
       - vue-youtube
@@ -31,7 +31,7 @@ https://ytgg.murase-msk.work
     - Yahoo API (https://developer.yahoo.co.jp/webapi/jlp/furigana/v1/furigana.html)
     - Youtube Data API(https://developers.google.com/youtube/v3/getting-started)
   - Apache2.4
-  - PostgreSQL 9.x
+  - PostgreSQL 9.5
 
 ## 環境構築方法
 //環境変数を設定する  
@@ -59,14 +59,12 @@ sudo vim /etc/postgresql/9.5/main/postgresql.conf
 // ssl有効化.  
 sudo a2enmod ssl   
 service apache2 restart  
-
 sudo vi /etc/apache2/sites-available/default-ssl.conf  
         ServerAdmin xxx@yyy.zzz <- 変更  
         ServerName xxx.yyy.zzz <- 追加  
         DocumentRoot /var/www/html/YoutubeTypingGameGenerator/public  
 sudo a2ensite default-ssl  
 service apache2 reload  
-
 //Lets EncryptでSSL証明書取得  
 sudo add-apt-repository ppa:certbot/certbot  
 sudo apt-get update  
@@ -79,5 +77,6 @@ sudo letsencrypt run --apache
 ## testing
 cd ~  
 ./start_selenium.sh  
+cd /var/www/html/YoutubeTypingGameGenerator  
 composer test
 

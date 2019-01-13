@@ -1,7 +1,6 @@
 <?php
 
 
-
 // Routes
 
 // setName()で名前を割当ることで、PathFor(name,[index, value])でURLを生成できる
@@ -40,8 +39,8 @@ $app->group('', function () use ($app) {
 
     // 登録.
     $app->post('/registerAccount', 'AccountController' . ':registerAccount')
-        ->setName('registerAccount');
-        //->add(new \DavidePastore\Slim\Validation\Validation($validators));
+        ->setName('registerAccount')
+        ->add(new \DavidePastore\Slim\Validation\Validation($GLOBALS['validators']));
 
 })->add($container->get('csrf'));
 

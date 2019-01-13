@@ -88,7 +88,7 @@
             // 8083はvue dev-serverのポート.
             // 8081はapacheのGuest80番をHostにフォワーディングした先のポート.
             // 開発環境(vue dev-server)の場合 port8083なのでajaxはport8081にする.
-            let port = location.port === 8083 ? 8081 : location.port;
+            let port = location.port === "8083" ? "8081" : location.port;
             let url = location.protocol + "//" + location.hostname +":"+port+ "/getTypeText?videoId=" + this.videoId;
             fetch(url).then(function (response) {
                 return response.json();
