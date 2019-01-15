@@ -36,11 +36,19 @@
             // 8081はapacheのGuest80番をHostにフォワーディングした先のポート.
             // 開発環境(vue dev-server)の場合 port8083なのでajaxはport8081にする.
             this.port = location.port === "8083" ? "8081" : location.port;
-            let url = location.protocol+"//"+location.hostname+":"+this.port+"/isBookmark";
-            fetch(url).then(function (response) {
+            const method ="POST";
+            const body = JSON.stringify({"videoId":this.videoId});
+            const headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            };
+            let url = location.protocol+"//"+location.hostname+":"+this.port+"/bookmark/isBookmark";
+            fetch(url,{method, headers, body}).then(function (response) {
                 return response.json();
             }).then(function (json) {
-                this.isBookmark = json.isBookmark;
+                if(json.noError === true) {
+                    this.isBookmark = json.isBookmark;
+                }
             }.bind(this));
         },
         methods:{
@@ -48,9 +56,9 @@
             changeBookmark: function(event){
                 console.log("bookmark");
                 // TODO:ajaxで処理する
-                const url = location.protocol+"//"+location.hostname+":"+this.port+"/changeBookmark";
+                const url = location.protocol+"//"+location.hostname+":"+this.port+"/bookmark/changeBookmark";
                 const method ="POST";
-                const body = JSON.stringify({"isBookmark": this.isBookmark});
+                const body = JSON.stringify({"isBookmark": this.isBookmark, "videoId":this.videoId});
                 const headers = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'

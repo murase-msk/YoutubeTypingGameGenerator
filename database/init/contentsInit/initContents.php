@@ -12,6 +12,10 @@ use Tests\Functional\E2EBaseTest;
 // ./start_selenium           //
 ////////////////////////////////
 
+// 下記チャンネルID内の動画を自動で登録する.
+// avex, AKB, hosino_gen
+
+
 require __DIR__ . '/../../../vendor/autoload.php';
 
 $settings = require __DIR__ . '/../../../src/settings.php';
