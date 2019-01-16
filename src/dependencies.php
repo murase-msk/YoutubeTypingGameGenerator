@@ -31,7 +31,7 @@ $container['accountAuth'] = function ($c) {
 $container['csrf'] = function ($c) {
     $guard = new \Slim\Csrf\Guard;
     // トークン永続化.
-    //$guard->setPersistentTokenMode(true);
+    $guard->setPersistentTokenMode(true);
     // CSRFチェック失敗時.
 //    $guard->setFailureCallable(function ($request, $response, $next) {
 //        $request = $request->withAttribute("csrf_status", false);
@@ -87,6 +87,10 @@ $container['TypingGameModel'] = function ($container) {
     $typingGameModel = new \src\Model\TypingGameModel($container['db']);
     return $typingGameModel;
 };
+$container['BookmarkModel'] = function ($container) {
+    $typingGameModel = new \src\Model\BookmarkModel($container['db']);
+    return $typingGameModel;
+};
 
 //
 // Controller
@@ -108,6 +112,17 @@ $container['Content1'] = function ($container) {
     $typingGameModel = $container->get('TypingGameModel');
     return new \src\Controller\Content1($view, $router, $csrf, $flash, $session, $typingGameModel);
 };
+
+$container['BookmarkController'] = function ($container) {
+    $view = $container->get('view');
+    $router = $container->get('router');
+    $csrf = $container->get('csrf');
+    $flash = $container->get('flash');
+    $session = $container->get('session');
+    $bookmarkModel = $container->get('BookmarkModel');
+    return new \src\Controller\BookmarkController($view, $router, $csrf, $flash, $session, $bookmarkModel);
+};
+
 $container['Content2'] = function ($container) {
     $view = $container->get('view');
     $session = $container->get('session');

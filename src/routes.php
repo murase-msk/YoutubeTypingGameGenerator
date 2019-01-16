@@ -9,11 +9,18 @@ $app->group('', function () use ($app) {
     // トップページ.
     $app->get('/', 'MainApp' . ':index')->setName('index');
 
-    // ログイン・ログアウト.
+    // ログイン.
     $app->get('/signIn', 'AccountController' . ':signIn')->setName('signIn');
+    // 新規登録.
     $app->get('/signUp', 'AccountController' . ':signUp')->setName('signUp');
+    // ログアウト.
     $app->get('/logout', 'AccountController' . ':logout')->setName('logout');
-    //$app->get('/signUpTest','AccountController' . ':test')->setName('accountTest');
+    // 認証.
+    $app->post('/auth', 'AccountController' . ':auth')->setName('auth');
+    // 登録処理.
+    $app->post('/registerAccount', 'AccountController' . ':registerAccount')
+        ->setName('registerAccount')
+        ->add(new \DavidePastore\Slim\Validation\Validation($GLOBALS['validators']));
 
     // コンテンツ1に新規登録.
     $app->get('/content1/new', 'Content1' . ':new')->setName('content1New');
@@ -28,19 +35,17 @@ $app->group('', function () use ($app) {
     $app->post('/content1/saveContent', 'Content1' . ':saveContent')->setName('saveContent');
     // タイピングテキストを取得(web API).
     $app->get('/getTypeText', 'Content1' . ':getTypeTextApi');
-
     // コンテンツ1.
     $app->get('/content1', 'Content1' . ':index')->setName('content1');
+
+    // ブックマークしているかどうか.
+    $app->post('/bookmark/isBookmark','BookmarkController'.':isBookmark')->setName('isBookmark');
+    // ブックマーク状態を変える.
+    $app->post('/bookmark/changeBookmark','BookmarkController'.':changeBookmark')->setName('changeBookmark');
+
     // コンテンツ2.
     $app->get('/content2', 'Content2' . ':index')->setName('content2');
 
-    // 認証.
-    $app->post('/auth', 'AccountController' . ':auth')->setName('auth');
-
-    // 登録.
-    $app->post('/registerAccount', 'AccountController' . ':registerAccount')
-        ->setName('registerAccount')
-        ->add(new \DavidePastore\Slim\Validation\Validation($GLOBALS['validators']));
 
 })->add($container->get('csrf'));
 
