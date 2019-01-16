@@ -43,9 +43,9 @@ class BookmarkModel
         $account = AccountTable::tableName;
         $typeText = TypeTextTable::tableName;
         $sql = "select count(*) from ${bookmark}"
-            ." inner join ${account} on ${bookmark}.".BookmarkTable::ID." = ${account}.".AccountTable::ID
+            ." inner join ${account} on ${bookmark}.".BookmarkTable::ACCOUNT_ID." = ${account}.".AccountTable::ID
             ." and ${account}.".AccountTable::ACCOUNT_NAME." = :accountName "
-            ." inner join ${typeText} on ${bookmark}.".BookmarkTable::ID." = ${typeText}.".TypeTextTable::ID
+            ." inner join ${typeText} on ${bookmark}.".BookmarkTable::TYPE_TEXT_ID." = ${typeText}.".TypeTextTable::ID
             ." and ${typeText}.".TypeTextTable::VIDEO_CODE." = :videoId ";
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':accountName', $accountName);

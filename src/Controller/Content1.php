@@ -202,11 +202,11 @@ class Content1 extends BaseController
     {
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
-
         return $this->view->render($response, 'content1Content.html.twig', [
             'activeHeader' => 'watch',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
             'videoId'=>$videoId
         ]);

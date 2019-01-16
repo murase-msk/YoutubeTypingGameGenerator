@@ -31,7 +31,7 @@ $container['accountAuth'] = function ($c) {
 $container['csrf'] = function ($c) {
     $guard = new \Slim\Csrf\Guard;
     // トークン永続化.
-    //$guard->setPersistentTokenMode(true);
+    $guard->setPersistentTokenMode(true);
     // CSRFチェック失敗時.
 //    $guard->setFailureCallable(function ($request, $response, $next) {
 //        $request = $request->withAttribute("csrf_status", false);

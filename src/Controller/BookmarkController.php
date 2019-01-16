@@ -55,11 +55,11 @@ class BookmarkController extends BaseController
     {
         if($this->session->get('isAuth')){
             $accountName = $this->session->get('account');
-            $videoId = $account = $request->getParsedBody()['videoId'];
+            $videoId = $request->getParsedBody()['videoId'];
             $isBookmark = $this->bookmarkModel->isBookmark($accountName, $videoId);
-            return $response->withJson("{noError:true, isBookmark:${isBookmark}");
+            return $response->withJson(["noError"=>true, "isBookmark"=>$isBookmark]);
         }
-        return $response->withJson("{noError:false}");
+        return $response->withJson(["noError"=>false]);
     }
 
     /**
@@ -88,8 +88,8 @@ class BookmarkController extends BaseController
                 // ブックマーク登録.
                 $this->bookmarkModel->registerBookmark($accountName, $videoId);
             }
-            return $response->withJson("{noError:true}");
+            return $response->withJson(["noError"=>true, "isBookmark"=>!$isBookmark]);
         }
-        return $response->withJson("{noError:false}");
+        return $response->withJson(["noError"=>false]);
     }
 }

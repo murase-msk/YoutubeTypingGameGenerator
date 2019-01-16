@@ -39,9 +39,9 @@ $app->group('', function () use ($app) {
     $app->get('/content1', 'Content1' . ':index')->setName('content1');
 
     // ブックマークしているかどうか.
-    $app->post('/bookmark/isBookmark','Bookmark'.':isBookmark')->setName('isBookmark');
+    $app->post('/bookmark/isBookmark','BookmarkController'.':isBookmark')->setName('isBookmark');
     // ブックマーク状態を変える.
-    $app->post('/bookmark/changeBookmark','Bookmark'.':changeBookmark')->setName('changeBookmark');
+    $app->post('/bookmark/changeBookmark','BookmarkController'.':changeBookmark')->setName('changeBookmark');
 
     // コンテンツ2.
     $app->get('/content2', 'Content2' . ':index')->setName('content2');

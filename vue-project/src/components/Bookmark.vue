@@ -22,6 +22,8 @@
             videoId: String,
             // ログインしているか.
             isAuth: Boolean,
+            csrf_name: String,
+            csrf_value: String,
         },
         data(){
             return {
@@ -36,12 +38,13 @@
             // 8081はapacheのGuest80番をHostにフォワーディングした先のポート.
             // 開発環境(vue dev-server)の場合 port8083なのでajaxはport8081にする.
             this.port = location.port === "8083" ? "8081" : location.port;
-            const method ="POST";
-            const body = JSON.stringify({"videoId":this.videoId});
-            const headers = {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            };
+
+            const obj = {"videoId":this.videoId, "csrf_name":this.csrf_name, "csrf_value":this.csrf_value};
+            const method = "POST";
+            //const body = Object.keys(obj).reduce((o,key)=>(o.set(key, obj[key])), new FormData());
+            const body = JSON.stringify(obj);
+            const headers = {"Content-type" : "application/json"};
+            // post (multipart/form-data)
             let url = location.protocol+"//"+location.hostname+":"+this.port+"/bookmark/isBookmark";
             fetch(url,{method, headers, body}).then(function (response) {
                 return response.json();
@@ -49,6 +52,7 @@
                 if(json.noError === true) {
                     this.isBookmark = json.isBookmark;
                 }
+
             }.bind(this));
         },
         methods:{
@@ -56,18 +60,18 @@
             changeBookmark: function(event){
                 console.log("bookmark");
                 // TODO:ajaxで処理する
+                const obj = {"videoId":this.videoId, "isBookmark":this.isBookmark, "csrf_name":this.csrf_name, "csrf_value":this.csrf_value};
+                const method = "POST";
+                //const body = Object.keys(obj).reduce((o,key)=>(o.set(key, obj[key])), new FormData());
+                const body = JSON.stringify(obj);
+                const headers = {"Content-type" : "application/json"};
+                // post (multipart/form-data)
                 const url = location.protocol+"//"+location.hostname+":"+this.port+"/bookmark/changeBookmark";
-                const method ="POST";
-                const body = JSON.stringify({"isBookmark": this.isBookmark, "videoId":this.videoId});
-                const headers = {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                };
                 fetch(url,{method, headers, body}).then(function (response) {
                     return response.json();
                 }).then(function (json) {
                     if(json.noError === true) {
-                        this.isBookmarked = json.bookmarkStatus;
+                        this.isBookmark = json.isBookmark;
                     }
                }.bind(this));
             },
