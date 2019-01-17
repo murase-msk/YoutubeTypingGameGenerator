@@ -167,13 +167,11 @@ class Content1 extends BaseController
         $page = $request->getQueryParams()['page'];
         $page = empty($page) ? 1 : $page;
         $movieNum=30;   // 取得する動画の数.
-        // TODO: DBからリスト取得.
         $videoList = $this->typingGameModel->getVideoList($page, $movieNum);
 
         $prevPage = $page > 1 ? $page - 1 : false;
         $nextPage = $this->typingGameModel->isExistNextPageMovie($page, $movieNum) ? $page + 1: false;
 
-        // TODO: リンクを表示
         return $this->view->render($response, 'content1List.html.twig', [
             'activeHeader' => 'content1',
             'isAuth' => $this->session->get('isAuth'),
@@ -202,13 +200,20 @@ class Content1 extends BaseController
     {
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
+        // ブックマークしているか確認.
+        if($this->session->get('isAuth')) {
+            $isBookmark = $GLOBALS['container']->get('BookmarkModel')->isBookmark($this->session->get('account'), $videoId);
+        }else{
+            $isBookmark = false;
+        }
         return $this->view->render($response, 'content1Content.html.twig', [
             'activeHeader' => 'watch',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
             'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
-            'videoId'=>$videoId
+            'videoId'=>$videoId,
+            'isBookmark'=>$isBookmark
         ]);
     }
 
