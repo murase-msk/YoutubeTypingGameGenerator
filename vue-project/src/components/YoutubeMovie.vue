@@ -3,7 +3,6 @@
         <!--<div id="blockPanel" style="position:absolute; left: 50%; transform: translateX(-50%);height:360px;width:640px; z-index:0;"></div>-->
         <youtube :videoId="videoId" :player-vars="playerVars" ref="youtube" @playing="playing" style="z-index:99;"></youtube>
         <br>
-        <button id="type_start" class="btn btn-secondary" @click="startType">start</button>
         <div>{{displayText}}</div>
         <div id="inputPhrase">
             <span id="inputtedPhrase">
@@ -101,14 +100,11 @@ export default {
   methods: {
     // 再生ボタンを押したときの実行される(vue-youtube).
     playing() {
-      if(this.movieTime === 0) {
+        // フォーカス外す
+        document.activeElement.blur();
+        if(this.movieTime === 0) {
         this.startingType();
       }
-      console.log("1  " + document.activeElement);
-      // フォーカス変更. TODO: できてない
-      console.log(document.getElementsByTagName('body')[0]);
-      this.$nextTick(() => document.getElementsByTagName('body')[0].focus())
-      console.log("2 "+document.activeElement);
     },
     // タイピング開始.
     startType(event) {
