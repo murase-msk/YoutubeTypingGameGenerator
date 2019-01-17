@@ -29,13 +29,13 @@ export default {
   },
   data() {
     return {
-      // vue-youtubeの設定
+      // vue-youtubeの設定(https://developers.google.com/youtube/player_parameters?hl=ja)
       playerVars:{
-        controls: 0,
-        disablekb: 1,
-        fs: 0,
-        modestbranding: 1,
-        showinfo: 0,
+        controls: 0,//プレーヤーコントロールは表示しない.
+        disablekb: 1,// プレイヤーのキーボード操作禁止.
+        fs: 0,  // 全画面ボタン表示しない.
+        modestbranding: 1,//コントロールバーにYoutubeロゴを表示しない.
+        showinfo: 0,//ユーザ情報を表示しない.
       },
       // すべてのテキスト.{startTime:..., endEtime:..., hurigana:..., text:...}
       allPhraseData: "",
