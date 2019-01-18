@@ -59,22 +59,19 @@ class TypingGameModel
 
     /**
      * 次のページに動画があるか
-     * @param int $page
-     * @param int $movieNum
+     * @param int $page 何ページ目か
+     * @param int $movieNum 取得する数
      * @return bool 取得したデータの配列
      */
     public function isExistNextPageMovie(int $page, int $movieNum): bool
     {
-        $nextPageOffsetNum = $page * $movieNum;
-        $sql = 'select * from '.TypeTextTable::tableName.' order by id desc limit 1 offset :offsetNum';
-        $stmt = $this->con->prepare($sql);
-        $stmt->bindParam(':offsetNum', $nextPageOffsetNum);
-        $stmt->execute();
-        $fetchResult = $stmt->fetch();
-        $result = !empty($fetchResult);
-        return $result;
+        $totalVideoNum = $this->getTotalVideoNum();
+        if($page*$movieNum < $totalVideoNum){
+            return true;
+        }else{
+            return false;
+        }
     }
-
 
     /**
      * 指定されたvideoIdが登録されているか
@@ -93,14 +90,14 @@ class TypingGameModel
     }
 
     /**
-     * すべてのVideoIdを取得する
+     * 動画数を取得する
      */
-    public function listVideoId(): array
+    public function getTotalVideoNum(): int
     {
-        $sql = 'select '.TypeTextTable::VIDEO_CODE.' from '.TypeTextTable::tableName;
+        $sql = 'select count(*) from '.TypeTextTable::tableName;
         $stmt = $this->con->prepare($sql);
         $stmt->execute();
-        $result = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        $result = $stmt->fetchColumn(0);
         return $result;
 
     }
