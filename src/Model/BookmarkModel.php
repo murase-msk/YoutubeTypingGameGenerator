@@ -56,6 +56,72 @@ class BookmarkModel
     }
 
     /**
+     * ブックマーク済みの動画を取得する
+     * @param string $accountName
+     * @param $page
+     * @param $movieNum
+     * @return array
+     */
+    public function getBookmarkedVideoList(string $accountName, $page, $movieNum): array
+    {
+        $offsetNum = ($page - 1) * $movieNum;
+        $bookmark = BookmarkTable::tableName;
+        $account = AccountTable::tableName;
+        $typeText = TypeTextTable::tableName;
+        $sql = "select * from ${bookmark}"
+            ." inner join ${account} on ${bookmark}.".BookmarkTable::ACCOUNT_ID." = ${account}.".AccountTable::ID
+            ." and ${account}.".AccountTable::ACCOUNT_NAME." = :accountName "
+            ." inner join ${typeText} on ${bookmark}.".BookmarkTable::TYPE_TEXT_ID." = ${typeText}.".TypeTextTable::ID
+            ." order by ${$bookmark}.".BookmarkTable::ID." desc limit :movieNum offset :offsetNum";
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':accountName', $accountName);
+        $stmt->bindParam(':movieNum', $movieNum);
+        $stmt->bindParam(':offsetNum', $offsetNum);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        return $result;
+    }
+
+    /**
+     * 次のページに動画があるか
+     * @param int $page 何ページ目か
+     * @param int $movieNum 取得する数
+     * @return bool 取得したデータの配列
+     * @param string $accountName
+     */
+    public function isExistNextPageMovie(int $page, int $movieNum, string $accountName): bool
+    {
+        $totalVideoNum = $this->getTotalVideoNum($accountName);
+        if($page*$movieNum < $totalVideoNum){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * ブックマーク済みの動画数を取得する
+     * @param string $accountName
+     * @return int
+     */
+    public function getTotalVideoNum(string $accountName): int
+    {
+        $bookmark = BookmarkTable::tableName;
+        $account = AccountTable::tableName;
+        $typeText = TypeTextTable::tableName;
+        $sql = "select count(*) from ${bookmark}"
+            ." inner join ${account} on ${bookmark}.".BookmarkTable::ACCOUNT_ID." = ${account}.".AccountTable::ID
+            ." and ${account}.".AccountTable::ACCOUNT_NAME." = :accountName "
+            ." inner join ${typeText} on ${bookmark}.".BookmarkTable::TYPE_TEXT_ID." = ${typeText}.".TypeTextTable::ID;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':accountName', $accountName);
+        $stmt->execute();
+        $result = $stmt->fetchColumn(0);
+        return $result;
+    }
+
+
+    /**
      * AccountテーブルからIDを取得する
      * @param string $accountName
      * @return int
