@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="watch">
         <Bookmark :videoId="videoId" :isAuth="isAuth" :isBookmark="isBookmark" :csrf_name="csrf_name" :csrf_value="csrf_value"></Bookmark>
         <YoutubeMovie :videoId="videoId"></YoutubeMovie>
     </div>
@@ -14,7 +14,7 @@
     Vue.use(VueYoutube);
 
     export default {
-        name: "app",
+        name: "watch",
         components: {
             YoutubeMovie, Bookmark
         },
@@ -31,7 +31,7 @@
 </script>
 
 <style>
-    #app {
+    #watch {
         font-family: "Avenir", Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
