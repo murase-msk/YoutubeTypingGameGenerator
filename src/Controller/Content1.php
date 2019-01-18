@@ -164,14 +164,33 @@ class Content1 extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         array $args)
     {
+        // ログインしているか.
+        $isAuth = $this->session->get('isAuth');
+        // アカウント名.
+        $accountName = $this->session->get('account');
+        // ブックマーク舌動画のみでフィルターするか.
+        $isFilterBookmark = $request->getQueryParams()['isFilterBookmark'];
+        $isFilterBookmark =$isFilterBookmark === 'true' ? true : false;
+        // 動画リストのページ番号.
         $page = $request->getQueryParams()['page'];
         $page = empty($page) ? 1 : $page;
-        $movieNum=30;   // 取得する動画の数.
-        $videoList = $this->typingGameModel->getVideoList($page, $movieNum);
+        // 取得する動画の数.
+        $movieNum=30;
 
+        // Output.
+        if($isFilterBookmark) {
+            // ブックマーク済みの動画リスト.
+            $videoList = $GLOBALS['container']->get('BookmarkModel')->getBookmarkedVideoList($accountName, $page, $movieNum);
+            //ブックマーク済み動画リストの次ページ.
+            $nextPage = $GLOBALS['container']->get('BookmarkModel')->isExistNextPageMovie($page, $movieNum, $accountName);
+        }else{
+            // 取得した動画リスト.
+            $videoList = $this->typingGameModel->getVideoList($page, $movieNum);
+            // 次のページ番号(なければfalse).
+            $nextPage = $this->typingGameModel->isExistNextPageMovie($page, $movieNum) ? $page + 1: false;
+        }
+        // 前のページ番号(なければfalse).
         $prevPage = $page > 1 ? $page - 1 : false;
-        $nextPage = $this->typingGameModel->isExistNextPageMovie($page, $movieNum) ? $page + 1: false;
-
         return $this->view->render($response, 'content1List.html.twig', [
             'activeHeader' => 'content1',
             'isAuth' => $this->session->get('isAuth'),
@@ -180,7 +199,8 @@ class Content1 extends BaseController
             'videoList'=>$videoList,
             'page'=>$page,
             'prevPage'=>$prevPage,
-            'nextPage'=>$nextPage
+            'nextPage'=>$nextPage,
+            'isFilterBookmark'=>$isFilterBookmark
         ]);
     }
 
