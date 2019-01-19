@@ -51,8 +51,8 @@ class E2EGameTest extends E2EBaseTest
         $driver = self::$driver;
         self::$driver->wait(50, 1000)->until(
             function () use ($driver) {
-                // URLに"content1/watch"が含まれるようになったら終わり(画面が遷移するまで待つ).
-                if (strpos($driver->getCurrentURL(), 'content1/watch') !== false) {
+                // URLに"typingGame/watch"が含まれるようになったら終わり(画面が遷移するまで待つ).
+                if (strpos($driver->getCurrentURL(), 'typingGame/watch') !== false) {
                     return true;
                 }
                 try {
@@ -78,7 +78,7 @@ class E2EGameTest extends E2EBaseTest
     {
         self::registerMovie();
         // 登録後の画面へ遷移できたか.
-        $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
+        $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/typingGame/watch/' . self::$videoId . '@';
         $this->assertRegExp($pattern, self::$driver->getCurrentURL());
     }
 
@@ -95,7 +95,7 @@ class E2EGameTest extends E2EBaseTest
         $typingGameModel = new TypingGameModel(self::$pdo);
         $initVideoNum = $typingGameModel->getTotalVideoNum();
         self::registerMovie();
-        $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
+        $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/typingGame/watch/' . self::$videoId . '@';
         $this->assertRegExp($pattern, self::$driver->getCurrentURL());
         $afterVideoNum = $typingGameModel->getTotalVideoNum();
         $this->assertEquals(true, $initVideoNum === $afterVideoNum);
@@ -110,7 +110,7 @@ class E2EGameTest extends E2EBaseTest
     public function startTypeGame()
     {
         // 指定URLへ遷移
-        self::$driver->get('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId);
+        self::$driver->get('http://' . self::$HOST_NAME . '/typingGame/watch/' . self::$videoId);
         // youtube動画再生でスタート.
         $driver = self::$driver;
         // youtube Iframe要素内の再生ボタン要素を取得.
@@ -162,12 +162,12 @@ class E2EGameTest extends E2EBaseTest
      */
     public function editTypeText()
     {
-        self::$driver->get('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId);
+        self::$driver->get('http://' . self::$HOST_NAME . '/typingGame/watch/' . self::$videoId);
         // 編集ボタンを押して編集画面へ.
         $element = self::$driver->findElement(WebDriverBy::id('editText'));
         $element->click();
         // 編集画面へ遷移できたか.
-        $this->assertEquals('http://' . self::$HOST_NAME . '/content1/edit/' . self::$videoId, self::$driver->getCurrentURL());
+        $this->assertEquals('http://' . self::$HOST_NAME . '/typingGame/edit/' . self::$videoId, self::$driver->getCurrentURL());
 
         // テキストを編集する.
         $element = self::$driver->findElement(
@@ -179,7 +179,7 @@ class E2EGameTest extends E2EBaseTest
         // 保存.
         self::$driver->findElement(WebDriverBy::name('saveTypeInfo'))->submit();
         // 保存したらタイピング画面へ遷移できたか.
-        $this->assertEquals('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId, self::$driver->getCurrentURL());
+        $this->assertEquals('http://' . self::$HOST_NAME . '/typingGame/watch/' . self::$videoId, self::$driver->getCurrentURL());
 
         // 編集後のタイピング画面で反映されているか確認
         $driver = self::$driver;
@@ -207,7 +207,7 @@ class E2EGameTest extends E2EBaseTest
      */
     public function listMovie()
     {
-        self::$driver->get('http://' . self::$HOST_NAME . '/content1/list');
+        self::$driver->get('http://' . self::$HOST_NAME . '/typingGame/list');
         // 登録一覧に動画が登録されているか.
         $elements = self::$driver->findElements(WebDriverBy::className('thumbnail'));
         $matchFlg = false;  //登録一覧に動画が登録されているかのフラグ.
@@ -217,7 +217,7 @@ class E2EGameTest extends E2EBaseTest
                 $matchFlg = true;
                 // 登録されたタイトルの動画があればクリックして正しく遷移するか.
                 $element->findElement(WebDriverBy::tagName('a'))->click();
-                $this->assertEquals('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId, self::$driver->getCurrentURL());
+                $this->assertEquals('http://' . self::$HOST_NAME . '/typingGame/watch/' . self::$videoId, self::$driver->getCurrentURL());
                 break;
             }
         }

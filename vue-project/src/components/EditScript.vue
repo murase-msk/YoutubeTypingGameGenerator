@@ -9,7 +9,7 @@
     ></youtube>
     <br />
     <!--実際に送る用-->
-    <form action="/content1/saveContent" method="post" name="saveTypeInfo">
+    <form action="/typingGame/saveContent" method="post" name="saveTypeInfo">
       <input type="hidden" name="csrf_name" :value="csrf.csrf_name" />
       <input type="hidden" name="csrf_value" :value="csrf.csrf_value" />
       <input type="hidden" name="videoId" :value="videoId" />
@@ -21,7 +21,7 @@
       <input type="submit" value="保存" class="btn btn-secondary" />
     </form>
 
-    <form action="/content1/saveContent" method="post" name="editPhrase">
+    <form action="/typingGame/saveContent" method="post" name="editPhrase">
       <input type="hidden" name="videoId" :value="videoId" />
       <div style="width:100%;height:200px;overflow:auto;">
         <table align="center">
@@ -127,7 +127,7 @@ export default {
       location.hostname +
       ":" +
       port +
-      "/getTypeText?videoId=" +
+      "/typingGame/getTypeText?videoId=" +
       this.videoId;
     fetch(url)
       .then(response => {

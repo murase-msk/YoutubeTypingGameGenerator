@@ -16,7 +16,7 @@
             {% if (flash is not empty) and (flash.error[0] is not empty) %}
                 <span class="label label-danger">{{ flash.error[0] }}</span>
             {% endif %}
-            <form class="form-inline" action="/content1/register" method="post">
+            <form class="form-inline" action="/typingGame/register" method="post">
                 {# CSRF #}
                 <input type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
                 <input type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">

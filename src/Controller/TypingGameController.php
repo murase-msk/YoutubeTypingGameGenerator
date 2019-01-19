@@ -17,11 +17,11 @@ use src\Model\typingGame\ScrappingTypeText;
 
 
 /**
- * Class Content1
+ * Class TypingGameController
  * @package src\Controller
  * コンテンツ画面
  */
-class Content1 extends BaseController
+class TypingGameController extends BaseController
 {
 
     private $view;
@@ -46,45 +46,7 @@ class Content1 extends BaseController
         $this->session = $session;
         $this->typingGameModel = $typingGameModel;
     }
-
-    function index(
-        /** @noinspection PhpUnusedParameterInspection */
-        Request $request,
-        /** @noinspection PhpUnusedParameterInspection */
-        Response $response,
-        /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
-
-        return $this->view->render($response, 'content1.html.twig', [
-            'activeHeader' => 'content1',
-            'isAuth' => $this->session->get('isAuth'),
-            'account' => $this->session->get('account'),
-        ]);
-    }
-
-    /**
-     * 新規作成画面
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    function new(
-        /** @noinspection PhpUnusedParameterInspection */
-        Request $request,
-        /** @noinspection PhpUnusedParameterInspection */
-        Response $response,
-        /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
-        return $this->view->render($response, 'content1New.html.twig', [
-            'activeHeader' => 'content1',
-            'isAuth' => $this->session->get('isAuth'),
-            'account' => $this->session->get('account'),
-        ]);
-    }
-
+    
     /**
      * コンテンツ登録
      * @param Request $request
@@ -163,8 +125,6 @@ class Content1 extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         array $args)
     {
-        // ログインしているか.
-        $isAuth = $this->session->get('isAuth');
         // アカウント名.
         $accountName = $this->session->get('account');
         // ブックマーク舌動画のみでフィルターするか.
@@ -190,8 +150,8 @@ class Content1 extends BaseController
         }
         // 前のページ番号(なければfalse).
         $prevPage = $page > 1 ? $page - 1 : false;
-        return $this->view->render($response, 'content1List.html.twig', [
-            'activeHeader' => 'content1',
+        return $this->view->render($response, 'typingGameList.html.twig', [
+            'activeHeader' => 'list',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
@@ -225,7 +185,7 @@ class Content1 extends BaseController
         } else {
             $isBookmark = false;
         }
-        return $this->view->render($response, 'content1Content.html.twig', [
+        return $this->view->render($response, 'typingGameContent.html.twig', [
             'activeHeader' => 'watch',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
@@ -253,7 +213,7 @@ class Content1 extends BaseController
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
 
-        return $this->view->render($response, 'content1Edit.html.twig', [
+        return $this->view->render($response, 'typingGameEdit.html.twig', [
             'activeHeader' => 'edit',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),

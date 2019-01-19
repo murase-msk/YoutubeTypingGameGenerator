@@ -16,10 +16,6 @@ namespace src\Model\typingGame;
 class ConvertTypeText
 {
 
-    public function __construct()
-    {
-    }
-
     /**
      * 文章をひらがなに変換
      * @param string $sentence

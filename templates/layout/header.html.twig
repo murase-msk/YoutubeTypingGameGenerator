@@ -15,12 +15,9 @@
                 <li {{ activeHeader == 'index' ? 'class=active' : '' }}>
                     <a href="{{ path_for('index', {'active-header': 'index'}) }}" id="home_button">Home</a>
                 </li>
-                <li {{ activeHeader == 'content1' ? 'class=active' : '' }}>
-                    <a href="{{ path_for('contentsList', {'active-header': 'content1'}) }}"
-                       id="content1_button">登録一覧</a>
-                </li>
-                <li {{ activeHeader == 'content2' ? 'class=active' : '' }}>
-                    <a href="{{ path_for('content2', {'active-header': 'content2'}) }}" id="content2_button">YTGGとは</a>
+                <li {{ activeHeader == 'list' ? 'class=active' : '' }}>
+                    <a href="{{ path_for('contentsList', {'active-header': 'list'}) }}"
+                       id="list_button">登録一覧</a>
                 </li>
             </ul>
             <input type="hidden" name="isAuth" value="{{ isAuth }}">

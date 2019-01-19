@@ -24,13 +24,10 @@ $con = $slimAppDb->connectDb();
 
 // テーブル初期化.
 $accountTable = new AccountTable($con);
-//$content1Table = new Content1Table($con);
-// 削除順 content1, account.
-//$content1Table->deleteTable();
+// 削除
 $accountTable->deleteTable();
-// 作成順 account, content1.
+// 作成順
 $accountTable->createTable();
-//$content1Table->createTable();
 
 // シードデータインサート.
 // accountテーブルデータ

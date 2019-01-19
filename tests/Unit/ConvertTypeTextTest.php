@@ -9,8 +9,13 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use src\Model\TypingGame\ConvertTypeText;
+use src\Model\typingGame\ConvertTypeText;
 
+/**
+ * Class ConvertTypeTextTest
+ * @package Tests\Unit
+ * @testdox ConvertTypeTextクラスのテスト
+ */
 class ConvertTypeTextTest extends TestCase
 {
 

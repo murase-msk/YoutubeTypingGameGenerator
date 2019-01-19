@@ -23,20 +23,20 @@ $app->group('', function () use ($app) {
         ->add(new \DavidePastore\Slim\Validation\Validation($GLOBALS['validators']));
 
     // コンテンツ1に新規登録.
-    $app->get('/content1/new', 'Content1' . ':new')->setName('content1New');
+    $app->get('/typingGame/new', 'TypingGameController' . ':new')->setName('typingGameNew');
     // コンテンツ1にコンテンツ登録.
-    $app->post('/content1/register', 'Content1' . ':register')->setName('content1Register');
-    $app->get('/content1/list', 'Content1' . ':list')->setName('contentsList');
+    $app->post('/typingGame/register', 'TypingGameController' . ':register')->setName('typingGameRegister');
+    $app->get('/typingGame/list', 'TypingGameController' . ':list')->setName('contentsList');
     // タイピング画面
-    $app->get('/content1/watch/{id}', 'Content1' . ':content')->setName('watch');
+    $app->get('/typingGame/watch/{id}', 'TypingGameController' . ':content')->setName('watch');
     // タイピング編集画面.
-    $app->get('/content1/edit/{id}', 'Content1' . ':editView')->setName('edit');
+    $app->get('/typingGame/edit/{id}', 'TypingGameController' . ':editView')->setName('edit');
     // 編集結果の保存.
-    $app->post('/content1/saveContent', 'Content1' . ':saveContent')->setName('saveContent');
+    $app->post('/typingGame/saveContent', 'TypingGameController' . ':saveContent')->setName('saveContent');
     // タイピングテキストを取得(web API).
-    $app->get('/getTypeText', 'Content1' . ':getTypeTextApi');
+    $app->get('/typingGame/getTypeText', 'TypingGameController' . ':getTypeTextApi');
     // コンテンツ1.
-    $app->get('/content1', 'Content1' . ':index')->setName('content1');
+    //$app->get('/typingGame', 'TypingGameController' . ':index')->setName('typingGame');
 
     // ブックマークしているかどうか.
     $app->post('/bookmark/isBookmark', 'BookmarkController' . ':isBookmark')->setName('isBookmark');
@@ -44,7 +44,7 @@ $app->group('', function () use ($app) {
     $app->post('/bookmark/changeBookmark', 'BookmarkController' . ':changeBookmark')->setName('changeBookmark');
 
     // コンテンツ2.
-    $app->get('/content2', 'Content2' . ':index')->setName('content2');
+    //$app->get('/content2', 'Content2' . ':index')->setName('content2');
 
 
 })->add($container->get('csrf'));

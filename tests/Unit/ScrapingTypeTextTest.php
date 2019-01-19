@@ -9,7 +9,7 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use src\Model\TypingGame\ScrappingTypeText;
+use src\Model\typingGame\ScrappingTypeText;
 
 /**
  * ScrappingTypeTextのテスト

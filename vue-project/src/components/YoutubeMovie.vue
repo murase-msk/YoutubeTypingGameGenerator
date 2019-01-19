@@ -109,7 +109,7 @@ export default {
       location.hostname +
       ":" +
       port +
-      "/getTypeText?videoId=" +
+      "/typingGame/getTypeText?videoId=" +
       this.videoId;
     fetch(url)
       .then(response => {

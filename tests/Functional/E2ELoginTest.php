@@ -48,7 +48,7 @@ class E2ELoginTest extends E2EBaseTest
     {
         // 指定URLへ遷移
         self::$driver->get('http://' . self::$HOST_NAME . '/');
-        $this->assertEquals('sampleApp', self::$driver->getTitle());
+        $this->assertEquals('YTGG', self::$driver->getTitle());
     }
 
     /**

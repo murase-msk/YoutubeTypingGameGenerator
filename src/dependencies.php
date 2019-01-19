@@ -103,14 +103,14 @@ $container['MainApp'] = function ($container) {
     return new \src\Controller\MainApp($view, $csrf, $flash, $session);
 };
 
-$container['Content1'] = function ($container) {
+$container['TypingGameController'] = function ($container) {
     $view = $container->get('view');
     $router = $container->get('router');
     $csrf = $container->get('csrf');
     $flash = $container->get('flash');
     $session = $container->get('session');
     $typingGameModel = $container->get('TypingGameModel');
-    return new \src\Controller\Content1($view, $router, $csrf, $flash, $session, $typingGameModel);
+    return new \src\Controller\TypingGameController($view, $router, $csrf, $flash, $session, $typingGameModel);
 };
 
 $container['BookmarkController'] = function ($container) {
@@ -123,11 +123,11 @@ $container['BookmarkController'] = function ($container) {
     return new \src\Controller\BookmarkController($view, $router, $csrf, $flash, $session, $bookmarkModel);
 };
 
-$container['Content2'] = function ($container) {
-    $view = $container->get('view');
-    $session = $container->get('session');
-    return new \src\Controller\Content2($view, $session);
-};
+//$container['Content2'] = function ($container) {
+//    $view = $container->get('view');
+//    $session = $container->get('session');
+//    return new \src\Controller\Content2($view, $session);
+//};
 
 
 $container['AccountController'] = function ($container) {
