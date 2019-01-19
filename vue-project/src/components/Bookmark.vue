@@ -44,8 +44,6 @@
         methods:{
             // ブックマーク登録・削除処理.
             changeBookmark: function(event){
-                console.log("bookmark");
-                // TODO:ajaxで処理する
                 const obj = {"videoId":this.videoId, "isBookmark":this.isBookmark, "csrf_name":this.csrf_name, "csrf_value":this.csrf_value};
                 const method = "POST";
                 //const body = Object.keys(obj).reduce((o,key)=>(o.set(key, obj[key])), new FormData());
@@ -53,13 +51,13 @@
                 const headers = {"Content-type" : "application/json"};
                 // post (multipart/form-data)
                 const url = location.protocol+"//"+location.hostname+":"+this.port+"/bookmark/changeBookmark";
-                fetch(url,{method, headers, body}).then(function (response) {
+                fetch(url,{method, headers, body}).then((response) => {
                     return response.json();
-                }).then(function (json) {
+                }).then((json) => {
                     if(json.noError === true) {
                         this.isBookmark = json.isBookmark;
                     }
-               }.bind(this));
+               });
             },
         }
     }

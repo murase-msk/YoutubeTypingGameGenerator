@@ -90,13 +90,13 @@
             // 開発環境(vue dev-server)の場合 port8083なのでajaxはport8081にする.
             let port = location.port === "8083" ? "8081" : location.port;
             let url = location.protocol + "//" + location.hostname +":"+port+ "/getTypeText?videoId=" + this.videoId;
-            fetch(url).then(function (response) {
+            fetch(url).then((response) => {
                 return response.json();
-            }).then(function (json) {
+            }).then((json) => {
                 this.allPhraseData = json;
                 console.log(json);
                 this.checkPhraseNo();
-            }.bind(this));
+            });
 
         },
         methods:{
