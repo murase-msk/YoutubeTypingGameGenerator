@@ -80,8 +80,6 @@ class E2EGameTest extends E2EBaseTest
         // 登録後の画面へ遷移できたか.
         $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
         $this->assertRegExp($pattern, self::$driver->getCurrentURL());
-        $element = self::$driver->findElement(WebDriverBy::id('type_start'));
-        $this->assertContains('start', $element->getText());
     }
 
     // TODO: 登録できない動画であればメッセージを表示する.
@@ -95,13 +93,11 @@ class E2EGameTest extends E2EBaseTest
     {
         // 画面遷移するが、DBに登録された数は変わらない.
         $typingGameModel = new TypingGameModel(self::$pdo);
-        $initVideoNum = count($typingGameModel->listVideoId());
+        $initVideoNum = $typingGameModel->getTotalVideoNum();
         self::registerMovie();
         $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
         $this->assertRegExp($pattern, self::$driver->getCurrentURL());
-        $element = self::$driver->findElement(WebDriverBy::id('type_start'));
-        $this->assertContains('start', $element->getText());
-        $afterVideoNum = count($typingGameModel->listVideoId());
+        $afterVideoNum = $typingGameModel->getTotalVideoNum();
         $this->assertEquals(true, $initVideoNum === $afterVideoNum);
     }
 
@@ -115,10 +111,13 @@ class E2EGameTest extends E2EBaseTest
     {
         // 指定URLへ遷移
         self::$driver->get('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId);
-        // スタートボタンでスタート.
-        $element = self::$driver->findElement(WebDriverBy::id('type_start'));
-        $element->click();
+        // youtube動画再生でスタート.
         $driver = self::$driver;
+        // youtube Iframe要素内の再生ボタン要素を取得.
+        $element = $driver->switchTo()->frame($driver->findElement(WebDriverBy::id('widget2')))
+            ->findElement(WebDriverBy::className('ytp-large-play-button'));
+        $element->click();
+        $driver->switchTo()->defaultContent();  // iframeから離れる.
         self::$driver->wait(30)->until(
             function () use ($driver) {
                 // タイピング用のテキストが表示されるまで待つ.
@@ -137,6 +136,7 @@ class E2EGameTest extends E2EBaseTest
 //        $file = __DIR__ . '/' . "_chrome.png";
 //        self::$driver->takeScreenshot($file);
         // キー入力.
+        $element = $driver->findElement(WebDriverBy::tagName('body'));
         $element->sendKeys('kikimikawaiine');
         $this->assertEquals(
             'ききみかわいいね',
@@ -182,12 +182,17 @@ class E2EGameTest extends E2EBaseTest
         $this->assertEquals('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId, self::$driver->getCurrentURL());
 
         // 編集後のタイピング画面で反映されているか確認
-        $element = self::$driver->findElement(WebDriverBy::id('type_start'));
+        $driver = self::$driver;
+        // youtube Iframe要素内の再生ボタン要素を取得.
+        $element = $driver->switchTo()->frame($driver->findElement(WebDriverBy::id('widget2')))
+            ->findElement(WebDriverBy::className('ytp-large-play-button'));
         $element->click();
+        $driver->switchTo()->defaultContent();  // iframeから離れる.
         self::$driver->wait(10)->until(
         // タイピング用のテキストが表示されるまで待つ.
             WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::className('restText'))
         );
+        $element = $driver->findElement(WebDriverBy::tagName('body'));
         $element->sendKeys('kimikawaiine');
         $this->assertEquals(
             'きみかわいいね',
