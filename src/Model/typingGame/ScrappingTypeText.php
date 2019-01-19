@@ -21,7 +21,7 @@ class ScrappingTypeText
 
     function __construct($videoId)
     {
-        $this->youtubeUrl = 'https://www.youtube.com/watch?v='.$videoId;
+        $this->youtubeUrl = 'https://www.youtube.com/watch?v=' . $videoId;
         $this->crawler = $this->getCrawlerResult($this->youtubeUrl);
         $this->videoCode = $videoId;
     }
@@ -55,7 +55,9 @@ class ScrappingTypeText
         $language = explode('Or translate from English to:', $language);
         $language = explode('>>', $language[0]);
         array_shift($language);
-        $languageList = array_map(function($item){return str_replace('Download   ','', $item);}, $language);
+        $languageList = array_map(function ($item) {
+            return str_replace('Download   ', '', $item);
+        }, $language);
         return $languageList;
     }
 
@@ -96,22 +98,22 @@ class ScrappingTypeText
             $parser = new Parser();
             $parser->loadFile($downloadFilePath);
             $captions = $parser->parse();
-            $loopNum=0;
-            foreach($captions as $key=>$caption){
+            $loopNum = 0;
+            foreach ($captions as $key => $caption) {
                 array_push(
                     $captionData,
                     array(
-                        'index'=>$loopNum++,
-                        'startTime'=>$caption->startTime,
-                        'endTime'=>$caption->endTime,
-                        'text'=>$caption->text,
-                        'Furigana'=>ConvertTypeText::convertToHiragana($caption->text, $yahooApiKey)
+                        'index' => $loopNum++,
+                        'startTime' => $caption->startTime,
+                        'endTime' => $caption->endTime,
+                        'text' => $caption->text,
+                        'Furigana' => ConvertTypeText::convertToHiragana($caption->text, $yahooApiKey)
                     )
                 );
             }
             // ファイル削除.
             unlink($downloadFilePath);
-        }catch(\Benlipp\SrtParser\Exceptions\FileNotFoundException $e){
+        } catch (\Benlipp\SrtParser\Exceptions\FileNotFoundException $e) {
             $e->getMessage();
         }
 
@@ -119,7 +121,8 @@ class ScrappingTypeText
     }
 
     // ファイルをダウンロード.
-    private function download($url, $savePath) {
+    private function download($url, $savePath)
+    {
         $fp = fopen($url, 'r');
         $fpw = fopen($savePath, 'w');
         $size = 0;
@@ -152,10 +155,10 @@ class ScrappingTypeText
     {
         $videoId = $this->videoCode;
         // YoutubeAPIのAPIkey
-        $url = 'https://www.googleapis.com/youtube/v3/videos?id='.$videoId.'&key='.$youtubeApiKey.'&fields=items(id,snippet(channelTitle,title,thumbnails),statistics)&part=snippet,contentDetails,statistics';
+        $url = 'https://www.googleapis.com/youtube/v3/videos?id=' . $videoId . '&key=' . $youtubeApiKey . '&fields=items(id,snippet(channelTitle,title,thumbnails),statistics)&part=snippet,contentDetails,statistics';
         $json = file_get_contents($url);
         $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
-        $arr = json_decode($json,true);
-        return array('title'=>$arr['items'][0]['snippet']['title'], 'thumbnail'=>$arr['items'][0]['snippet']['thumbnails']['medium']['url']);
+        $arr = json_decode($json, true);
+        return array('title' => $arr['items'][0]['snippet']['title'], 'thumbnail' => $arr['items'][0]['snippet']['thumbnails']['medium']['url']);
     }
 }

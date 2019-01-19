@@ -43,16 +43,16 @@ class BookmarkModel
         $account = AccountTable::tableName;
         $typeText = TypeTextTable::tableName;
         $sql = "select count(*) from ${bookmark}"
-            ." inner join ${account} on ${bookmark}.".BookmarkTable::ACCOUNT_ID." = ${account}.".AccountTable::ID
-            ." and ${account}.".AccountTable::ACCOUNT_NAME." = :accountName "
-            ." inner join ${typeText} on ${bookmark}.".BookmarkTable::TYPE_TEXT_ID." = ${typeText}.".TypeTextTable::ID
-            ." and ${typeText}.".TypeTextTable::VIDEO_CODE." = :videoId ";
+            . " inner join ${account} on ${bookmark}." . BookmarkTable::ACCOUNT_ID . " = ${account}." . AccountTable::ID
+            . " and ${account}." . AccountTable::ACCOUNT_NAME . " = :accountName "
+            . " inner join ${typeText} on ${bookmark}." . BookmarkTable::TYPE_TEXT_ID . " = ${typeText}." . TypeTextTable::ID
+            . " and ${typeText}." . TypeTextTable::VIDEO_CODE . " = :videoId ";
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':accountName', $accountName);
         $stmt->bindParam(':videoId', $videoId);
         $stmt->execute();
         $result = $stmt->fetchColumn(0);
-        return (int)$result === 0 ? false: true;
+        return (int)$result === 0 ? false : true;
     }
 
     /**
@@ -69,10 +69,10 @@ class BookmarkModel
         $account = AccountTable::tableName;
         $typeText = TypeTextTable::tableName;
         $sql = "select * from ${bookmark}"
-            ." inner join ${account} on ${bookmark}.".BookmarkTable::ACCOUNT_ID." = ${account}.".AccountTable::ID
-            ." and ${account}.".AccountTable::ACCOUNT_NAME." = :accountName "
-            ." inner join ${typeText} on ${bookmark}.".BookmarkTable::TYPE_TEXT_ID." = ${typeText}.".TypeTextTable::ID
-            ." order by ${$bookmark}.".BookmarkTable::ID." desc limit :movieNum offset :offsetNum";
+            . " inner join ${account} on ${bookmark}." . BookmarkTable::ACCOUNT_ID . " = ${account}." . AccountTable::ID
+            . " and ${account}." . AccountTable::ACCOUNT_NAME . " = :accountName "
+            . " inner join ${typeText} on ${bookmark}." . BookmarkTable::TYPE_TEXT_ID . " = ${typeText}." . TypeTextTable::ID
+            . " order by ${$bookmark}." . BookmarkTable::ID . " desc limit :movieNum offset :offsetNum";
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':accountName', $accountName);
         $stmt->bindParam(':movieNum', $movieNum);
@@ -92,9 +92,9 @@ class BookmarkModel
     public function isExistNextPageMovie(int $page, int $movieNum, string $accountName): bool
     {
         $totalVideoNum = $this->getTotalVideoNum($accountName);
-        if($page*$movieNum < $totalVideoNum){
+        if ($page * $movieNum < $totalVideoNum) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -110,9 +110,9 @@ class BookmarkModel
         $account = AccountTable::tableName;
         $typeText = TypeTextTable::tableName;
         $sql = "select count(*) from ${bookmark}"
-            ." inner join ${account} on ${bookmark}.".BookmarkTable::ACCOUNT_ID." = ${account}.".AccountTable::ID
-            ." and ${account}.".AccountTable::ACCOUNT_NAME." = :accountName "
-            ." inner join ${typeText} on ${bookmark}.".BookmarkTable::TYPE_TEXT_ID." = ${typeText}.".TypeTextTable::ID;
+            . " inner join ${account} on ${bookmark}." . BookmarkTable::ACCOUNT_ID . " = ${account}." . AccountTable::ID
+            . " and ${account}." . AccountTable::ACCOUNT_NAME . " = :accountName "
+            . " inner join ${typeText} on ${bookmark}." . BookmarkTable::TYPE_TEXT_ID . " = ${typeText}." . TypeTextTable::ID;
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':accountName', $accountName);
         $stmt->execute();
@@ -128,8 +128,8 @@ class BookmarkModel
      */
     public function getAccountIdFromName(string $accountName): int
     {
-        $sql = 'select '.AccountTable::ID.' '
-            .' from '.AccountTable::tableName.' where '.AccountTable::ACCOUNT_NAME.' = :account ';
+        $sql = 'select ' . AccountTable::ID . ' '
+            . ' from ' . AccountTable::tableName . ' where ' . AccountTable::ACCOUNT_NAME . ' = :account ';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':account', $accountName);
         $stmt->execute();
@@ -144,8 +144,8 @@ class BookmarkModel
      */
     public function getTypeTextIdFromVideoId(string $videoId): int
     {
-        $sql = 'select '.TypeTextTable::ID.' '
-            .' from '.TypeTextTable::tableName.' where '.TypeTextTable::VIDEO_CODE.' = :videoId ';
+        $sql = 'select ' . TypeTextTable::ID . ' '
+            . ' from ' . TypeTextTable::tableName . ' where ' . TypeTextTable::VIDEO_CODE . ' = :videoId ';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':videoId', $videoId);
         $stmt->execute();
@@ -162,10 +162,10 @@ class BookmarkModel
     {
         $accountId = $this->getAccountIdFromName($accountName);
         $typeTextId = $this->getTypeTextIdFromVideoId($videoId);
-        $sql = 'insert into '.BookmarkTable::tableName.' ('
-            .BookmarkTable::ACCOUNT_ID.', '
-            .BookmarkTable::TYPE_TEXT_ID
-            .') values(:account_id, :type_text_id)';
+        $sql = 'insert into ' . BookmarkTable::tableName . ' ('
+            . BookmarkTable::ACCOUNT_ID . ', '
+            . BookmarkTable::TYPE_TEXT_ID
+            . ') values(:account_id, :type_text_id)';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':account_id', $accountId);
         $stmt->bindParam(':type_text_id', $typeTextId);
@@ -182,8 +182,8 @@ class BookmarkModel
     {
         $accountId = $this->getAccountIdFromName($accountName);
         $typeTextId = $this->getTypeTextIdFromVideoId($videoId);
-        $sql = 'delete from '.BookmarkTable::tableName
-            .' where '.BookmarkTable::ACCOUNT_ID.' = :accountId and '.BookmarkTable::TYPE_TEXT_ID.' = :typeTextId';
+        $sql = 'delete from ' . BookmarkTable::tableName
+            . ' where ' . BookmarkTable::ACCOUNT_ID . ' = :accountId and ' . BookmarkTable::TYPE_TEXT_ID . ' = :typeTextId';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':accountId', $accountId);
         $stmt->bindParam(':typeTextId', $typeTextId);

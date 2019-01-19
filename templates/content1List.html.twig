@@ -25,10 +25,10 @@
                     <div class="col-md-12 page" style="text-align:center;margin:50px;">
                         <span style="font-size: x-large;">
                             {#<a href="/content1/list?page={{ prevPage }}"> &lt; </a>#}
-                            <a {{prevPage == false ? "" : "href= /content1/list?page="}}{{ prevPage }}> &lt; </a>
+                            <a {{ prevPage == false ? "" : "href= /content1/list?page=" }}{{ prevPage }}> &lt; </a>
                             <span style="margin-left: 5em;margin-right:5em;">{{ page }}</span>
                             {#<a href="/content1/list?page={{ nextPage }}"> &gt; </a>#}
-                            <a {{nextPage == false ? "" : "href= /content1/list?page="}}{{ nextPage }}> &gt; </a>
+                            <a {{ nextPage == false ? "" : "href= /content1/list?page=" }}{{ nextPage }}> &gt; </a>
                         </span>
                     </div>
                 </div>
@@ -38,9 +38,9 @@
                 <form action="/content1/list" method="GET">
                     {% if (isAuth is same as (true)) %}
                         {% if (isFilterBookmark is same as (true)) %}
-                            <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true"  checked>
+                            <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true" checked>
                         {% else %}
-                            <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true" >
+                            <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true">
                         {% endif %}
                     {% else %}
                         <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" disabled value="true">

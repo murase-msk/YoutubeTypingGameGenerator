@@ -47,6 +47,4 @@ class MainApp extends BaseController
     }
 
 
-
-
 }

@@ -22,16 +22,16 @@ $settings = require __DIR__ . '/../../../src/settings.php';
 // youtubeのAPI Key.
 $youtubeApiKey = $settings['settings']['youtube_api']['key'];
 // 取得する動画のチャンネルリスト.
-$channelList=[
-    'avex'=>'UC1oPBUWifc0QOOY8DEKhLuQ',
-    'AKB'=>'UCxjXU89x6owat9dA8Z-bzdw',
-    'hosino_gen'=>'UCPKlrgZXnnb89nSeITvTdGA',
+$channelList = [
+    'avex' => 'UC1oPBUWifc0QOOY8DEKhLuQ',
+    'AKB' => 'UCxjXU89x6owat9dA8Z-bzdw',
+    'hosino_gen' => 'UCPKlrgZXnnb89nSeITvTdGA',
     //'Victor'=>'UC4YT50DP7hbMsor8FmyEPMw',
     //'toysfactory'=>'UC4C37AMho6DRUIYnoc4fiSA'
 ];
 
 
-foreach($channelList as $key => $channelId) {
+foreach ($channelList as $key => $channelId) {
     // チャンネルIDから動画IDを取得するAPI
     $url = 'https://www.googleapis.com/youtube/v3/search?' .
         'part=snippet' .                     // 出力形式（snippet:動画の基本的な情報）.

@@ -33,18 +33,18 @@ class ConvertTypeText
     {
         // TODO: 一行ずつ変換するのではなく全部まとめて変換できるようにしたい　　
         // TODO: 例「sentence1 ## sentence2 ## ....」→「converted1 ## converted2 ## ....」
-        $url = 'https://jlp.yahooapis.jp/FuriganaService/V1/furigana?appid='.$appId.'&sentence='.$sentence;
+        $url = 'https://jlp.yahooapis.jp/FuriganaService/V1/furigana?appid=' . $appId . '&sentence=' . $sentence;
 
         $xml = simplexml_load_file($url); //XML ファイルの URL を指定
-        $oneSentence = array('Surface'=>'', 'Furigana'=>'', 'Roman'=>'');
-        foreach($xml->Result[0]->WordList[0] as $word){
-            $oneSentence['Surface'] .=$word->Surface;
+        $oneSentence = array('Surface' => '', 'Furigana' => '', 'Roman' => '');
+        foreach ($xml->Result[0]->WordList[0] as $word) {
+            $oneSentence['Surface'] .= $word->Surface;
             if (isset($word->Furigana)) {
                 $oneSentence['Furigana'] .= $word->Furigana;
                 //$oneSentence['Roman'] .= $word->Roman;
-            }else{  // ふりがながなければ英数字なのでそのまま返す.
+            } else {  // ふりがながなければ英数字なのでそのまま返す.
                 //英数字以外削除する.
-                $lowerStr=preg_replace('/[^a-z0-9\s]/', '',mb_strtolower($word->Surface));
+                $lowerStr = preg_replace('/[^a-z0-9\s]/', '', mb_strtolower($word->Surface));
                 $oneSentence['Furigana'] .= $lowerStr;
                 //$oneSentence['Roman'] .= mb_strtolower($word->Surface);
             }

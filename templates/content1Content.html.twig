@@ -10,13 +10,14 @@
             <div class="col-md-10 content" id="mainApp">
                 <input type="hidden" name="videoId" value="{{ videoId }}">
                 <input type="hidden" name="isBookmark" value="{{ isBookmark }}">
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                <input type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
+                <input type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">
                 <div id="watch"></div>
             </div>
             <div class="col-md-2 sidebar">
                 <br>
-                <a id="editText" class="btn btn-success col-md-12" href="{{ path_for('edit', {'active-header': 'edit', 'id': videoId }) }}">テキストを編集する</a>
+                <a id="editText" class="btn btn-success col-md-12"
+                   href="{{ path_for('edit', {'active-header': 'edit', 'id': videoId }) }}">テキストを編集する</a>
             </div>
         </div>
     </div>

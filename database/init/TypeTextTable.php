@@ -27,17 +27,17 @@ class TypeTextTable extends BaseTable
 
     /** @var \PDO $con データベースコネクション */
     private $con;
-    /** @var string createTableSql  */
+    /** @var string createTableSql */
     private const createTableSql =
-        "create table if not exists ".self::tableName."("
-        .self::ID." serial NOT NULL, "
-        .self::TYPE_TEXT." jsonb NOT NULL, "
-        .self::VIDEO_CODE." text, "
-        .self::TITLE." text, "
-        .self::THUMBNAIL." text, "
-        .self::LAST_UPDATE." timestamp without time zone, "
-        ."CONSTRAINT type_text_table_id_primary_key PRIMARY KEY (".self::ID.")"
-        .") ";
+        "create table if not exists " . self::tableName . "("
+        . self::ID . " serial NOT NULL, "
+        . self::TYPE_TEXT . " jsonb NOT NULL, "
+        . self::VIDEO_CODE . " text, "
+        . self::TITLE . " text, "
+        . self::THUMBNAIL . " text, "
+        . self::LAST_UPDATE . " timestamp without time zone, "
+        . "CONSTRAINT type_text_table_id_primary_key PRIMARY KEY (" . self::ID . ")"
+        . ") ";
 
     public function __construct(\PDO $con)
     {
@@ -54,15 +54,15 @@ class TypeTextTable extends BaseTable
         echo 'insert data' . PHP_EOL;
         $nowData = date("Y-m-d H:i:s");
         //echo $data['type_text'].PHP_EOL;
-        $sql = 'insert into '.self::tableName
-            .' ('
-            .self::TYPE_TEXT.', '
-            .self::VIDEO_CODE.', '
-            .self::TITLE.', '
-            .self::THUMBNAIL.', '
-            .self::LAST_UPDATE
-            .') '
-            .'values(:type_text, :video_code, :title, :thumbnail, :last_update)';
+        $sql = 'insert into ' . self::tableName
+            . ' ('
+            . self::TYPE_TEXT . ', '
+            . self::VIDEO_CODE . ', '
+            . self::TITLE . ', '
+            . self::THUMBNAIL . ', '
+            . self::LAST_UPDATE
+            . ') '
+            . 'values(:type_text, :video_code, :title, :thumbnail, :last_update)';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':type_text', $data['type_text']);
         $stmt->bindParam(':video_code', $data['video_code']);

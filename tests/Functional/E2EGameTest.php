@@ -50,17 +50,17 @@ class E2EGameTest extends E2EBaseTest
         $element->submit();
         $driver = self::$driver;
         self::$driver->wait(50, 1000)->until(
-            function() use($driver){
+            function () use ($driver) {
                 // URLに"content1/watch"が含まれるようになったら終わり(画面が遷移するまで待つ).
-                if(strpos($driver->getCurrentURL(), 'content1/watch') !== false) {
-                    return  true;
+                if (strpos($driver->getCurrentURL(), 'content1/watch') !== false) {
+                    return true;
                 }
                 try {
                     $driver->findElement(WebDriverBy::className('label-danger'));
                     // 画面遷移せず且つ、警告が出ている・・・待たずに終了.
                     //var_dump('警告出ています');
                     return true;
-                }catch(NoSuchElementException $e){
+                } catch (NoSuchElementException $e) {
                     // 画面遷移せず且つ、警告が出ていない・・・待ち.
                     //var_dump('警告出ていません'.PHP_EOL);
                     return false;
@@ -74,7 +74,8 @@ class E2EGameTest extends E2EBaseTest
      * @test
      * @testdox 動画登録後の画面遷移ができているか
      */
-    public function windowsTransitionAfterRegisterMovie(){
+    public function windowsTransitionAfterRegisterMovie()
+    {
         self::registerMovie();
         // 登録後の画面へ遷移できたか.
         $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
@@ -90,17 +91,18 @@ class E2EGameTest extends E2EBaseTest
      * @testdox すでに登録された動画を入れると何もせずリダイレクト
      * @depends windowsTransitionAfterRegisterMovie
      */
-    public function redirectRegisteredVideo(){
+    public function redirectRegisteredVideo()
+    {
         // 画面遷移するが、DBに登録された数は変わらない.
         $typingGameModel = new TypingGameModel(self::$pdo);
-        $initVideoNum=count($typingGameModel->listVideoId());
+        $initVideoNum = count($typingGameModel->listVideoId());
         self::registerMovie();
         $pattern = '@' . 'https?://' . str_replace('.', '\.', self::$HOST_NAME) . '/content1/watch/' . self::$videoId . '@';
         $this->assertRegExp($pattern, self::$driver->getCurrentURL());
         $element = self::$driver->findElement(WebDriverBy::id('type_start'));
         $this->assertContains('start', $element->getText());
-        $afterVideoNum=count($typingGameModel->listVideoId());
-        $this->assertEquals(true, $initVideoNum===$afterVideoNum);
+        $afterVideoNum = count($typingGameModel->listVideoId());
+        $this->assertEquals(true, $initVideoNum === $afterVideoNum);
     }
 
     /**
@@ -112,20 +114,20 @@ class E2EGameTest extends E2EBaseTest
     public function startTypeGame()
     {
         // 指定URLへ遷移
-        self::$driver->get('http://'.self::$HOST_NAME.'/content1/watch/'.self::$videoId);
+        self::$driver->get('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId);
         // スタートボタンでスタート.
         $element = self::$driver->findElement(WebDriverBy::id('type_start'));
         $element->click();
         $driver = self::$driver;
         self::$driver->wait(30)->until(
-            function() use($driver){
+            function () use ($driver) {
                 // タイピング用のテキストが表示されるまで待つ.
                 try {
                     //WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::className('restText'))
                     $driver->findElement(WebDriverBy::className('restText'));
                     // restTextクラスがあれば待ち終了.
                     return true;
-                }catch(NoSuchElementException $e){
+                } catch (NoSuchElementException $e) {
                     // restTextクラスがなければ待ち.
                     return false;
                 }
@@ -158,25 +160,26 @@ class E2EGameTest extends E2EBaseTest
      * @testdox 入力文字の編集
      * @depends windowsTransitionAfterRegisterMovie
      */
-    public function editTypeText(){
-        self::$driver->get('http://'.self::$HOST_NAME.'/content1/watch/'.self::$videoId);
+    public function editTypeText()
+    {
+        self::$driver->get('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId);
         // 編集ボタンを押して編集画面へ.
         $element = self::$driver->findElement(WebDriverBy::id('editText'));
         $element->click();
         // 編集画面へ遷移できたか.
-        $this->assertEquals('http://'.self::$HOST_NAME.'/content1/edit/'.self::$videoId, self::$driver->getCurrentURL());
+        $this->assertEquals('http://' . self::$HOST_NAME . '/content1/edit/' . self::$videoId, self::$driver->getCurrentURL());
 
         // テキストを編集する.
         $element = self::$driver->findElement(
             WebDriverBy::id('phrase0'))->findElement(
-                WebDriverBy::className('inputText'))->findElement(
-                    WebDriverBy::tagName('input'));
+            WebDriverBy::className('inputText'))->findElement(
+            WebDriverBy::tagName('input'));
         $element->clear();
         $element->sendKeys('きみかわいいね');
         // 保存.
         self::$driver->findElement(WebDriverBy::name('saveTypeInfo'))->submit();
         // 保存したらタイピング画面へ遷移できたか.
-        $this->assertEquals('http://'.self::$HOST_NAME.'/content1/watch/'.self::$videoId, self::$driver->getCurrentURL());
+        $this->assertEquals('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId, self::$driver->getCurrentURL());
 
         // 編集後のタイピング画面で反映されているか確認
         $element = self::$driver->findElement(WebDriverBy::id('type_start'));
@@ -197,18 +200,19 @@ class E2EGameTest extends E2EBaseTest
      * @testdox 登録動画一覧
      * @depends windowsTransitionAfterRegisterMovie
      */
-    public function listMovie(){
-        self::$driver->get('http://'.self::$HOST_NAME.'/content1/list');
+    public function listMovie()
+    {
+        self::$driver->get('http://' . self::$HOST_NAME . '/content1/list');
         // 登録一覧に動画が登録されているか.
         $elements = self::$driver->findElements(WebDriverBy::className('thumbnail'));
         $matchFlg = false;  //登録一覧に動画が登録されているかのフラグ.
-        foreach($elements as $element){
+        foreach ($elements as $element) {
             $getText = $element->findElement(WebDriverBy::className('movieTitle'))->getText();
-            if($getText === self::$videoTitle){
+            if ($getText === self::$videoTitle) {
                 $matchFlg = true;
                 // 登録されたタイトルの動画があればクリックして正しく遷移するか.
                 $element->findElement(WebDriverBy::tagName('a'))->click();
-                $this->assertEquals('http://'.self::$HOST_NAME.'/content1/watch/'.self::$videoId, self::$driver->getCurrentURL());
+                $this->assertEquals('http://' . self::$HOST_NAME . '/content1/watch/' . self::$videoId, self::$driver->getCurrentURL());
                 break;
             }
         }

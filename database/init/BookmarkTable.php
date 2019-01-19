@@ -24,16 +24,16 @@ class BookmarkTable extends BaseTable
 
     /** @var \PDO $con データベースコネクション */
     private $con;
-    /** @var string createTableSql  */
+    /** @var string createTableSql */
     private const createTableSql =
-        "create table if not exists ".self::tableName."("
-        .self::ID." serial NOT NULL, "
-        .self::ACCOUNT_ID." integer, "
-        .self::TYPE_TEXT_ID." integer, "
-        ."CONSTRAINT bookmark_id_primary_key PRIMARY KEY (".self::ID."), "
-        ."CONSTRAINT bookmark_account_id_foreign_key FOREIGN KEY (".self::ACCOUNT_ID.") REFERENCES ".AccountTable::tableName."(".AccountTable::ID."), "
-        ."CONSTRAINT bookmark_type_text_id_foreign_key FOREIGN KEY (".self::TYPE_TEXT_ID.") REFERENCES ".TypeTextTable::tableName."(".TypeTextTable::ID.") "
-        .") ";
+        "create table if not exists " . self::tableName . "("
+        . self::ID . " serial NOT NULL, "
+        . self::ACCOUNT_ID . " integer, "
+        . self::TYPE_TEXT_ID . " integer, "
+        . "CONSTRAINT bookmark_id_primary_key PRIMARY KEY (" . self::ID . "), "
+        . "CONSTRAINT bookmark_account_id_foreign_key FOREIGN KEY (" . self::ACCOUNT_ID . ") REFERENCES " . AccountTable::tableName . "(" . AccountTable::ID . "), "
+        . "CONSTRAINT bookmark_type_text_id_foreign_key FOREIGN KEY (" . self::TYPE_TEXT_ID . ") REFERENCES " . TypeTextTable::tableName . "(" . TypeTextTable::ID . ") "
+        . ") ";
 
     public function __construct(\PDO $con)
     {
@@ -48,12 +48,12 @@ class BookmarkTable extends BaseTable
     public function insertData($data)
     {
         echo 'insert data' . PHP_EOL;
-        $sql = 'insert into '.self::tableName
-            .' ('
-            .self::ACCOUNT_ID.', '
-            .self::TYPE_TEXT_ID.', '
-            .') '
-            .'values(:account_id, :type_text_id)';
+        $sql = 'insert into ' . self::tableName
+            . ' ('
+            . self::ACCOUNT_ID . ', '
+            . self::TYPE_TEXT_ID . ', '
+            . ') '
+            . 'values(:account_id, :type_text_id)';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':account_id', $data['account_id']);
         $stmt->bindParam(':type_text_id', $data['type_text_id']);

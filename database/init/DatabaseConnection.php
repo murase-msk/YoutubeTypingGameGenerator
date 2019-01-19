@@ -33,8 +33,9 @@ class DatabaseConnection
      * データベースサーバ接続後、データベースへ接続
      * @return \PDO
      */
-    public function connectDb(){
-        echo 'connecting db'.PHP_EOL;
+    public function connectDb()
+    {
+        echo 'connecting db' . PHP_EOL;
         $this->connect();
         $this->createDbIfNotExist();
         $this->connect($this->dbName);
@@ -48,8 +49,8 @@ class DatabaseConnection
     private function connect($dbName = '')
     {
         $db = $this->setting['db'];
-        $dsn = 'pgsql:host=' . $db['host']. ' port='.$db['port'];
-        $dsn .= strcmp($dbName, '') !== 0 ? ' dbname='.$this->dbName : '';
+        $dsn = 'pgsql:host=' . $db['host'] . ' port=' . $db['port'];
+        $dsn .= strcmp($dbName, '') !== 0 ? ' dbname=' . $this->dbName : '';
         $pdo = new \PDO($dsn, $db['user'], $db['pass']);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
@@ -65,7 +66,7 @@ class DatabaseConnection
             echo 'exist db' . PHP_EOL;
             $this->dropDatabase();
             $this->createNewDatabase();
-        }else{
+        } else {
             $this->createNewDatabase();
         }
 
@@ -82,13 +83,14 @@ class DatabaseConnection
         $stmt->bindParam(':dbName', $this->dbName);
         $stmt->execute();
         $result = $stmt->fetchColumn(0);
-        return (int)$result === 0 ? false: true;
+        return (int)$result === 0 ? false : true;
     }
 
     /**
      * データベース新規作成
      */
-    private function createNewDatabase(){
+    private function createNewDatabase()
+    {
         echo 'create database' . PHP_EOL;
         $sql = 'CREATE DATABASE ' . $this->dbName;
         $stmt = $this->pdo->prepare($sql);
@@ -98,7 +100,8 @@ class DatabaseConnection
     /**
      * データベース削除
      */
-    private function dropDatabase(){
+    private function dropDatabase()
+    {
         echo 'drop database' . PHP_EOL;
         $sql = 'drop DATABASE ' . $this->dbName;
         $stmt = $this->pdo->prepare($sql);

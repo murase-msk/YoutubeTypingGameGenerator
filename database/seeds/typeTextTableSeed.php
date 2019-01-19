@@ -28,8 +28,8 @@ return [
                 ]
             }',
         'video_code' => 'abc',
-        'title'=>'title1',
-        'thumbnail'=>'thumbnail1'
+        'title' => 'title1',
+        'thumbnail' => 'thumbnail1'
     ],
     'data2' => [
         'type_text' =>
@@ -56,8 +56,8 @@ return [
                 ]
             }',
         'video_code' => 'efg',
-        'title'=>'title22',
-        'thumbnail'=>'thumbnail2'
+        'title' => 'title22',
+        'thumbnail' => 'thumbnail2'
     ],
     'data3' => [
         'type_text' =>
@@ -84,7 +84,7 @@ return [
                 ]
             }',
         'video_code' => 'hij',
-        'title'=>'title33',
-        'thumbnail'=>'thumbnail33'
+        'title' => 'title33',
+        'thumbnail' => 'thumbnail33'
     ],
 ];

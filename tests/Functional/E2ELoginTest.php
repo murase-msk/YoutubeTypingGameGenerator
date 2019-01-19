@@ -47,7 +47,7 @@ class E2ELoginTest extends E2EBaseTest
     public function indexPage()
     {
         // 指定URLへ遷移
-        self::$driver->get('http://'.self::$HOST_NAME.'/');
+        self::$driver->get('http://' . self::$HOST_NAME . '/');
         $this->assertEquals('sampleApp', self::$driver->getTitle());
     }
 
@@ -58,11 +58,11 @@ class E2ELoginTest extends E2EBaseTest
      */
     public function signUpPage()
     {
-        self::$driver->get('http://'.self::$HOST_NAME.'/');
+        self::$driver->get('http://' . self::$HOST_NAME . '/');
         $element = self::$driver->findElement(WebDriverBy::id('sign_up_button'));
         $element->click();
         self::$driver->wait(3);
-        $this->assertEquals('http://'.self::$HOST_NAME.'/signUp', self::$driver->getCurrentURL());
+        $this->assertEquals('http://' . self::$HOST_NAME . '/signUp', self::$driver->getCurrentURL());
     }
 
     /**
@@ -90,7 +90,7 @@ class E2ELoginTest extends E2EBaseTest
 //        self::$driver->takeScreenshot($file);
 
         // 登録完了画面へ遷移できたか.
-        $this->assertEquals('http://'.self::$HOST_NAME.'/registerAccount', self::$driver->getCurrentURL());
+        $this->assertEquals('http://' . self::$HOST_NAME . '/registerAccount', self::$driver->getCurrentURL());
         $element = self::$driver->findElement(WebDriverBy::className('panel-body'));
         $this->assertContains('登録完了しました。', $element->getText());
         // トップページへ戻る.
@@ -124,11 +124,11 @@ class E2ELoginTest extends E2EBaseTest
      */
     public function signInPage()
     {
-        self::$driver->get('http://'.self::$HOST_NAME.'/');
+        self::$driver->get('http://' . self::$HOST_NAME . '/');
         $element = self::$driver->findElement(WebDriverBy::id('sign_in_button'));
         $element->click();
         self::$driver->wait(3);
-        $this->assertEquals('http://'.self::$HOST_NAME.'/signIn', self::$driver->getCurrentURL());
+        $this->assertEquals('http://' . self::$HOST_NAME . '/signIn', self::$driver->getCurrentURL());
     }
 
     /**
@@ -153,7 +153,7 @@ class E2ELoginTest extends E2EBaseTest
 //        self::$driver->takeScreenshot($file);
 
         // トップページへ遷移できたか.
-        $this->assertEquals('http://'.self::$HOST_NAME.'/', self::$driver->getCurrentURL());
+        $this->assertEquals('http://' . self::$HOST_NAME . '/', self::$driver->getCurrentURL());
         // root アカウントになったか.
         $element = self::$driver->findElement(WebDriverBy::id('account_button'));
         $this->assertEquals($accountName, $element->getText());

@@ -39,7 +39,7 @@ class E2EBaseTest extends \PHPUnit\Framework\TestCase
         // selenium
         $host = 'http://localhost:4444/wd/hub';
         // chrome ドライバーの起動
-        self::$driver = RemoteWebDriver::create($host, DesiredCapabilities::chrome(),120000,120000);
+        self::$driver = RemoteWebDriver::create($host, DesiredCapabilities::chrome(), 120000, 120000);
     }
 
     public static function tearDownAfterClass()

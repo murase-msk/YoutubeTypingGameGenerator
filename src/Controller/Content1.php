@@ -7,6 +7,7 @@
  */
 
 namespace src\Controller;
+
 use Slim\Http\Response;
 use Slim\Http\Request;
 use src\Model\typingGame\ValidationVideo;
@@ -112,14 +113,13 @@ class Content1 extends BaseController
             $scrappingTypeText
         );
         // 何らかの異常があり、生成できない.
-        if($result['result'] === 'error'){
+        if ($result['result'] === 'error') {
             // エラーを返す(URLが正しくない).
             $this->flash->addMessage('error', $result['msg']);
             $uri = $request->getUri()->withPath($this->router->pathFor('index'));
             return $response->withRedirect((string)$uri, 301);
-        }
-        // 生成できるURLであった.
-        else if($result['result'] === 'ok') {
+        } // 生成できるURLであった.
+        else if ($result['result'] === 'ok') {
             $downloadSubUrl = $scrappingTypeText->getSrtUrl($validationVideo->langListIndex);
             $captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
             // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
@@ -133,9 +133,8 @@ class Content1 extends BaseController
                     'title' => $youtubeData['title'],
                     'thumbnail' => $youtubeData['thumbnail']
                 ]);
-        }
-        // すでに登録されている.
-        else if($result['result'] === 'redirect'){
+        } // すでに登録されている.
+        else if ($result['result'] === 'redirect') {
         }
         // リダイレクト.
         $uri = $request->getUri()->withPath($this->router->pathFor('watch', [
@@ -143,8 +142,8 @@ class Content1 extends BaseController
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'id'=>$videoId,// リダイレクトでURLパラメータに使う.
-            'videoId'=>$videoId
+            'id' => $videoId,// リダイレクトでURLパラメータに使う.
+            'videoId' => $videoId
         ]));
         return $response->withRedirect((string)$uri, 301);
 
@@ -170,24 +169,24 @@ class Content1 extends BaseController
         $accountName = $this->session->get('account');
         // ブックマーク舌動画のみでフィルターするか.
         $isFilterBookmark = $request->getQueryParams()['isFilterBookmark'];
-        $isFilterBookmark =$isFilterBookmark === 'true' ? true : false;
+        $isFilterBookmark = $isFilterBookmark === 'true' ? true : false;
         // 動画リストのページ番号.
         $page = $request->getQueryParams()['page'];
         $page = empty($page) ? 1 : $page;
         // 取得する動画の数.
-        $movieNum=30;
+        $movieNum = 30;
 
         // Output.
-        if($isFilterBookmark) {
+        if ($isFilterBookmark) {
             // ブックマーク済みの動画リスト.
             $videoList = $GLOBALS['container']->get('BookmarkModel')->getBookmarkedVideoList($accountName, $page, $movieNum);
             //ブックマーク済み動画リストの次ページ.
             $nextPage = $GLOBALS['container']->get('BookmarkModel')->isExistNextPageMovie($page, $movieNum, $accountName);
-        }else{
+        } else {
             // 取得した動画リスト.
             $videoList = $this->typingGameModel->getVideoList($page, $movieNum);
             // 次のページ番号(なければfalse).
-            $nextPage = $this->typingGameModel->isExistNextPageMovie($page, $movieNum) ? $page + 1: false;
+            $nextPage = $this->typingGameModel->isExistNextPageMovie($page, $movieNum) ? $page + 1 : false;
         }
         // 前のページ番号(なければfalse).
         $prevPage = $page > 1 ? $page - 1 : false;
@@ -196,11 +195,11 @@ class Content1 extends BaseController
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'videoList'=>$videoList,
-            'page'=>$page,
-            'prevPage'=>$prevPage,
-            'nextPage'=>$nextPage,
-            'isFilterBookmark'=>$isFilterBookmark
+            'videoList' => $videoList,
+            'page' => $page,
+            'prevPage' => $prevPage,
+            'nextPage' => $nextPage,
+            'isFilterBookmark' => $isFilterBookmark
         ]);
     }
 
@@ -221,9 +220,9 @@ class Content1 extends BaseController
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
         // ブックマークしているか確認.
-        if($this->session->get('isAuth')) {
+        if ($this->session->get('isAuth')) {
             $isBookmark = $GLOBALS['container']->get('BookmarkModel')->isBookmark($this->session->get('account'), $videoId);
-        }else{
+        } else {
             $isBookmark = false;
         }
         return $this->view->render($response, 'content1Content.html.twig', [
@@ -232,8 +231,8 @@ class Content1 extends BaseController
             'account' => $this->session->get('account'),
             'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
-            'videoId'=>$videoId,
-            'isBookmark'=>$isBookmark
+            'videoId' => $videoId,
+            'isBookmark' => $isBookmark
         ]);
     }
 
@@ -260,7 +259,7 @@ class Content1 extends BaseController
             'account' => $this->session->get('account'),
             'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
-            'videoId'=>$videoId
+            'videoId' => $videoId
         ]);
     }
 
@@ -279,7 +278,7 @@ class Content1 extends BaseController
         array $args)
     {
         $videoId = $request->getParsedBody()['videoId'];
-        $typeInfo= $request->getParsedBody()['typeInfo'];
+        $typeInfo = $request->getParsedBody()['typeInfo'];
         // jsonにしてDB保存.
         $this->typingGameModel->updateTypeInfo($videoId, $typeInfo);
 
@@ -289,8 +288,8 @@ class Content1 extends BaseController
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'id'=>$videoId,// リダイレクトでURLパラメータに使う.
-            'videoId'=>$videoId
+            'id' => $videoId,// リダイレクトでURLパラメータに使う.
+            'videoId' => $videoId
         ]));
         return $response->withRedirect((string)$uri, 301);
 

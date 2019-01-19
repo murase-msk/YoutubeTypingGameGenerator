@@ -68,7 +68,7 @@ $container['view'] = function ($container) {
 // DB.
 $container['db'] = function ($container) {
     $db = $container['settings']['db'];
-    $dsn = 'pgsql:host=' . $db['host']. '; port='.$db['port'].';dbname=' . $db['dbname'];
+    $dsn = 'pgsql:host=' . $db['host'] . '; port=' . $db['port'] . ';dbname=' . $db['dbname'];
     $pdo = new PDO($dsn, $db['user'], $db['pass']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);

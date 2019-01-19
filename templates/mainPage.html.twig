@@ -10,16 +10,18 @@
         <!-- ジャンボトロン-->
         <!-- Main component for a primary marketing message or call to action -->
         <div class="jumbotron">
-            <h1><span style="color: red;">Y</span>outube <span style="color: red;">T</span>yping <span style="color: red;">G</span>ame <span style="color: red;">G</span>enerator</h1>
+            <h1><span style="color: red;">Y</span>outube <span style="color: red;">T</span>yping <span
+                        style="color: red;">G</span>ame <span style="color: red;">G</span>enerator</h1>
             <p>あなたの好きな動画でタイピングゲームをしよう</p>
             {% if (flash is not empty) and (flash.error[0] is not empty) %}
                 <span class="label label-danger">{{ flash.error[0] }}</span>
             {% endif %}
             <form class="form-inline" action="/content1/register" method="post">
                 {# CSRF #}
-                <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-                <input type="url" class="form-control" id="InputURL" name="youtube_url" size="80" placeholder="Youtubeの動画URLを入力してください(例: https://www.youtube.com/watch?v=xxxxx)">
+                <input type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
+                <input type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">
+                <input type="url" class="form-control" id="InputURL" name="youtube_url" size="80"
+                       placeholder="Youtubeの動画URLを入力してください(例: https://www.youtube.com/watch?v=xxxxx)">
                 <div class="radio">
                     <label><input type="radio" name="radio" value="Japanese" checked>日本語</label>
                 </div>
@@ -39,17 +41,20 @@
             <div class="col-lg-4">
                 <h3>Step1</h3>
                 <p>Youtubeの動画URLをコピー<br>（字幕のある動画であることを確認）</p>
-                <img class="img-thumbnail" src="./asset/img/step1.jpeg" alt="Generic placeholder image" style="width: 100%;">
+                <img class="img-thumbnail" src="./asset/img/step1.jpeg" alt="Generic placeholder image"
+                     style="width: 100%;">
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
                 <h3>Step2</h3>
                 <p>動画URLペースト＆日本語か英語どちらかをチェックして生成ボタンを押す</p>
-                <img class="img-thumbnail" src="./asset/img/step2.png" alt="Generic placeholder image" style="width: 100%; ">
+                <img class="img-thumbnail" src="./asset/img/step2.png" alt="Generic placeholder image"
+                     style="width: 100%; ">
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
                 <h3>Step3</h3>
                 <p>タイピングゲーム開始</p><br>
-                <img class="img-thumbnail" src="./asset/img/step3.png" alt="Generic placeholder image" style="width: 100%;">
+                <img class="img-thumbnail" src="./asset/img/step3.png" alt="Generic placeholder image"
+                     style="width: 100%;">
             </div><!-- /.col-lg-4 -->
         </div>
 

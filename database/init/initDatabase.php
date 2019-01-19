@@ -34,13 +34,13 @@ $accountTable->createTable();
 
 // シードデータインサート.
 // accountテーブルデータ
-$seeds = require  __DIR__ . '/../seeds/accountTableSeed.php';
-foreach($seeds as $key => $value){
+$seeds = require __DIR__ . '/../seeds/accountTableSeed.php';
+foreach ($seeds as $key => $value) {
     $accountTable->insertData(
         [
-            AccountTable::EMAIL=>$value[AccountTable::EMAIL],
-            AccountTable::ACCOUNT_NAME=>$value[AccountTable::ACCOUNT_NAME],
-            'password'=>$value['password']
+            AccountTable::EMAIL => $value[AccountTable::EMAIL],
+            AccountTable::ACCOUNT_NAME => $value[AccountTable::ACCOUNT_NAME],
+            'password' => $value['password']
         ]);
 }
 
@@ -56,14 +56,14 @@ $typeTextTable->createTable();
 
 // シードデータインサート.
 // accountテーブルデータ
-$seeds = require  __DIR__ . '/../seeds/typeTextTableSeed.php';
-foreach($seeds as $key => $value){
+$seeds = require __DIR__ . '/../seeds/typeTextTableSeed.php';
+foreach ($seeds as $key => $value) {
     $typeTextTable->insertData(
         [
-            TypeTextTable::TYPE_TEXT=>$value[TypeTextTable::TYPE_TEXT],
-            TypeTextTable::VIDEO_CODE=>$value[TypeTextTable::VIDEO_CODE],
-            TypeTextTable::TITLE=>$value[TypeTextTable::TITLE],
-            TypeTextTable::THUMBNAIL=>$value[TypeTextTable::THUMBNAIL]
+            TypeTextTable::TYPE_TEXT => $value[TypeTextTable::TYPE_TEXT],
+            TypeTextTable::VIDEO_CODE => $value[TypeTextTable::VIDEO_CODE],
+            TypeTextTable::TITLE => $value[TypeTextTable::TITLE],
+            TypeTextTable::THUMBNAIL => $value[TypeTextTable::THUMBNAIL]
         ]);
 }
 

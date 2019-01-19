@@ -53,13 +53,13 @@ class BookmarkController extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         array $args)
     {
-        if($this->session->get('isAuth')){
+        if ($this->session->get('isAuth')) {
             $accountName = $this->session->get('account');
             $videoId = $request->getParsedBody()['videoId'];
             $isBookmark = $this->bookmarkModel->isBookmark($accountName, $videoId);
-            return $response->withJson(["noError"=>true, "isBookmark"=>$isBookmark]);
+            return $response->withJson(["noError" => true, "isBookmark" => $isBookmark]);
         }
-        return $response->withJson(["noError"=>false]);
+        return $response->withJson(["noError" => false]);
     }
 
     /**
@@ -77,19 +77,19 @@ class BookmarkController extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         array $args)
     {
-        if($this->session->get('isAuth')){
+        if ($this->session->get('isAuth')) {
             $accountName = $this->session->get('account');
             $isBookmark = $account = $request->getParsedBody()['isBookmark'];
             $videoId = $account = $request->getParsedBody()['videoId'];
-            if($isBookmark){
+            if ($isBookmark) {
                 // ブックマーク削除.
                 $this->bookmarkModel->deleteBookmark($accountName, $videoId);
-            }else{
+            } else {
                 // ブックマーク登録.
                 $this->bookmarkModel->registerBookmark($accountName, $videoId);
             }
-            return $response->withJson(["noError"=>true, "isBookmark"=>!$isBookmark]);
+            return $response->withJson(["noError" => true, "isBookmark" => !$isBookmark]);
         }
-        return $response->withJson(["noError"=>false]);
+        return $response->withJson(["noError" => false]);
     }
 }

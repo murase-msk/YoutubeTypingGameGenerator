@@ -11,7 +11,7 @@ return [
         ],
 
         'cache' => [
-            'cache_path' => __DIR__ .'/../cache/',
+            'cache_path' => __DIR__ . '/../cache/',
         ],
 
         // Monolog settings
@@ -24,18 +24,18 @@ return [
             'host' => 'localhost',
             'user' => getenv('DB_user'),
             'pass' => getenv('DB_pass'),
-            'dbname'=> 'youtube_typing_game_generator',
+            'dbname' => 'youtube_typing_game_generator',
             'port' => '5432'
         ],
-        'root_account'=>[
-            'name'=>getenv('ROOT_NAME'),
-            'pass'=>getenv('ROOT_PASS')
+        'root_account' => [
+            'name' => getenv('ROOT_NAME'),
+            'pass' => getenv('ROOT_PASS')
         ],
-        'youtube_api'=>[
-            'key'=>getenv('youtubeApiKey')
+        'youtube_api' => [
+            'key' => getenv('youtubeApiKey')
         ],
-        'yahoo_api' =>[
-            'key'=>getenv('yahooApiKey')
+        'yahoo_api' => [
+            'key' => getenv('yahooApiKey')
         ]
     ],
 ];

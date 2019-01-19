@@ -29,22 +29,20 @@ class ValidationVideo
      * @param string $url youtubeの動画URL
      * @param string $type
      */
-    public function __construct($url, $type='youtubeUrl')
+    public function __construct($url, $type = 'youtubeUrl')
     {
-        if($type=='youtubeUrl'){
+        if ($type == 'youtubeUrl') {
             $isMatch = preg_match(
                 '/^(http|https):\/\/(www\.youtube\.com\/watch\?v=)([A-Z0-9_-]+)(&.*)?/i',
                 $url,
                 $matchResult
             );
             $this->videoId = $matchResult[3];
-            $this->isYoutubeUrl = $isMatch===1;
-        }
-        else if($type=='videoId'){
+            $this->isYoutubeUrl = $isMatch === 1;
+        } else if ($type == 'videoId') {
             $this->videoId = $url;
             $this->isYoutubeUrl = true;
-        }
-        else{
+        } else {
             throw new Exception('正しくありません');
         }
     }
@@ -62,16 +60,16 @@ class ValidationVideo
         ScrappingTypeText $scrappingTypeText
     ): array
     {
-        $result = ['result'=>'ok', 'msg'=>''];
-        if(!$this->isMatchYoutubeUrl()){
-            $result['result']='error';
-            $result['msg']='URLが正しくありません';
-        }else if($this->isAlreadyRegisteredUrl($typingGameModel)){
-            $result['result']='redirect';
-            $result['msg']='すでに登録されています';
-        }else if(!$this->isExistLanguageScript($languageType, $scrappingTypeText)){
-            $result['result']='error';
-            $result['msg']='対応する字幕データがありません';
+        $result = ['result' => 'ok', 'msg' => ''];
+        if (!$this->isMatchYoutubeUrl()) {
+            $result['result'] = 'error';
+            $result['msg'] = 'URLが正しくありません';
+        } else if ($this->isAlreadyRegisteredUrl($typingGameModel)) {
+            $result['result'] = 'redirect';
+            $result['msg'] = 'すでに登録されています';
+        } else if (!$this->isExistLanguageScript($languageType, $scrappingTypeText)) {
+            $result['result'] = 'error';
+            $result['msg'] = '対応する字幕データがありません';
         }
         return $result;
     }

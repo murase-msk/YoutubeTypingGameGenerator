@@ -38,13 +38,14 @@ abstract class BaseTable
         $stmt = $this->con->prepare($sql);
         $stmt->bindValue("tableName", $this->tableName, \PDO::PARAM_STR);
         $stmt->execute();
-        return $stmt->fetchColumn(0) === 0 ? false: true;
+        return $stmt->fetchColumn(0) === 0 ? false : true;
     }
 
-    public function createTable(){
+    public function createTable()
+    {
 
         if (!$this->isTableExist()) {
-            echo 'create new table '.$this->tableName.PHP_EOL;
+            echo 'create new table ' . $this->tableName . PHP_EOL;
             $stmt = $this->con->prepare($this->createTableSql);
             var_dump($stmt->queryString);
             $stmt->execute();
@@ -56,8 +57,8 @@ abstract class BaseTable
     public function deleteTable()
     {
         if ($this->isTableExist()) {
-            echo 'delete table '.$this->tableName.PHP_EOL;
-            $sql = "drop table ". $this->tableName;
+            echo 'delete table ' . $this->tableName . PHP_EOL;
+            $sql = "drop table " . $this->tableName;
             $stmt = $this->con->prepare($sql);
             $stmt->execute();
         }

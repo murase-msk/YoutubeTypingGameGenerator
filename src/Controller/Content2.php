@@ -7,6 +7,7 @@
  */
 
 namespace src\Controller;
+
 use Slim\Http\Response;
 use Slim\Http\Request;
 
