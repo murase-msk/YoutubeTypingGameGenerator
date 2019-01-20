@@ -8,7 +8,7 @@
 
 namespace src\Model;
 
-use database\init\TypeTextTable;
+use database\init\TypingGameTable;
 
 class TypingGameModel
 {
@@ -30,7 +30,7 @@ class TypingGameModel
      */
     public function searchTypeText(string $videoId): array
     {
-        $sql = 'select * from ' . TypeTextTable::tableName . ' where ' . TypeTextTable::VIDEO_CODE . ' = :videoId';
+        $sql = 'select * from ' . TypingGameTable::tableName . ' where ' . TypingGameTable::VIDEO_ID . ' = :videoId';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':videoId', $videoId);
         $stmt->execute();
@@ -48,7 +48,7 @@ class TypingGameModel
     public function getVideoList(int $page, int $movieNum): array
     {
         $offsetNum = ($page - 1) * $movieNum;
-        $sql = 'select * from ' . TypeTextTable::tableName . ' order by id desc limit :movieNum offset :offsetNum ';
+        $sql = 'select * from ' . TypingGameTable::tableName . ' order by id desc limit :movieNum offset :offsetNum ';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':movieNum', $movieNum);
         $stmt->bindParam(':offsetNum', $offsetNum);
@@ -80,9 +80,9 @@ class TypingGameModel
      */
     public function isExistRegisteredVideo(string $videoId): bool
     {
-        $sql = 'select * from ' . TypeTextTable::tableName . ' where video_code=:video_code';
+        $sql = 'select * from ' . TypingGameTable::tableName . ' where '.TypingGameTable::VIDEO_ID.'=:video_id';
         $stmt = $this->con->prepare($sql);
-        $stmt->bindParam(':video_code', $videoId);
+        $stmt->bindParam(':video_id', $videoId);
         $stmt->execute();
         $fetchResult = $stmt->fetch();
         $result = !empty($fetchResult);
@@ -94,7 +94,7 @@ class TypingGameModel
      */
     public function getTotalVideoNum(): int
     {
-        $sql = 'select count(*) from ' . TypeTextTable::tableName;
+        $sql = 'select count(*) from ' . TypingGameTable::tableName;
         $stmt = $this->con->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchColumn(0);
@@ -110,42 +110,42 @@ class TypingGameModel
     public function updateTypeInfo(string $videoId, string $typeInfo): void
     {
         $nowData = date("Y-m-d H:i:s");
-        $sql = 'update ' . TypeTextTable::tableName
+        $sql = 'update ' . TypingGameTable::tableName
             . ' set '
-            . ' ' . TypeTextTable::TYPE_TEXT . '=:type_text, '
-            . ' ' . TypeTextTable::VIDEO_CODE . '=:video_code, '
-            . ' ' . TypeTextTable::LAST_UPDATE . '=:last_update '
-            . ' ' . 'where ' . TypeTextTable::VIDEO_CODE . ' = \'' . $videoId . '\'';
+            . ' ' . TypingGameTable::TYPE_TEXT . '=:type_text, '
+            . ' ' . TypingGameTable::VIDEO_ID . '=:video_id, '
+            . ' ' . TypingGameTable::LAST_UPDATE . '=:last_update '
+            . ' ' . 'where ' . TypingGameTable::VIDEO_ID . ' = \'' . $videoId . '\'';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':type_text', $typeInfo);
-        $stmt->bindParam(':video_code', $videoId);
+        $stmt->bindParam(':video_id', $videoId);
         $stmt->bindParam(':last_update', $nowData);
         $stmt->execute();
     }
 
     /**
      * データ挿入
-     * @param $data [type_text=>..., video_code=>..., title=>..., thumbnail=>...,]
+     * @param $data [type_text=>..., video_id=>..., title=>..., thumbnail=>...,]
      */
     public function insertData(array $data): void
     {
         echo 'insert data' . PHP_EOL;
         $nowData = date("Y-m-d H:i:s");
         //echo $data['type_text'].PHP_EOL;
-        $sql = 'insert into ' . TypeTextTable::tableName
+        $sql = 'insert into ' . TypingGameTable::tableName
             . ' ('
-            . TypeTextTable::TYPE_TEXT . ', '
-            . TypeTextTable::VIDEO_CODE . ', '
-            . TypeTextTable::TITLE . ', '
-            . TypeTextTable::THUMBNAIL . ', '
-            . TypeTextTable::LAST_UPDATE
+            . TypingGameTable::TYPE_TEXT . ', '
+            . TypingGameTable::VIDEO_ID . ', '
+            . TypingGameTable::TITLE . ', '
+            . TypingGameTable::THUMBNAIL . ', '
+            . TypingGameTable::LAST_UPDATE
             . ') '
-            . 'values(:type_text, :video_code, :title, :thumbnail, :last_update)';
+            . 'values(:type_text, :video_id, :title, :thumbnail, :last_update)';
         $stmt = $this->con->prepare($sql);
-        $stmt->bindParam(':type_text', $data['type_text']);
-        $stmt->bindParam(':video_code', $data['video_code']);
-        $stmt->bindParam(':title', $data['title']);
-        $stmt->bindParam(':thumbnail', $data['thumbnail']);
+        $stmt->bindParam(':type_text', $data[TypingGameTable::TYPE_TEXT]);
+        $stmt->bindParam(':video_id', $data[TypingGameTable::VIDEO_ID]);
+        $stmt->bindParam(':title', $data[TypingGameTable::TITLE]);
+        $stmt->bindParam(':thumbnail', $data[TypingGameTable::THUMBNAIL]);
         $stmt->bindParam(':last_update', $nowData);
         $stmt->execute();
     }
@@ -156,7 +156,7 @@ class TypingGameModel
      */
     public function delete(string $videoId): void
     {
-        $sql = 'delete from ' . TypeTextTable::tableName . ' where ' . TypeTextTable::VIDEO_CODE . ' = :videoId';
+        $sql = 'delete from ' . TypingGameTable::tableName . ' where ' . TypingGameTable::VIDEO_ID . ' = :videoId';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':videoId', $videoId);
         $stmt->execute();

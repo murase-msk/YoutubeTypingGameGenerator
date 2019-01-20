@@ -10,20 +10,20 @@ namespace database\init;
 
 /**
  * タイピング情報を入ったテーブル
- * Class TypeTextTable
+ * Class TypingGameTable
  * @package database\init
  */
-class TypeTextTable extends BaseTable
+class TypingGameTable extends BaseTable
 {
     // カラム名.
     public const ID = 'id';
     public const TYPE_TEXT = 'type_text';
-    public const VIDEO_CODE = 'video_code';
+    public const VIDEO_ID = 'video_id';
     public const TITLE = 'title';
     public const THUMBNAIL = 'thumbnail';
     public const LAST_UPDATE = 'last_update';
     /** @var string tableName テーブル名 */
-    public const tableName = 'type_text_table';
+    public const tableName = 'typing_game';
 
     /** @var \PDO $con データベースコネクション */
     private $con;
@@ -32,11 +32,11 @@ class TypeTextTable extends BaseTable
         "create table if not exists " . self::tableName . "("
         . self::ID . " serial NOT NULL, "
         . self::TYPE_TEXT . " jsonb NOT NULL, "
-        . self::VIDEO_CODE . " text, "
+        . self::VIDEO_ID . " text, "
         . self::TITLE . " text, "
         . self::THUMBNAIL . " text, "
         . self::LAST_UPDATE . " timestamp without time zone, "
-        . "CONSTRAINT type_text_table_id_primary_key PRIMARY KEY (" . self::ID . ")"
+        . "CONSTRAINT typing_game_id_primary_key PRIMARY KEY (" . self::ID . ")"
         . ") ";
 
     public function __construct(\PDO $con)
@@ -53,21 +53,20 @@ class TypeTextTable extends BaseTable
     {
         echo 'insert data' . PHP_EOL;
         $nowData = date("Y-m-d H:i:s");
-        //echo $data['type_text'].PHP_EOL;
         $sql = 'insert into ' . self::tableName
             . ' ('
             . self::TYPE_TEXT . ', '
-            . self::VIDEO_CODE . ', '
+            . self::VIDEO_ID . ', '
             . self::TITLE . ', '
             . self::THUMBNAIL . ', '
             . self::LAST_UPDATE
             . ') '
-            . 'values(:type_text, :video_code, :title, :thumbnail, :last_update)';
+            . 'values(:type_text, :video_id, :title, :thumbnail, :last_update)';
         $stmt = $this->con->prepare($sql);
-        $stmt->bindParam(':type_text', $data['type_text']);
-        $stmt->bindParam(':video_code', $data['video_code']);
-        $stmt->bindParam(':title', $data['title']);
-        $stmt->bindParam(':thumbnail', $data['thumbnail']);
+        $stmt->bindParam(':type_text', $data[TypingGameTable::TYPE_TEXT]);
+        $stmt->bindParam(':video_id', $data[TypingGameTable::VIDEO_ID]);
+        $stmt->bindParam(':title', $data[TypingGameTable::TITLE]);
+        $stmt->bindParam(':thumbnail', $data[TypingGameTable::THUMBNAIL]);
         $stmt->bindParam(':last_update', $nowData);
         $stmt->execute();
     }

@@ -10,7 +10,7 @@ namespace database\init;
 
 /**
  * タイピング情報を入ったテーブル
- * Class TypeTextTable
+ * Class TypingGameTable
  * @package database\init
  */
 class BookmarkTable extends BaseTable
@@ -18,7 +18,7 @@ class BookmarkTable extends BaseTable
     // カラム名.
     public const ID = 'id';
     public const ACCOUNT_ID = 'account_id';
-    public const TYPE_TEXT_ID = 'type_text_id';
+    public const TYPING_GAME_ID = 'typing_game_id';
     /** @var string tableName テーブル名 */
     public const tableName = 'bookmark';
 
@@ -29,10 +29,10 @@ class BookmarkTable extends BaseTable
         "create table if not exists " . self::tableName . "("
         . self::ID . " serial NOT NULL, "
         . self::ACCOUNT_ID . " integer, "
-        . self::TYPE_TEXT_ID . " integer, "
+        . self::TYPING_GAME_ID . " integer, "
         . "CONSTRAINT bookmark_id_primary_key PRIMARY KEY (" . self::ID . "), "
         . "CONSTRAINT bookmark_account_id_foreign_key FOREIGN KEY (" . self::ACCOUNT_ID . ") REFERENCES " . AccountTable::tableName . "(" . AccountTable::ID . "), "
-        . "CONSTRAINT bookmark_type_text_id_foreign_key FOREIGN KEY (" . self::TYPE_TEXT_ID . ") REFERENCES " . TypeTextTable::tableName . "(" . TypeTextTable::ID . ") "
+        . "CONSTRAINT bookmark_typing_game_id_foreign_key FOREIGN KEY (" . self::TYPING_GAME_ID . ") REFERENCES " . TypingGameTable::tableName . "(" . TypingGameTable::ID . ") "
         . ") ";
 
     public function __construct(\PDO $con)
@@ -51,12 +51,12 @@ class BookmarkTable extends BaseTable
         $sql = 'insert into ' . self::tableName
             . ' ('
             . self::ACCOUNT_ID . ', '
-            . self::TYPE_TEXT_ID . ', '
+            . self::TYPING_GAME_ID . ', '
             . ') '
-            . 'values(:account_id, :type_text_id)';
+            . 'values(:account_id, :typing_game_id)';
         $stmt = $this->con->prepare($sql);
-        $stmt->bindParam(':account_id', $data['account_id']);
-        $stmt->bindParam(':type_text_id', $data['type_text_id']);
+        $stmt->bindParam(':account_id', $data[BookmarkTable::ACCOUNT_ID]);
+        $stmt->bindParam(':typing_game_id', $data[BookmarkTable::TYPING_GAME_ID]);
         $stmt->execute();
     }
 }

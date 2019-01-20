@@ -12,7 +12,7 @@ use Slim\Http\Response;
 use Slim\Http\Request;
 use src\Model\typingGame\ValidationVideo;
 use src\Model\TypingGameModel;
-use src\Model\typingGame\ConvertTypeText;
+use database\init\TypingGameTable;
 use src\Model\typingGame\ScrappingTypeText;
 
 
@@ -90,10 +90,10 @@ class TypingGameController extends BaseController
             // データベース追加.
             $this->typingGameModel->insertData(
                 [
-                    'type_text' => json_encode($captionData),
-                    'video_code' => $scrappingTypeText->videoCode,
-                    'title' => $youtubeData['title'],
-                    'thumbnail' => $youtubeData['thumbnail']
+                    TypingGameTable::TYPE_TEXT => json_encode($captionData),
+                    TypingGameTable::VIDEO_ID => $scrappingTypeText->videoCode,
+                    TypingGameTable::TITLE => $youtubeData['title'],
+                    TypingGameTable::THUMBNAIL => $youtubeData['thumbnail']
                 ]);
         } // すでに登録されている.
         else if ($result['result'] === 'redirect') {

@@ -1,7 +1,7 @@
 <?php
 
 
-/** type_text_tableの初期データ */
+/** typing_gameの初期データ */
 return [
     'data1' => [
         'type_text' =>
@@ -27,7 +27,7 @@ return [
                 }
                 ]
             }',
-        'video_code' => 'abc',
+        'video_id' => 'abc',
         'title' => 'title1',
         'thumbnail' => 'thumbnail1'
     ],
@@ -55,7 +55,7 @@ return [
                 }
                 ]
             }',
-        'video_code' => 'efg',
+        'video_id' => 'efg',
         'title' => 'title22',
         'thumbnail' => 'thumbnail2'
     ],
@@ -83,7 +83,7 @@ return [
                 }
                 ]
             }',
-        'video_code' => 'hij',
+        'video_id' => 'hij',
         'title' => 'title33',
         'thumbnail' => 'thumbnail33'
     ],
