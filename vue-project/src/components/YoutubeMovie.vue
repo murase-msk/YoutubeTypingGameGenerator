@@ -9,26 +9,30 @@
       style="z-index:99;"
     ></youtube>
     <br />
-    <div>{{ displayText }}</div>
-    <div id="inputPhrase">
-      <span id="inputtedPhrase">
-        <span
-          class="inputtedText"
-          v-for="(oneInputText, index) in inputtedText"
-          v-bind:key="index"
-          >{{ oneInputText + " " }}</span
-        >
-      </span>
-      <span id="restPhrase">
-        <span
-          class="restText"
-          v-for="(oneRestText, index) in restText"
-          v-bind:key="index"
-          >{{ oneRestText + " " }}</span
-        >
-      </span>
+    <div id="displayField">
+      <div id="displayText">{{ displayText }}</div>
+      <div id="inputPhrase">
+        <span id="inputtedPhrase">
+          <span
+            class="inputtedText"
+            v-for="(oneInputText, index) in inputtedText"
+            v-bind:key="index"
+            >{{ oneInputText + " " }}</span
+          >
+        </span>
+        <span id="restPhrase">
+          <span
+            class="restText"
+            v-for="(oneRestText, index) in restText"
+            v-bind:key="index"
+            >{{ oneRestText + " " }}</span
+          >
+        </span>
+      </div>
+      <div id="inputRoman">
+        <span>{{ inputRoman }}</span>
+      </div>
     </div>
-    <span>{{ inputRoman }}</span>
 
     <br />
     <span></span>
@@ -363,13 +367,46 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+//  枠の大きさ
+$border-length: 3px;
+// タイピング枠の横幅の大きさ
+$typingFieldWidth: 640px;
+// テキストの大きさ（縦幅）
+$textFieldHeight:30px;
+
+#displayField,
+#displayText,
+#inputPhrase,
+#inputRoman{
+  background-color: #9d9d9d;
+  border: $border-length solid #000000;
+  box-sizing: border-box;
+}
+
+#displayField {
+  width: $typingFieldWidth;
+  margin: auto;
+  height: $textFieldHeight*3 + $border-length;
+
+  #displayText,
+  #inputPhrase,
+  #inputRoman {
+    border-top: 0;
+    width: $typingFieldWidth - ($border-length* 2);
+    height:$textFieldHeight;
+    margin: 0;
+    font-size: 1.5em;
+  }
+}
+
 .inputtedText {
   font-weight: bolder;
 }
 
-#topInputtedText > span.inputtedText:not(:first-child),
-#topRestText > span.restText:not(:first-child) {
-  /*margin-left: 5px;*/
-}
+/*#topInputtedText > span.inputtedText:not(:first-child),*/
+/*#topRestText > span.restText:not(:first-child) {*/
+  /*!*margin-left: 5px;*!*/
+/*}*/
 </style>

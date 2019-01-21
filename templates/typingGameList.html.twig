@@ -34,16 +34,17 @@
             <div class="col-md-2 sidebar">
                 {# ログインしている場合のみ　チェックの有無で遷移先を変える　vueが良さそう? バニラでもいいかも？ #}
                 <form action="/typingGame/list" method="GET">
-                    {% if (isAuth is same as (true)) %}
-                        {% if (isFilterBookmark is same as (true)) %}
-                            <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true" checked>
+                    <label for="isFilterBookmark" style="cursor: pointer;">
+                        {% if (isAuth is same as (true)) %}
+                            {% if (isFilterBookmark is same as (true)) %}
+                                <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true" style="cursor: pointer;" checked>
+                            {% else %}
+                                <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true" style="cursor: pointer;">
+                            {% endif %}
                         {% else %}
-                            <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true">
+                            <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" disabled value="true" style="cursor: pointer;">
                         {% endif %}
-                    {% else %}
-                        <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" disabled value="true">
-                    {% endif %}
-                    <label for="isFilterBookmark">ブックマーク済みのみ</label>
+                    ブックマーク済みのみ</label>
                     <input type="submit" value="フィルター">
                 </form>
             </div>
