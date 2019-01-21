@@ -368,18 +368,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 //  枠の大きさ
 $border-length: 3px;
 // タイピング枠の横幅の大きさ
 $typingFieldWidth: 640px;
 // テキストの大きさ（縦幅）
-$textFieldHeight:30px;
+$textFieldHeight: 30px;
 
 #displayField,
 #displayText,
 #inputPhrase,
-#inputRoman{
+#inputRoman {
   background-color: #9d9d9d;
   border: $border-length solid #000000;
   box-sizing: border-box;
@@ -388,14 +387,14 @@ $textFieldHeight:30px;
 #displayField {
   width: $typingFieldWidth;
   margin: auto;
-  height: $textFieldHeight*3 + $border-length;
+  height: $textFieldHeight * 3 + $border-length;
 
   #displayText,
   #inputPhrase,
   #inputRoman {
     border-top: 0;
-    width: $typingFieldWidth - ($border-length* 2);
-    height:$textFieldHeight;
+    width: $typingFieldWidth - ($border-length * 2);
+    height: $textFieldHeight;
     margin: 0;
     font-size: 1.5em;
   }
@@ -407,6 +406,6 @@ $textFieldHeight:30px;
 
 /*#topInputtedText > span.inputtedText:not(:first-child),*/
 /*#topRestText > span.restText:not(:first-child) {*/
-  /*!*margin-left: 5px;*!*/
+/*!*margin-left: 5px;*!*/
 /*}*/
 </style>
