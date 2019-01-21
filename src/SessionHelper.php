@@ -24,7 +24,8 @@ class SessionHelper
         return $this->exists($key) ? $this->session[$key] : $default;
     }
 
-    public function set($key, $value){
+    public function set($key, $value)
+    {
         $this->presetSession();
         $this->session[$key] = $value;
         $this->afterSetSession();
@@ -38,13 +39,16 @@ class SessionHelper
         }
         $this->afterSetSession();
     }
+
     public function clear()
     {
         $this->presetSession();
         $this->session = [];
         $this->afterSetSession();
     }
-    private function exists($key){
+
+    private function exists($key)
+    {
         return array_key_exists($key, $this->session);
     }
 
@@ -54,6 +58,7 @@ class SessionHelper
             $this->session = $_SESSION;
         }
     }
+
     private function afterSetSession()
     {
         if (isset($_SESSION)) {

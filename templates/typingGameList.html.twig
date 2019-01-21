@@ -1,0 +1,54 @@
+{% extends "layout/layout.html.twig" %}
+
+{% block title %}リスト{% endblock %}
+
+{% block content %}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 content" id="mainApp">
+                <div class="row">
+                    <div class="col-md-12 moveList">
+                        {% for video in videoList %}
+                            <div class="col-xs-6 col-md-4">
+                                <div class="thumbnail">
+                                    <img src="{{ video['thumbnail'] }}">
+                                    <div class="caption line-2">
+                                        <span class="movieTitle">{{ video['title'] }}</span>
+                                        <a href="./watch/{{ video['video_id'] }}" class="thumbnailLink"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-12 page" style="text-align:center;margin:50px;">
+                        <span style="font-size: x-large;">
+                            <a {{ prevPage == false ? "" : "href= /typingGame/list?page=" }}{{ prevPage }}> &lt; </a>
+                            <span style="margin-left: 5em;margin-right:5em;">{{ page }}</span>
+                            <a {{ nextPage == false ? "" : "href= /typingGame/list?page=" }}{{ nextPage }}> &gt; </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 sidebar">
+                {# ログインしている場合のみ　チェックの有無で遷移先を変える　vueが良さそう? バニラでもいいかも？ #}
+                <form action="/typingGame/list" method="GET">
+                    <label for="isFilterBookmark" style="cursor: pointer;">
+                        {% if (isAuth is same as (true)) %}
+                            {% if (isFilterBookmark is same as (true)) %}
+                                <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true" style="cursor: pointer;" checked>
+                            {% else %}
+                                <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" value="true" style="cursor: pointer;">
+                            {% endif %}
+                        {% else %}
+                            <input type="checkbox" name="isFilterBookmark" id="isFilterBookmark" disabled value="true" style="cursor: pointer;">
+                        {% endif %}
+                    ブックマーク済みのみ</label>
+                    <input type="submit" value="フィルター">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

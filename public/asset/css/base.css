@@ -1,12 +1,13 @@
 .sidebar {
-    height: 700px;
-    background: orange;
+    /*height: 700px;*/
+    /*background: orange;*/
 }
 .content {
-    height:700px;
-    background:pink;
+    /*height:700px;*/
+    /*background:pink;*/
 }
 
+/* 一覧画面のサムネイル全体をリンクにする */
 .thumbnailLink {
     position: absolute;
     top: 0;
@@ -15,4 +16,12 @@
     height: 100%;
     text-indent:-999px;
     z-index: 2;
+}
+
+/* 2行だけ表示 */
+.line-2 {
+    overflow: hidden;
+    height: 3.6em; /* 2em（行）x line-heightの1.8 */
+    font-size: 16px;
+    line-height: 1.8;
 }

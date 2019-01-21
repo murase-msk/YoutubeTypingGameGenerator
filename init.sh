@@ -6,7 +6,7 @@
 # vagrant init 名前
 # vagrant up
 
-# ./provision.sh production
+# ./init.sh production
 # ENV=production: 本番環境, ENV=development: 開発環境
 #ENV=production
 #ENV=development
@@ -318,3 +318,24 @@ npm i -D --no-bin-links --no-optional
 #
 # Vue CLI 3
 npm install -g @vue/cli
+
+#
+# アプリの初期設定.
+#
+cd /var/www/html/YoutubeTypingGnameGenerator
+# Composer
+sudo composer install
+# DB初期化
+php database/init/initDatabase.php
+# webhookでgit pullするため.
+sudo chown -R www-data:www-data /var/www/html/YoutubeTypingGameGenerator/
+
+cd vue-project
+# windows Hostとファイル共有する場合のみ
+# node_modulesを共有しないディレクトリに作成し、シンボリックリンクを貼る
+if [ ${ENV} = 'development' ]; then
+    mkdir -p ~slim_app_node_modules/node_modules
+    ln -s ~/slim_app_node_modules/node_modules/ node_modules
+fi
+# npm
+npm install  --production --no-save

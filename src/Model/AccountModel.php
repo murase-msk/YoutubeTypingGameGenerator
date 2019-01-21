@@ -35,7 +35,6 @@ class AccountModel
 //    }
 
 
-
     /**
      * アカウントを登録する
      * @param $email
@@ -47,11 +46,11 @@ class AccountModel
         // パスワードハッシュ化.
         $hashedPass = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = 'insert into '.AccountTable::tableName.' ('
-            .AccountTable::ACCOUNT_NAME.', '
-            .AccountTable::EMAIL.', '
-            .AccountTable::HASHED_PASSWORD
-            .') values(:name, :email, :password)';
+        $sql = 'insert into ' . AccountTable::tableName . ' ('
+            . AccountTable::ACCOUNT_NAME . ', '
+            . AccountTable::EMAIL . ', '
+            . AccountTable::HASHED_PASSWORD
+            . ') values(:name, :email, :password)';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':name', $account);
         $stmt->bindParam(':email', $email);
@@ -65,13 +64,14 @@ class AccountModel
      * @param [type] $email
      * @return boolean
      */
-    public function isSameEmail($email){
-        $sql = 'select count(*) from '.AccountTable::tableName.' where '.AccountTable::EMAIL.' = :email';
+    public function isSameEmail($email)
+    {
+        $sql = 'select count(*) from ' . AccountTable::tableName . ' where ' . AccountTable::EMAIL . ' = :email';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         $result = $stmt->fetchColumn(0);
-        return (int)$result === 0 ? false: true;
+        return (int)$result === 0 ? false : true;
     }
 
     /**
@@ -80,12 +80,13 @@ class AccountModel
      * @param [type] $account
      * @return boolean
      */
-    public function isSameAccount($account){
-        $sql = 'select count(*) from '.AccountTable::tableName.' where '.AccountTable::ACCOUNT_NAME.' = :account';
+    public function isSameAccount($account)
+    {
+        $sql = 'select count(*) from ' . AccountTable::tableName . ' where ' . AccountTable::ACCOUNT_NAME . ' = :account';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':account', $account);
         $stmt->execute();
-        return $stmt->fetchColumn(0) === 0 ? false: true;
+        return $stmt->fetchColumn(0) === 0 ? false : true;
     }
 
     /**
@@ -97,9 +98,9 @@ class AccountModel
     public function isAuthAccount($account, $password)
     {
         $sql = 'select '
-            .AccountTable::ACCOUNT_NAME.', '
-            .AccountTable::HASHED_PASSWORD
-            .' from '.AccountTable::tableName.' where '.AccountTable::ACCOUNT_NAME.' = :account ';
+            . AccountTable::ACCOUNT_NAME . ', '
+            . AccountTable::HASHED_PASSWORD
+            . ' from ' . AccountTable::tableName . ' where ' . AccountTable::ACCOUNT_NAME . ' = :account ';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':account', $account);
 //        $stmt->bindParam(':password', $password);
@@ -116,8 +117,8 @@ class AccountModel
      */
     public function deleteAccount($account, $password)
     {
-        if($this->isAuthAccount($account, $password)){
-            $sql = 'delete from '.AccountTable::tableName.' where '.AccountTable::ACCOUNT_NAME.' = :account';
+        if ($this->isAuthAccount($account, $password)) {
+            $sql = 'delete from ' . AccountTable::tableName . ' where ' . AccountTable::ACCOUNT_NAME . ' = :account';
             $stmt = $this->con->prepare($sql);
             $stmt->bindParam(':account', $account);
             $stmt->execute();

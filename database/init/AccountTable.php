@@ -25,17 +25,17 @@ class AccountTable extends BaseTable
 
     /** @var \PDO $con データベースコネクション */
     private $con;
-    /** @var string createTableSql  */
+    /** @var string createTableSql */
     private const createTableSql =
-        "create table if not exists ".self::tableName."("
-        .self::ID." serial NOT NULL, "
-        .self::ACCOUNT_NAME." text NOT NULL, "
-        .self::EMAIL." text, "
-        .self::HASHED_PASSWORD." text, "
-        ."CONSTRAINT account_id_primary_key PRIMARY KEY (".self::ID."), "
-        ."CONSTRAINT account_email_unique UNIQUE (".self::EMAIL."), "
-        ."CONSTRAINT account_name_unique UNIQUE (".self::ACCOUNT_NAME.")"
-        .") ";
+        "create table if not exists " . self::tableName . "("
+        . self::ID . " serial NOT NULL, "
+        . self::ACCOUNT_NAME . " text NOT NULL, "
+        . self::EMAIL . " text, "
+        . self::HASHED_PASSWORD . " text, "
+        . "CONSTRAINT account_id_primary_key PRIMARY KEY (" . self::ID . "), "
+        . "CONSTRAINT account_email_unique UNIQUE (" . self::EMAIL . "), "
+        . "CONSTRAINT account_name_unique UNIQUE (" . self::ACCOUNT_NAME . ")"
+        . ") ";
 
     public function __construct(\PDO $con)
     {
@@ -53,13 +53,13 @@ class AccountTable extends BaseTable
         // パスワードハッシュ化.
         $hashedPass = password_hash($data['password'], PASSWORD_DEFAULT);
 
-        $sql = 'insert into '.self::tableName
-            .' ('
-            .self::ACCOUNT_NAME.', '
-            .self::EMAIL.', '
-            .self::HASHED_PASSWORD
-            .') '
-            .'values(:account_name, :email, :hashed_password)';
+        $sql = 'insert into ' . self::tableName
+            . ' ('
+            . self::ACCOUNT_NAME . ', '
+            . self::EMAIL . ', '
+            . self::HASHED_PASSWORD
+            . ') '
+            . 'values(:account_name, :email, :hashed_password)';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':account_name', $data[AccountTable::ACCOUNT_NAME]);
         $stmt->bindParam(':email', $data[AccountTable::EMAIL]);

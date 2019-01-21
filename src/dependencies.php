@@ -31,7 +31,7 @@ $container['accountAuth'] = function ($c) {
 $container['csrf'] = function ($c) {
     $guard = new \Slim\Csrf\Guard;
     // トークン永続化.
-    //$guard->setPersistentTokenMode(true);
+    $guard->setPersistentTokenMode(true);
     // CSRFチェック失敗時.
 //    $guard->setFailureCallable(function ($request, $response, $next) {
 //        $request = $request->withAttribute("csrf_status", false);
@@ -68,7 +68,7 @@ $container['view'] = function ($container) {
 // DB.
 $container['db'] = function ($container) {
     $db = $container['settings']['db'];
-    $dsn = 'pgsql:host=' . $db['host']. '; port='.$db['port'].';dbname=' . $db['dbname'];
+    $dsn = 'pgsql:host=' . $db['host'] . '; port=' . $db['port'] . ';dbname=' . $db['dbname'];
     $pdo = new PDO($dsn, $db['user'], $db['pass']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -87,6 +87,10 @@ $container['TypingGameModel'] = function ($container) {
     $typingGameModel = new \src\Model\TypingGameModel($container['db']);
     return $typingGameModel;
 };
+$container['BookmarkModel'] = function ($container) {
+    $typingGameModel = new \src\Model\BookmarkModel($container['db']);
+    return $typingGameModel;
+};
 
 //
 // Controller
@@ -99,20 +103,31 @@ $container['MainApp'] = function ($container) {
     return new \src\Controller\MainApp($view, $csrf, $flash, $session);
 };
 
-$container['Content1'] = function ($container) {
+$container['TypingGameController'] = function ($container) {
     $view = $container->get('view');
     $router = $container->get('router');
     $csrf = $container->get('csrf');
     $flash = $container->get('flash');
     $session = $container->get('session');
     $typingGameModel = $container->get('TypingGameModel');
-    return new \src\Controller\Content1($view, $router, $csrf, $flash, $session, $typingGameModel);
+    return new \src\Controller\TypingGameController($view, $router, $csrf, $flash, $session, $typingGameModel);
 };
-$container['Content2'] = function ($container) {
+
+$container['BookmarkController'] = function ($container) {
     $view = $container->get('view');
+    $router = $container->get('router');
+    $csrf = $container->get('csrf');
+    $flash = $container->get('flash');
     $session = $container->get('session');
-    return new \src\Controller\Content2($view, $session);
+    $bookmarkModel = $container->get('BookmarkModel');
+    return new \src\Controller\BookmarkController($view, $router, $csrf, $flash, $session, $bookmarkModel);
 };
+
+//$container['Content2'] = function ($container) {
+//    $view = $container->get('view');
+//    $session = $container->get('session');
+//    return new \src\Controller\Content2($view, $session);
+//};
 
 
 $container['AccountController'] = function ($container) {

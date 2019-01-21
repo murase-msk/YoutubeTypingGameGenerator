@@ -7,19 +7,21 @@
  */
 
 namespace src\Controller;
+
 use Slim\Http\Response;
 use Slim\Http\Request;
+use src\Model\typingGame\ValidationVideo;
 use src\Model\TypingGameModel;
-use src\Model\typingGame\ConvertTypeText;
+use database\init\TypingGameTable;
 use src\Model\typingGame\ScrappingTypeText;
 
 
 /**
- * Class Content1
+ * Class TypingGameController
  * @package src\Controller
  * コンテンツ画面
  */
-class Content1 extends BaseController
+class TypingGameController extends BaseController
 {
 
     private $view;
@@ -44,45 +46,7 @@ class Content1 extends BaseController
         $this->session = $session;
         $this->typingGameModel = $typingGameModel;
     }
-
-    function index(
-        /** @noinspection PhpUnusedParameterInspection */
-        Request $request,
-        /** @noinspection PhpUnusedParameterInspection */
-        Response $response,
-        /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
-
-        return $this->view->render($response, 'content1.html.twig', [
-            'activeHeader' => 'content1',
-            'isAuth' => $this->session->get('isAuth'),
-            'account' => $this->session->get('account'),
-        ]);
-    }
-
-    /**
-     * 新規作成画面
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    function new(
-        /** @noinspection PhpUnusedParameterInspection */
-        Request $request,
-        /** @noinspection PhpUnusedParameterInspection */
-        Response $response,
-        /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
-        return $this->view->render($response, 'content1New.html.twig', [
-            'activeHeader' => 'content1',
-            'isAuth' => $this->session->get('isAuth'),
-            'account' => $this->session->get('account'),
-        ]);
-    }
-
+    
     /**
      * コンテンツ登録
      * @param Request $request
@@ -100,51 +64,48 @@ class Content1 extends BaseController
     {
         $settings = require __DIR__ . '/../settings.php';
         $youtubeUrl = $request->getParsedBody()['youtube_url'];
-        // youtubeの動画URLであるかチェック
-        $isMatch = preg_match('/^(http|https):\/\/(www\.youtube\.com\/watch\?v=)([A-Z0-9_-]+)(&.*)?/i', $youtubeUrl, $matchResult);
-        if($isMatch !== 1){
+
+        $validationVideo = new ValidationVideo($youtubeUrl);
+        $videoId = $validationVideo->videoId;
+        $scrappingTypeText = new ScrappingTypeText($videoId);
+        // TODO: クライアントの日本語と英語選択を反映する
+        $result = $validationVideo->validateUrl(
+            $this->typingGameModel,
+            'Japanese',
+            $scrappingTypeText
+        );
+        // 何らかの異常があり、生成できない.
+        if ($result['result'] === 'error') {
             // エラーを返す(URLが正しくない).
-            $this->flash->addMessage('error', 'URLが正しくありません');
+            $this->flash->addMessage('error', $result['msg']);
             $uri = $request->getUri()->withPath($this->router->pathFor('index'));
             return $response->withRedirect((string)$uri, 301);
+        } // 生成できるURLであった.
+        else if ($result['result'] === 'ok') {
+            $downloadSubUrl = $scrappingTypeText->getSrtUrl($validationVideo->langListIndex);
+            $captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
+            // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
+            // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
+            $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
+            // データベース追加.
+            $this->typingGameModel->insertData(
+                [
+                    TypingGameTable::TYPE_TEXT => json_encode($captionData),
+                    TypingGameTable::VIDEO_ID => $scrappingTypeText->videoCode,
+                    TypingGameTable::TITLE => $youtubeData['title'],
+                    TypingGameTable::THUMBNAIL => $youtubeData['thumbnail']
+                ]);
+        } // すでに登録されている.
+        else if ($result['result'] === 'redirect') {
         }
-        // TODO:すでに登録されている動画であるか.
-        if(true){
-
-        }
-        $videoId = $matchResult[3];
-        // videoIdから字幕情報タイピング情報取得.
-        $scrappingTypeText = new ScrappingTypeText($youtubeUrl);
-        $languageList = $scrappingTypeText->getScriptLanguageList();
-        $langListIndex = array_search('Japanese', $languageList);
-        if($langListIndex === false){
-            // 対応する字幕が見つからなかった。.
-            $this->flash->addMessage('error', '対応する字幕データがありません');
-            $uri = $request->getUri()->withPath($this->router->pathFor('index'));
-            return $response->withRedirect((string)$uri, 301);
-        }
-        $downloadSubUrl = $scrappingTypeText->getSrtUrl($langListIndex);
-        $captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
-        // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
-        // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
-        $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
-        // データベース追加.
-        $this->typingGameModel->insertData(
-            [
-                'type_text'=>json_encode($captionData),
-                'video_code'=>$scrappingTypeText->videoCode,
-                'title' =>$youtubeData['title'],
-                'thumbnail'=>$youtubeData['thumbnail']
-            ]);
-
         // リダイレクト.
         $uri = $request->getUri()->withPath($this->router->pathFor('watch', [
             'activeHeader' => 'watch',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'id'=>$videoId,
-            'videoId'=>$videoId
+            'id' => $videoId,// リダイレクトでURLパラメータに使う.
+            'videoId' => $videoId
         ]));
         return $response->withRedirect((string)$uri, 301);
 
@@ -164,16 +125,41 @@ class Content1 extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         array $args)
     {
-        // TODO: DBからリスト取得.
-        $videoList = $this->typingGameModel->getAllVideoList();
+        // アカウント名.
+        $accountName = $this->session->get('account');
+        // ブックマーク舌動画のみでフィルターするか.
+        $isFilterBookmark = $request->getQueryParams()['isFilterBookmark'];
+        $isFilterBookmark = $isFilterBookmark === 'true' ? true : false;
+        // 動画リストのページ番号.
+        $page = $request->getQueryParams()['page'];
+        $page = empty($page) ? 1 : $page;
+        // 取得する動画の数.
+        $movieNum = 30;
 
-        // TODO: リンクを表示
-        return $this->view->render($response, 'content1List.html.twig', [
-            'activeHeader' => 'content1',
+        // Output.
+        if ($isFilterBookmark) {
+            // ブックマーク済みの動画リスト.
+            $videoList = $GLOBALS['container']->get('BookmarkModel')->getBookmarkedVideoList($accountName, $page, $movieNum);
+            //ブックマーク済み動画リストの次ページ.
+            $nextPage = $GLOBALS['container']->get('BookmarkModel')->isExistNextPageMovie($page, $movieNum, $accountName);
+        } else {
+            // 取得した動画リスト.
+            $videoList = $this->typingGameModel->getVideoList($page, $movieNum);
+            // 次のページ番号(なければfalse).
+            $nextPage = $this->typingGameModel->isExistNextPageMovie($page, $movieNum) ? $page + 1 : false;
+        }
+        // 前のページ番号(なければfalse).
+        $prevPage = $page > 1 ? $page - 1 : false;
+        return $this->view->render($response, 'typingGameList.html.twig', [
+            'activeHeader' => 'list',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'videoList'=>$videoList
+            'videoList' => $videoList,
+            'page' => $page,
+            'prevPage' => $prevPage,
+            'nextPage' => $nextPage,
+            'isFilterBookmark' => $isFilterBookmark
         ]);
     }
 
@@ -193,13 +179,20 @@ class Content1 extends BaseController
     {
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
-
-        return $this->view->render($response, 'content1Content.html.twig', [
+        // ブックマークしているか確認.
+        if ($this->session->get('isAuth')) {
+            $isBookmark = $GLOBALS['container']->get('BookmarkModel')->isBookmark($this->session->get('account'), $videoId);
+        } else {
+            $isBookmark = false;
+        }
+        return $this->view->render($response, 'typingGameContent.html.twig', [
             'activeHeader' => 'watch',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
-            'videoId'=>$videoId
+            'videoId' => $videoId,
+            'isBookmark' => $isBookmark
         ]);
     }
 
@@ -220,13 +213,13 @@ class Content1 extends BaseController
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
 
-        return $this->view->render($response, 'content1Edit.html.twig', [
+        return $this->view->render($response, 'typingGameEdit.html.twig', [
             'activeHeader' => 'edit',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
             'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
-            'videoId'=>$videoId
+            'videoId' => $videoId
         ]);
     }
 
@@ -245,7 +238,7 @@ class Content1 extends BaseController
         array $args)
     {
         $videoId = $request->getParsedBody()['videoId'];
-        $typeInfo= $request->getParsedBody()['typeInfo'];
+        $typeInfo = $request->getParsedBody()['typeInfo'];
         // jsonにしてDB保存.
         $this->typingGameModel->updateTypeInfo($videoId, $typeInfo);
 
@@ -255,8 +248,8 @@ class Content1 extends BaseController
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
 
-            'id'=>$videoId,
-            'videoId'=>$videoId
+            'id' => $videoId,// リダイレクトでURLパラメータに使う.
+            'videoId' => $videoId
         ]));
         return $response->withRedirect((string)$uri, 301);
 

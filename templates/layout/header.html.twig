@@ -15,23 +15,22 @@
                 <li {{ activeHeader == 'index' ? 'class=active' : '' }}>
                     <a href="{{ path_for('index', {'active-header': 'index'}) }}" id="home_button">Home</a>
                 </li>
-                <li {{ activeHeader == 'content1' ? 'class=active' : '' }}>
-                    <a href="{{ path_for('contentsList', {'active-header': 'content1'}) }}" id="content1_button">登録一覧</a>
-                </li>
-                <li {{ activeHeader == 'content2' ? 'class=active' : '' }}>
-                    <a href="{{ path_for('content2', {'active-header': 'content2'}) }}" id="content2_button">YTGGとは</a>
+                <li {{ activeHeader == 'list' ? 'class=active' : '' }}>
+                    <a href="{{ path_for('contentsList', {'active-header': 'list'}) }}"
+                       id="list_button">登録一覧</a>
                 </li>
             </ul>
+            <input type="hidden" name="isAuth" value="{{ isAuth }}">
             {% if (isAuth is same as (true)) %}
-              <ul class="nav navbar-nav navbar-right">
-                  <li><a href="#" id="account_button">{{ account }}</a></li>
-                  <li><a href="{{ path_for('logout', {}) }}" id="logout_button">Logout</a></li>
-              </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" id="account_button">{{ account }}</a></li>
+                    <li><a href="{{ path_for('logout', {}) }}" id="logout_button">Logout</a></li>
+                </ul>
             {% else %}
-              <ul class="nav navbar-nav navbar-right">
-                  <li><a href="{{ path_for('signUp', {}) }}" id="sign_up_button">Sign Up</a></li>
-                  <li><a href="{{ path_for('signIn', {}) }}" id="sign_in_button">Sign In</a></li>
-              </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{ path_for('signUp', {}) }}" id="sign_up_button">Sign Up</a></li>
+                    <li><a href="{{ path_for('signIn', {}) }}" id="sign_in_button">Sign In</a></li>
+                </ul>
             {% endif %}
         </div><!--/.nav-collapse -->
     </div>

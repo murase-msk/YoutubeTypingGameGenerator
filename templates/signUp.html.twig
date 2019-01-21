@@ -14,8 +14,8 @@
                     <form action="/registerAccount" method="post">
 
                         {# CSRF #}
-                        <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                        <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+                        <input type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
+                        <input type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">
 
                         <div class="form-group">
                             <label for="InputEmail">メールアドレス

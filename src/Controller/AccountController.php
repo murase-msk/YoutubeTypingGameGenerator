@@ -242,7 +242,7 @@ class AccountController extends BaseController
     {
         $request = $request->withAttribute('has_errors', true);
         $errors = $request->getAttribute('errors');
-        $errors = array_merge($errors, array($index=>[$msg]));
+        $errors = array_merge($errors, array($index => [$msg]));
         $request = $request->withAttribute('errors', $errors);
         return $request;
     }
