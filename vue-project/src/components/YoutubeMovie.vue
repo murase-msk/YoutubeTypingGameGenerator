@@ -106,8 +106,8 @@ export default {
     // 8083はvue dev-serverのポート.
     // 8081はapacheのGuest80番をHostにフォワーディングした先のポート.
     // 開発環境(vue dev-server)の場合 port8083なのでajaxはport8081にする.
-    let port = location.port === "8083" ? "8081" : location.port;
-    let url =
+    const port = location.port === "8083" ? "8081" : location.port;
+    const url =
       location.protocol +
       "//" +
       location.hostname +
@@ -155,7 +155,7 @@ export default {
     //   return item;
     // },
     startingType() {
-      let now = Date.now();
+      const now = Date.now();
       if (now - this.timer > FRAME_TIME) {
         // ループ処理ここから //
         // 現在の再生時間取得.
@@ -195,7 +195,7 @@ export default {
         // ループ処理ここまで //
         this.timer = now;
       }
-      let requestId = requestAnimationFrame(this.startingType);
+      requestAnimationFrame(this.startingType);
       // cancelAnimationFrame(requestId);
     },
     // キー入力がトリガーとなる.
@@ -259,17 +259,17 @@ export default {
     // インデックスは文字数.
     searchNextRomanChunkCandidate(text) {
       // 残りの入力テキストのうち最初の文字.
-      let firstChar = text.slice(0, 1);
+      const firstChar = text.slice(0, 1);
       // 残りの入力テキストのうち2番目文字.
-      let secondChar = text.slice(1, 2);
+      const secondChar = text.slice(1, 2);
       // 残りの入力テキストのうち3番目文字.
-      let thirdChar = text.slice(2, 3);
+      const thirdChar = text.slice(2, 3);
       // 残りの入力テキストのうち最初の文字をローマ字返還した時の候補の配列
-      let singleRoman = this.convertHiraganaToRoman(firstChar);
+      const singleRoman = this.convertHiraganaToRoman(firstChar);
       // 残りの入力テキストのうち2文字目までをローマ字返還した時の候補の配列
-      let doubleRoman = this.convertHiraganaToRoman(firstChar + secondChar);
+      const doubleRoman = this.convertHiraganaToRoman(firstChar + secondChar);
       // 残りの入力テキストのうち3文字目までをローマ字返還した時の候補の配列
-      let tripleRoman = this.convertHiraganaToRoman(
+      const tripleRoman = this.convertHiraganaToRoman(
         firstChar + secondChar + thirdChar
       );
       // 半角はそのまま入力.

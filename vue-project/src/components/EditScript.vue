@@ -120,8 +120,8 @@ export default {
     // 8083はvue dev-serverのポート.
     // 8081はapacheのGuest80番をHostにフォワーディングした先のポート.
     // 開発環境(vue dev-server)の場合 port8083なのでajaxはport8081にする.
-    let port = location.port === "8083" ? "8081" : location.port;
-    let url =
+    const port = location.port === "8083" ? "8081" : location.port;
+    const url =
       location.protocol +
       "//" +
       location.hostname +
@@ -146,7 +146,7 @@ export default {
     },
     // 再生している時間はどのフレーズか.
     checkPhraseNo() {
-      let now = Date.now();
+      const now = Date.now();
       if (now - this.timer > FRAME_TIME * 30) {
         // ループ処理ここから //
         // 現在の再生時間取得.
@@ -167,7 +167,7 @@ export default {
         // ループ処理ここまで //
         this.timer = now;
       }
-      let requestId = requestAnimationFrame(this.checkPhraseNo);
+      requestAnimationFrame(this.checkPhraseNo);
     }
   }
 };
