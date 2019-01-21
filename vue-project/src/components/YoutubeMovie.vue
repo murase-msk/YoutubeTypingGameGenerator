@@ -172,9 +172,9 @@ export default {
           // 次のフレーズを表示する.
           this.displayText = this.allPhraseData[this.nextPhraseNo]["text"];
           /** 入力するテキスト */
-          this.inputText = this.allPhraseData[this.nextPhraseNo][
-            "Furigana"
-          ].split(" ");
+          this.inputText = this.allPhraseData[this.nextPhraseNo]["Furigana"]
+            .split(" ")
+            .filter(Boolean);
           /** 入力したかな文字数 */
           this.inputtedKanaNum = 0;
           /** 入力したカナ文字 */
