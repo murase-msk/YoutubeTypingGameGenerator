@@ -1,7 +1,7 @@
 <?php
 return [
     'settings' => [
-        'displayErrorDetails' => true, // set to false in production
+        'displayErrorDetails' => getenv('env') === 'dev' ? true : false, // set to false in production
         'addContentLengthHeader' => false, // Allow the web server to send the content-length header
         'env' => getenv('env'), // dev 開発用, production 本番.
 
