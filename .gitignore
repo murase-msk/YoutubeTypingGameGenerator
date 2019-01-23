@@ -3,7 +3,7 @@
 /.*
 /vue-project/node_modules/*
 
-# masterにプッシュするときはvueDistをignoreしない
+# masterにプッシュするときはvueDistをignore(!)しない
 /public/asset/vueDist/*
 
 !.gitignore
