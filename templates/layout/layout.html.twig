@@ -13,7 +13,12 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'UA-133320926-1');
+    const dimensionValue = "<?php echo $_SERVER['REMOTE_ADDR']; ?>";
+    gtag('config', 'UA-133320926-1',{
+      'custom_map': {'dimension1': 'ip_address'}
+    });
+    gtag('event', 'ip_address_dimension', {'ip_address': dimensionValue});
+//    gtag('set', 'dimension1', dimensionValue);
     </script>
 
     <title>{% block title %}{% endblock %}</title>
