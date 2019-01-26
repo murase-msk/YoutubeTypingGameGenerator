@@ -15,17 +15,23 @@
 
     const getIpAddress = "<?php echo $_SERVER['REMOTE_ADDR']; ?>";
     const getTime="<?php echo $DATE; ?>";
+    const getHostName="<?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']); ?>";
+    const getReferer="<?php echo $_SERVER['HTTP_REFERER']; ?>";
     gtag('config', 'UA-133320926-1',{
       'custom_map': {
         'dimension1': 'ip_address',
         'dimension2': 'access_time',
         'dimension3': 'ua',
-        'dimension4': 'uri_js'
+        'dimension4': 'uri_js',
+        'dimension5': 'hostName',
+        'dimension6': 'referer'
       },
       'ip_address': getIpAddress,
       'access_time:': getTime,
       'ua': navigator.userAgent,
-      'uri_js': location.pathname
+      'uri_js': location.pathname,
+      'hostName': getHostName,
+      'referer': getReferer
     });
 //    gtag('event', 'ip_address_dimension', {'ip_address': dimensionValue});
     </script>
