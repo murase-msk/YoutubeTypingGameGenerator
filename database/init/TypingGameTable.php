@@ -36,7 +36,8 @@ class TypingGameTable extends BaseTable
         . self::TITLE . " text, "
         . self::THUMBNAIL . " text, "
         . self::LAST_UPDATE . " timestamp without time zone, "
-        . "CONSTRAINT typing_game_id_primary_key PRIMARY KEY (" . self::ID . ")"
+        . "CONSTRAINT typing_game_id_primary_key PRIMARY KEY (" . self::ID . "),"
+        . "CONSTRAINT typing_game_video_id_unique UNIQUE (" . self::VIDEO_ID . ")"
         . ") ";
 
     public function __construct(\PDO $con)
