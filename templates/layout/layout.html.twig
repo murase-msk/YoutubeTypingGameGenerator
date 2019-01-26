@@ -13,12 +13,21 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    const dimensionValue = "<?php echo $_SERVER['REMOTE_ADDR']; ?>";
+    const getIpAddress = "<?php echo $_SERVER['REMOTE_ADDR']; ?>";
+    const getTime="<?php echo $DATE; ?>";
     gtag('config', 'UA-133320926-1',{
-      'custom_map': {'dimension1': 'ip_address'}
+      'custom_map': {
+        'dimension1': 'ip_address',
+        'dimension2': 'access_time',
+        'dimension3': 'ua',
+        'dimension4': 'uri_js'
+      },
+      'ip_address': getIpAddress,
+      'access_time:': getTime,
+      'ua': navigator.userAgent,
+      'uri_js': location.pathname
     });
-    gtag('event', 'ip_address_dimension', {'ip_address': dimensionValue});
-//    gtag('set', 'dimension1', dimensionValue);
+//    gtag('event', 'ip_address_dimension', {'ip_address': dimensionValue});
     </script>
 
     <title>{% block title %}{% endblock %}</title>
