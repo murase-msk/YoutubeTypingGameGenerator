@@ -28,13 +28,13 @@ class TypingGameModel
      * @param string $videoId
      * @return array
      */
-    public function searchTypeText(string $videoId): array
+    public function searchVideoInfo(string $videoId): array
     {
         $sql = 'select * from ' . TypingGameTable::tableName . ' where ' . TypingGameTable::VIDEO_ID . ' = :videoId';
         $stmt = $this->con->prepare($sql);
         $stmt->bindParam(':videoId', $videoId);
         $stmt->execute();
-        $result = json_decode($stmt->fetchAll()[0]['type_text']);
+        $result = $stmt->fetchAll()[0];
         return $result;
 
     }

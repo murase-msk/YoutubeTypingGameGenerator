@@ -179,6 +179,7 @@ class TypingGameController extends BaseController
     {
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
+        $title = $this->typingGameModel->searchVideoInfo($videoId)[TypingGameTable::TITLE];
         // ブックマークしているか確認.
         if ($this->session->get('isAuth')) {
             $isBookmark = $GLOBALS['container']->get('BookmarkModel')->isBookmark($this->session->get('account'), $videoId);
@@ -192,7 +193,8 @@ class TypingGameController extends BaseController
             'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
             'videoId' => $videoId,
-            'isBookmark' => $isBookmark
+            'isBookmark' => $isBookmark,
+            'title' => $title
         ]);
     }
 
@@ -212,6 +214,7 @@ class TypingGameController extends BaseController
     {
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
+        $title = $this->typingGameModel->searchVideoInfo($videoId)[TypingGameTable::TITLE];
 
         return $this->view->render($response, 'typingGameEdit.html.twig', [
             'activeHeader' => 'edit',
@@ -219,7 +222,8 @@ class TypingGameController extends BaseController
             'account' => $this->session->get('account'),
             'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
-            'videoId' => $videoId
+            'videoId' => $videoId,
+            'title' => $title
         ]);
     }
 
@@ -270,7 +274,7 @@ class TypingGameController extends BaseController
         array $args)
     {
         $videoId = $request->getQueryParams()['videoId'];
-        $resultData = $this->typingGameModel->searchTypeText($videoId);
+        $resultData = json_decode($this->typingGameModel->searchVideoInfo($videoId)[TypingGameTable::TYPE_TEXT]);
         return $response->withJson($resultData);
     }
 }
