@@ -7,31 +7,28 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script type="text/javascript" src="/asset/analytics.php?s=X"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133320926-1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    const getIpAddress = "<?php echo $_SERVER['REMOTE_ADDR']; ?>";
-    const getTime="<?php echo $DATE; ?>";
-    const getHostName="<?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']); ?>";
-    const getReferer="<?php echo $_SERVER['HTTP_REFERER']; ?>";
+    // const getIpAddress = '<?php echo $_SERVER["REMOTE_ADDR"]; ?>';
+    // const getTime='<?php echo $DATE; ?>';
+    // const getHostName='<?php echo gethostbyaddr($_SERVER["REMOTE_ADDR"]); ?>';
+    // const getReferer='<?php echo $_SERVER["HTTP_REFERER"]; ?>';
     gtag('config', 'UA-133320926-1',{
       'custom_map': {
         'dimension1': 'ip_address',
         'dimension2': 'access_time',
         'dimension3': 'ua',
-        'dimension4': 'uri_js',
-        'dimension5': 'hostName',
-        'dimension6': 'referer'
+        'dimension4': 'uri_js'
       },
-      'ip_address': getIpAddress,
-      'access_time:': getTime,
+      'ip_address': setAnalytics.getIP(),
+      'access_time:': setAnalytics.getAccessTime(),
       'ua': navigator.userAgent,
-      'uri_js': location.pathname,
-      'hostName': getHostName,
-      'referer': getReferer
+      'uri_js': location.pathname
     });
 //    gtag('event', 'ip_address_dimension', {'ip_address': dimensionValue});
     </script>
