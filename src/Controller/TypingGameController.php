@@ -82,9 +82,16 @@ class TypingGameController extends BaseController
             return $response->withRedirect((string)$uri, 301);
         } // 生成できるURLであった.
         else if ($result['result'] === 'ok') {
-            $downloadSubUrl = $scrappingTypeText->getSrtUrl($validationVideo->langListIndex);
-            $captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
+            $downloadSubUrl = "https://video.google.com/timedtext?hl=ja&lang=ja&name=&v=" . $videoId;
+            //$captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
+            $captionData = $scrappingTypeText->convertToArrayDataFromXML($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
             // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
+            if (count($captionData) == 0) { // youtube URLであるが字幕データがない
+            // エラーを返す(URLが正しくない).
+            $this->flash->addMessage('error', $result['msg']);
+            $uri = $request->getUri()->withPath($this->router->pathFor('index'));
+            return $response->withRedirect((string)$uri, 301);
+            }
             // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
             $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
             // データベース追加.

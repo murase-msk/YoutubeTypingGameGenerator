@@ -139,9 +139,10 @@ class E2EGameTest extends E2EBaseTest
         $element = $driver->findElement(WebDriverBy::tagName('body'));
         $element->sendKeys('kikimikawaiine');
         $this->assertEquals(
-            'ききみかわいいね',
+            'ききみかわいい',
             self::$driver->findElement(WebDriverBy::className('inputtedText'))->getText()
         );
+        $element->sendKeys('ne');
         // 次のフレーズが出るまで待ち.
         self::$driver->wait(10)->until(
             WebDriverExpectedCondition::elementTextIs(
