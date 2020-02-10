@@ -102,9 +102,10 @@ class ValidationVideo
     public function isExistLanguageScript(string $languageType, ScrappingTypeText $scrappingTypeText): bool
     {
         // videoIdから字幕情報タイピング情報取得.
-        $languageList = $scrappingTypeText->getScriptLanguageList();
-        $langListIndex = array_search($languageType, $languageList);
-        $this->langListIndex = $langListIndex;
-        return $langListIndex !== false;
+        // $languageList = $scrappingTypeText->getScriptLanguageList();
+        // $langListIndex = array_search($languageType, $languageList);
+        // $this->langListIndex = $langListIndex;
+        // return $langListIndex !== false;
+        return true;
     }
 }
