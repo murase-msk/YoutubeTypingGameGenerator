@@ -37,8 +37,10 @@ class ValidationVideo
                 $url,
                 $matchResult
             );
-            $this->videoId = $matchResult[3];
-            $this->isYoutubeUrl = $isMatch === 1;
+            if (count($matchResult) >= 3) {
+                $this->videoId = $matchResult[3];
+            }
+                $this->isYoutubeUrl = $isMatch === 1;
         } else if ($type == 'videoId') {
             $this->videoId = $url;
             $this->isYoutubeUrl = true;

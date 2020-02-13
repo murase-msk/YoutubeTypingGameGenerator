@@ -130,7 +130,13 @@ class ScrappingTypeText
      */
     public function convertToArrayDataFromXML(string $downloadSubUrl, string $yahooApiKey): array
     {
+        //動画IDがなければ404, 字幕データがなければ空白
         $html = file_get_contents($downloadSubUrl);
+        if($html === false){    // 404 not found 動画IDがない.
+            return array();
+        }else if($html == ""){ // 空のHTML（歌詞データがない）.
+            return array();
+        }
         $xml = simplexml_load_string($html);
         // $json = json_encode($xml);
         // $array = json_decode($json, TRUE);

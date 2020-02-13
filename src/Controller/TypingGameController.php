@@ -80,20 +80,29 @@ class TypingGameController extends BaseController
             $this->flash->addMessage('error', $result['msg']);
             $uri = $request->getUri()->withPath($this->router->pathFor('index'));
             return $response->withRedirect((string)$uri, 301);
-        } // 生成できるURLであった.
+        }
+        // 生成できるURLであった.
         else if ($result['result'] === 'ok') {
-            $downloadSubUrl = "https://video.google.com/timedtext?hl=ja&lang=ja&name=&v=" . $videoId;
-            //$captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
-            $captionData = $scrappingTypeText->convertToArrayDataFromXML($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
-            // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
-            if (count($captionData) == 0) { // youtube URLであるが字幕データがない
-            // エラーを返す(URLが正しくない).
-            $this->flash->addMessage('error', $result['msg']);
-            $uri = $request->getUri()->withPath($this->router->pathFor('index'));
-            return $response->withRedirect((string)$uri, 301);
-            }
             // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
             $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
+            // 字幕取得のためのURL.
+            $downloadSubUrl = "https://video.google.com/timedtext?hl=ja&lang=ja&name=&v=" . $videoId;
+            // 字幕データ.
+            $captionData = $scrappingTypeText->convertToArrayDataFromXML($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
+            // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
+
+            // youtube URLであるが字幕データがない
+            if (count($captionData) == 0) {
+                //歌詞候補選択画面へ
+                //引数 videoID, title, thumbnail, 
+                $uri = $request->getUri()->withPath($this->router->pathFor('typingGameLyricsCandidate', [
+                    'isAuth' => $this->session->get('isAuth'),
+                    'account' => $this->session->get('account'),
+                    'id' => $videoId,
+                ]));
+                return $response->withRedirect((string)$uri, 301);
+            }
+            
             // データベース追加.
             $this->typingGameModel->insertData(
                 [
@@ -116,6 +125,59 @@ class TypingGameController extends BaseController
         ]));
         return $response->withRedirect((string)$uri, 301);
 
+    }
+
+    /**
+     * 歌詞候補選択画面
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return void
+     */
+    function lyricsCandidate(
+        Request $request,
+        /** @noinspection PhpUnusedParameterInspection */
+        Response $response,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $args)
+    {
+        //TODO:画面表示
+        $settings = require __DIR__ . '/../settings.php';
+        // リクエストパラメータ受け取り.
+        $videoId = $args['id'];
+        // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
+        $scrappingTypeText = new ScrappingTypeText($videoId);
+        $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
+
+        return $this->view->render($response, 'typingGameLyricsCandidate.html.twig', [
+            'isAuth' => $this->session->get('isAuth'),
+            'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
+
+            'videoId' => $videoId,
+            'title' => $youtubeData['title'],
+            'thumbnail' => $youtubeData['thumbnail']
+        ]);
+    }
+
+    /**
+     * 歌詞候補から歌詞を選択し、編集画面へ
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return void
+     */
+    function selectLyrics(
+        Request $request,
+        /** @noinspection PhpUnusedParameterInspection */
+        Response $response,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $args)
+    {
+        // TODO: 動画を登録.
+        // TODO: 編集画面へリダイレクト.
     }
 
     /**

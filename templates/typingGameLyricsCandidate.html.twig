@@ -1,0 +1,26 @@
+{% extends "layout/layout.html.twig" %}
+
+{% block title %}LyricsCandidate : {{ title }}{% endblock %}
+
+{% block content %}
+
+
+    <div class="container">
+        <div class="row">
+        test
+            <div class="col-md-10 content" id="mainApp">
+                <br>
+                <input type="hidden" name="videoId" value="{{ videoId }}">
+                <input type="hidden" name="title" value="{{ title }}">
+                <input type="hidden" name="thumbnail" value="{{ thumbnail }}">
+                <input id="csrf_name" type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
+                <input id="csrf_value" type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">
+                <div id="lyricsCandidate"></div>
+            </div>
+            <div class="col-md-2 sidebar">
+                <br>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -26,6 +26,11 @@ $app->group('', function () use ($app) {
     $app->get('/typingGame/new', 'TypingGameController' . ':new')->setName('typingGameNew');
     // コンテンツ1にコンテンツ登録.
     $app->post('/typingGame/register', 'TypingGameController' . ':register')->setName('typingGameRegister');
+    // 歌詞候補選択画面
+    $app->get('/typingGame/lyricsCandidate/{id}', 'TypingGameController' . ':lyricsCandidate')->setName('typingGameLyricsCandidate');
+    // 歌詞選択
+    $app->get('/typingGame/selectLyrics', 'TypingGameController' . ':selectLyrics')->setName('typingGameSelectLyrics');
+    // 一覧
     $app->get('/typingGame/list', 'TypingGameController' . ':list')->setName('contentsList');
     // タイピング画面
     $app->get('/typingGame/watch/{id}', 'TypingGameController' . ':content')->setName('watch');
