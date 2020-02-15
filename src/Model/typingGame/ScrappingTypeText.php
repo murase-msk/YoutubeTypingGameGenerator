@@ -19,7 +19,7 @@ class ScrappingTypeText
     public $crawler;
     public $videoCode;
 
-    function __construct($videoId)
+    public function __construct($videoId)
     {
         $this->youtubeUrl = 'https://www.youtube.com/watch?v=' . $videoId;
 //        $this->crawler = $this->getCrawlerResult($this->youtubeUrl);
@@ -132,9 +132,9 @@ class ScrappingTypeText
     {
         //動画IDがなければ404, 字幕データがなければ空白
         $html = file_get_contents($downloadSubUrl);
-        if($html === false){    // 404 not found 動画IDがない.
+        if ($html === false) {    // 404 not found 動画IDがない.
             return array();
-        }else if($html == ""){ // 空のHTML（歌詞データがない）.
+        } elseif ($html == "") { // 空のHTML（歌詞データがない）.
             return array();
         }
         $xml = simplexml_load_string($html);
@@ -142,7 +142,7 @@ class ScrappingTypeText
         // $array = json_decode($json, TRUE);
         $captionData = array();
         $loopNum = 0;
-        foreach($xml->text as $key => $value){
+        foreach ($xml->text as $key => $value) {
             $aaa=(string)$value[0];
             $bbb=(double)$value[0]["start"];
             $ccc=(double)$value[0]["dur"];
@@ -156,7 +156,7 @@ class ScrappingTypeText
                     'Furigana' => ConvertTypeText::convertToHiragana((string)$value[0], $yahooApiKey)
                 )
             );
-         }
+        }
 
         return $captionData;
     }

@@ -37,7 +37,7 @@ class ConvertTypeText
             $oneSentence['Surface'] .= $word->Surface;
             if (isset($word->Furigana)) {
                 $oneSentence['Furigana'] .= $word->Furigana;
-                //$oneSentence['Roman'] .= $word->Roman;
+            //$oneSentence['Roman'] .= $word->Roman;
             } else {  // ふりがながなければ英数字なのでそのまま返す.
                 //英数字以外削除する.
                 $lowerStr = preg_replace('/[^a-z0-9\s]/', '', mb_strtolower($word->Surface));

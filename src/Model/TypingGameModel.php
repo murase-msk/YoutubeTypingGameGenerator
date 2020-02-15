@@ -36,7 +36,6 @@ class TypingGameModel
         $stmt->execute();
         $result = $stmt->fetchAll()[0];
         return $result;
-
     }
 
     /**
@@ -99,7 +98,6 @@ class TypingGameModel
         $stmt->execute();
         $result = $stmt->fetchColumn(0);
         return $result;
-
     }
 
     /**

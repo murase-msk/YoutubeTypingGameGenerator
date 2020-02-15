@@ -15,7 +15,7 @@ class ScrapingLyrics
     // 歌詞サイト
     public const LYRICS_SEARCH_WEB_SITE = 'http://j-lyric.net/';
 
-    function __construct()
+    public function __construct()
     {
     }
 
@@ -25,7 +25,7 @@ class ScrapingLyrics
      * @param String $title
      * @return void
      */
-    function findLyricsResult(String $title) : Array
+    public function findLyricsResult(String $title) : array
     {
         return $this->getCrawlerResult($title);
     }
@@ -36,7 +36,7 @@ class ScrapingLyrics
      * @param String $title
      * @return void
      */
-    private function getCrawlerResult(String $title) : Array
+    private function getCrawlerResult(String $title) : array
     {
         $client = new Client();
 
@@ -47,19 +47,20 @@ class ScrapingLyrics
         //$form = $crawler->selectButton('search')->form();
         $form['key'] = $title;
         $uri = $form->getUri();
-        $uri = str_replace('&key','&kt',$uri);// keyをktに変換する(スクレイピング対策されている？).
+        $uri = str_replace('&key', '&kt', $uri);// keyをktに変換する(スクレイピング対策されている？).
 
         //画面遷移
         $crawler = $client->request('GET', $uri);
         // 検索結果を取得.
         $searchResult = $crawler->filter('#mnb')->children('.bdy')
              ->each(
-                 function($node, $i){
+                 function ($node, $i) {
                      return $node;
-                 });
+                 }
+             );
         // 検索結果のデータが入る（タイトル、歌詞ページURL、アーティスト名、歌詞の出だし）.
         $searchResultInfo = array();
-        for($i=0; $i<count($searchResult); $i++){
+        for ($i=0; $i<count($searchResult); $i++) {
             // タイトル.
             $foundTitle = $searchResult[$i]->filter('.mid > a')->text();
             // 歌詞ページのURL.
@@ -69,9 +70,9 @@ class ScrapingLyrics
             // 歌詞の出だし.
             $foundIntroText = $searchResult[$i]->filter('.sml')->eq(1)->text();
             array_push($searchResultInfo, array(
-                'foundTitle'=> $foundTitle, 
-                'foundUrl'=> $foundUrl, 
-                'foundArtistName' => $foundArtistName, 
+                'foundTitle'=> $foundTitle,
+                'foundUrl'=> $foundUrl,
+                'foundArtistName' => $foundArtistName,
                 'foundIntroText' => $foundIntroText));
         }
         return $searchResultInfo;

@@ -52,8 +52,6 @@ $app->group('', function () use ($app) {
 
     // コンテンツ2.
     //$app->get('/content2', 'Content2' . ':index')->setName('content2');
-
-
 })->add($container->get('csrf'));
 
 // GitHubからWebHook.

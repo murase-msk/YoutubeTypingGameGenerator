@@ -8,7 +8,6 @@
 
 namespace src\Model;
 
-
 use database\init\AccountTable;
 use database\init\BookmarkTable;
 use database\init\TypingGameTable;
@@ -170,7 +169,6 @@ class BookmarkModel
         $stmt->bindParam(':account_id', $accountId);
         $stmt->bindParam(':typing_game_id', $typingGameId);
         $stmt->execute();
-
     }
 
     /**

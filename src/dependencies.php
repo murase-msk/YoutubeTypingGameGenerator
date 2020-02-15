@@ -143,4 +143,3 @@ $container['AccountController'] = function ($container) {
 $container['DeployController'] = function ($container) {
     return new \src\Controller\DeployController();
 };
-
