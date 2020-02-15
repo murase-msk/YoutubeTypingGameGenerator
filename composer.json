@@ -50,6 +50,6 @@
         "test": "vendor/bin/phpunit --testdox --colors tests",
         "coverage": "vendor/bin/phpunit --coverage-html .coverage tests",
         "reload": "composer dumpautoload",
-        "lint": "vendor/bin/php-cs-fixer fix ./src"
+        "lint": "./vendor/bin/php-cs-fixer fix ./src"
     }
 }

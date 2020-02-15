@@ -11,8 +11,14 @@
         v-model="inputSearchText"
       />
       <button @click="searchLyrics">検索</button> <br />
-      <img id="now-loading" src="./assets/img/loading.gif" />
+      <!-- <img id="now-loading" src="./assets/unbookmark32px.jpeg" /> -->
+      <img id="now-loading" src="./assets/loading.gif" />
       <form action="/typingGame/selectLyrics" method="post" name="selectLyrics">
+        <input type="hidden" name="csrf_name" :value="csrf.csrf_name" />
+        <input type="hidden" name="csrf_value" :value="csrf.csrf_value" />
+        <input type="hidden" name="video-id" :value="videoId"/>
+        <input type="hidden" name="title" :value="title"/>
+        <input type="hidden" name="thumbnail" :value="thumbnail"/>
         <div class=".all-data">
           <div v-if="searchResultNum > 0">使用する歌詞を選択してください</div>
           <div v-if="searchResultNum === 0">
@@ -47,6 +53,10 @@ export default {
       videoId: document.getElementsByName("videoId")[0].value,
       title: document.getElementsByName("title")[0].value,
       thumbnail: document.getElementsByName("thumbnail")[0].value,
+      csrf: {
+        csrf_name: document.getElementsByName("csrf_name")[0].value,
+        csrf_value: document.getElementsByName("csrf_value")[0].value
+      },
       // 検索するテキスト.
       inputSearchText: "",
       // 検索結果.
