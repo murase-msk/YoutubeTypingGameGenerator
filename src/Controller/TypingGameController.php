@@ -14,7 +14,7 @@ use src\Model\typingGame\ValidationVideo;
 use src\Model\TypingGameModel;
 use database\init\TypingGameTable;
 use src\Model\typingGame\ScrappingTypeText;
-
+use src\Model\TypingGame\ScrapingLyrics;
 
 /**
  * Class TypingGameController
@@ -151,6 +151,7 @@ class TypingGameController extends BaseController
         $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
 
         return $this->view->render($response, 'typingGameLyricsCandidate.html.twig', [
+            'activeHeader' => 'lyrics-candidate',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
             'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
@@ -161,6 +162,30 @@ class TypingGameController extends BaseController
         ]);
     }
 
+    /**
+     * タイトルから歌詞データを取得するAPI
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return void
+     */
+    function lyricsSearchApi(
+        Request $request,
+        /** @noinspection PhpUnusedParameterInspection */
+        Response $response,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $args)
+    {
+        //タイトル.
+        $title = $request->getQueryParams()['title'];
+        $scrapingLyrics = new scrapingLyrics();
+        $scrapingLyrics->findLyricsResult($title);
+        //スクレイピングで歌詞情報を取得して返す(http://j-lyric.net/)
+        $searchResultData = $scrapingLyrics->findLyricsResult($title);
+//        $resultData = json_decode($searchResultData);
+        return $response->withJson($searchResultData);
+    }
     /**
      * 歌詞候補から歌詞を選択し、編集画面へ
      *
