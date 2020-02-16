@@ -17,8 +17,7 @@ use Slim\Http\Request;
  */
 class DeployController
 {
-
-    function __construct()
+    public function __construct()
     {
         return;
     }
@@ -35,8 +34,8 @@ class DeployController
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         // TODO Secretトークンは環境変数に入れる
         // Secretトークンで認証.
         $signature = 'sha1=' . hash_hmac('sha1', $request->getBody(), getenv('Github_Secret'));
@@ -57,11 +56,10 @@ class DeployController
                 file_put_contents($LOG_FILE, date("[Y-m-d H:i:s]") . " " . " git pulled master: " . $payload['head_commit']['message'] . PHP_EOL, FILE_APPEND | LOCK_EX);
                 file_put_contents($LOG_FILE, $output, FILE_APPEND|LOCK_EX);
 //                file_put_contents($LOG_FILE, exec('sudo git pull origin master') . PHP_EOL, FILE_APPEND | LOCK_EX);
-            } else if ($payload['ref'] === 'refs/heads/develop') {
+            } elseif ($payload['ref'] === 'refs/heads/develop') {
             } else {
                 // それ以外.
             }
         }
     }
-
 }

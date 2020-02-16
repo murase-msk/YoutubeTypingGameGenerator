@@ -8,8 +8,6 @@
 
 namespace src\Model;
 
-
 class DbManager
 {
-
 }

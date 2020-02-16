@@ -12,10 +12,8 @@ use Slim\Http\Response;
 use Slim\Http\Request;
 use src\Model\BookmarkModel;
 
-
 class BookmarkController extends BaseController
 {
-
     private $view;
     private $router;
     private $csrf;
@@ -23,13 +21,14 @@ class BookmarkController extends BaseController
     private $session;
     private $bookmarkModel;
 
-    function __construct(\Slim\Views\Twig $view,
-                         \Slim\Router $router,
-                         \Slim\Csrf\Guard $csrf,
-                         \Slim\Flash\Messages $flash,
-                         \src\SessionHelper $session,
-                         BookmarkModel $bookmarkModel)
-    {
+    public function __construct(
+        \Slim\Views\Twig $view,
+        \Slim\Router $router,
+        \Slim\Csrf\Guard $csrf,
+        \Slim\Flash\Messages $flash,
+        \src\SessionHelper $session,
+        BookmarkModel $bookmarkModel
+    ) {
         $this->view = $view;
         $this->router = $router;
         $this->csrf = $csrf;
@@ -45,14 +44,14 @@ class BookmarkController extends BaseController
      * @param array $args
      * @return Response
      */
-    function isBookmark(
+    public function isBookmark(
         /** @noinspection PhpUnusedParameterInspection */
         Request $request,
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         if ($this->session->get('isAuth')) {
             $accountName = $this->session->get('account');
             $videoId = $request->getParsedBody()['videoId'];
@@ -69,14 +68,14 @@ class BookmarkController extends BaseController
      * @param array $args
      * @return Response
      */
-    function changeBookmark(
+    public function changeBookmark(
         /** @noinspection PhpUnusedParameterInspection */
         Request $request,
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         if ($this->session->get('isAuth')) {
             $accountName = $this->session->get('account');
             $isBookmark = $account = $request->getParsedBody()['isBookmark'];

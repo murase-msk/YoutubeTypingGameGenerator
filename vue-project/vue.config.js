@@ -15,6 +15,11 @@ module.exports = {
       entry: "src/edit.js", // エントリーポイント
       template: "./public/edit.html", //3. index.htmlテンプレート
       filename: "edit.html" // 省略可
+    },
+    lyricsCandidate: {
+      entry: "src/lyricsCandidate.js", // エントリーポイント
+      template: "./public/lyricsCandidate.html", //3. index.htmlテンプレート
+      filename: "lyricsCandidate.html" // 省略可
     }
   },
   // ホットリロード.
@@ -28,8 +33,13 @@ module.exports = {
     historyApiFallback: {
       rewrites: [
         { from: /\/watch/, to: "/watch.html" }, // watchwatch.html に飛ばす
-        { from: /\/edit/, to: "/edit.html" }
+        { from: /\/edit/, to: "/edit.html" },
+        { from: /\/lyricsCandidate/, to: "/lyricsCandidate.html" }
       ]
     }
+  },
+  // vscode デバッグ用.
+  configureWebpack: {
+    devtool: "source-map"
   }
 };

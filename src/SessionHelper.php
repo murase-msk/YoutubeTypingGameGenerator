@@ -10,7 +10,6 @@ namespace src;
 
 class SessionHelper
 {
-
     public $session;
 
     public function __construct()

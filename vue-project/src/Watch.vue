@@ -1,5 +1,5 @@
 <template>
-  <div id="watch">
+  <div id="watch" class="common-style">
     <Bookmark
       :videoId="videoId"
       :isAuth="isAuth"
@@ -38,12 +38,5 @@ export default {
 </script>
 
 <style>
-#watch {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import "./assets/css/common.css";
 </style>
