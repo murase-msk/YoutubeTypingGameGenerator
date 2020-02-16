@@ -14,7 +14,7 @@ use src\Model\typingGame\ValidationVideo;
 use src\Model\TypingGameModel;
 use database\init\TypingGameTable;
 use src\Model\typingGame\ScrappingTypeText;
-
+use src\Model\TypingGame\ScrapingLyrics;
 
 /**
  * Class TypingGameController
@@ -23,7 +23,6 @@ use src\Model\typingGame\ScrappingTypeText;
  */
 class TypingGameController extends BaseController
 {
-
     private $view;
     private $router;
     private $csrf;
@@ -31,14 +30,14 @@ class TypingGameController extends BaseController
     private $session;
     private $typingGameModel;
 
-    function __construct(
+    public function __construct(
         \Slim\Views\Twig $view,
         \Slim\Router $router,
         \Slim\Csrf\Guard $csrf,
         \Slim\Flash\Messages $flash,
         \src\SessionHelper $session,
-        TypingGameModel $typingGameModel)
-    {
+        TypingGameModel $typingGameModel
+    ) {
         $this->view = $view;
         $this->router = $router;
         $this->csrf = $csrf;
@@ -54,14 +53,14 @@ class TypingGameController extends BaseController
      * @param array $args
      * @return \Psr\Http\Message\ResponseInterface
      */
-    function register(
+    public function register(
         /** @noinspection PhpUnusedParameterInspection */
         Request $request,
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         $settings = require __DIR__ . '/../settings.php';
         $youtubeUrl = $request->getParsedBody()['youtube_url'];
 
@@ -80,20 +79,29 @@ class TypingGameController extends BaseController
             $this->flash->addMessage('error', $result['msg']);
             $uri = $request->getUri()->withPath($this->router->pathFor('index'));
             return $response->withRedirect((string)$uri, 301);
-        } // 生成できるURLであった.
-        else if ($result['result'] === 'ok') {
-            $downloadSubUrl = "https://video.google.com/timedtext?hl=ja&lang=ja&name=&v=" . $videoId;
-            //$captionData = $scrappingTypeText->convertToArrayDataFromSrtSubUrl($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
-            $captionData = $scrappingTypeText->convertToArrayDataFromXML($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
-            // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
-            if (count($captionData) == 0) { // youtube URLであるが字幕データがない
-            // エラーを返す(URLが正しくない).
-            $this->flash->addMessage('error', $result['msg']);
-            $uri = $request->getUri()->withPath($this->router->pathFor('index'));
-            return $response->withRedirect((string)$uri, 301);
-            }
+        }
+        // 生成できるURLであった.
+        elseif ($result['result'] === 'ok') {
             // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
             $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
+            // 字幕取得のためのURL.
+            $downloadSubUrl = "https://video.google.com/timedtext?hl=ja&lang=ja&name=&v=" . $videoId;
+            // 字幕データ.
+            $captionData = $scrappingTypeText->convertToArrayDataFromXML($downloadSubUrl, $settings['settings']['yahoo_api']['key']);
+            // $captionData  = [0=>['startTime'=>xxx, 'endTime'=>xxx, 'text'=>xxx, 'Furigana'=>xxx,], 1=>[...], ...]
+
+            // youtube URLであるが字幕データがない
+            if (count($captionData) == 0) {
+                //歌詞候補選択画面へ
+                //引数 videoID, title, thumbnail,
+                $uri = $request->getUri()->withPath($this->router->pathFor('typingGameLyricsCandidate', [
+                    'isAuth' => $this->session->get('isAuth'),
+                    'account' => $this->session->get('account'),
+                    'id' => $videoId,
+                ]));
+                return $response->withRedirect((string)$uri, 301);
+            }
+            
             // データベース追加.
             $this->typingGameModel->insertData(
                 [
@@ -101,9 +109,10 @@ class TypingGameController extends BaseController
                     TypingGameTable::VIDEO_ID => $scrappingTypeText->videoCode,
                     TypingGameTable::TITLE => $youtubeData['title'],
                     TypingGameTable::THUMBNAIL => $youtubeData['thumbnail']
-                ]);
+                ]
+            );
         } // すでに登録されている.
-        else if ($result['result'] === 'redirect') {
+        elseif ($result['result'] === 'redirect') {
         }
         // リダイレクト.
         $uri = $request->getUri()->withPath($this->router->pathFor('watch', [
@@ -115,7 +124,116 @@ class TypingGameController extends BaseController
             'videoId' => $videoId
         ]));
         return $response->withRedirect((string)$uri, 301);
+    }
 
+    /**
+     * 歌詞候補選択画面
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return void
+     */
+    public function lyricsCandidate(
+        Request $request,
+        /** @noinspection PhpUnusedParameterInspection */
+        Response $response,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $args
+    ) {
+        //TODO:画面表示
+        $settings = require __DIR__ . '/../settings.php';
+        // リクエストパラメータ受け取り.
+        $videoId = $args['id'];
+        // YoutubeDataAPIからタイトルとサムネイルのURLを取得.
+        $scrappingTypeText = new ScrappingTypeText($videoId);
+        $youtubeData = $scrappingTypeText->getYoutubeData($settings['settings']['youtube_api']['key']);
+
+        return $this->view->render($response, 'typingGameLyricsCandidate.html.twig', [
+            'activeHeader' => 'lyrics-candidate',
+            'isAuth' => $this->session->get('isAuth'),
+            'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
+
+            'videoId' => $videoId,
+            'title' => $youtubeData['title'],
+            'thumbnail' => $youtubeData['thumbnail']
+        ]);
+    }
+
+    /**
+     * タイトルから歌詞データを取得するAPI
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return void
+     */
+    public function lyricsSearchApi(
+        Request $request,
+        /** @noinspection PhpUnusedParameterInspection */
+        Response $response,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $args
+    ) {
+        //タイトル.
+        $title = $request->getQueryParams()['title'];
+        $scrapingLyrics = new scrapingLyrics();
+        //スクレイピングで歌詞情報を取得して返す(http://j-lyric.net/)
+        $searchResultData = $scrapingLyrics->searchLyricsCandidateFromTitle($title);
+//        $resultData = json_decode($searchResultData);
+        return $response->withJson($searchResultData);
+    }
+    /**
+     * 歌詞選択からデータ取得して、編集画面へ
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return void
+     */
+    public function selectLyrics(
+        Request $request,
+        /** @noinspection PhpUnusedParameterInspection */
+        Response $response,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $args
+    ) {
+        $settings = require __DIR__ . '/../settings.php';
+        // リクエストパラメータ取得.
+        $videoId = $request->getParsedBody()['video-id'];
+        $lyricsUrl = $request->getParsedBody()['lyrics-url'];
+        $title = $request->getParsedBody()['title'];
+        $thumbnail = $request->getParsedBody()['thumbnail'];
+
+        // 歌詞の取得
+        $scrapingLyrics = new scrapingLyrics();
+        $lyrics = $scrapingLyrics->getLyricsFromUrl($lyricsUrl);
+        // キャプションデータ生成.
+        $captionData = $scrapingLyrics->createCaptionData($lyrics, $settings['settings']['yahoo_api']['key']);
+        // TODO: 動画をDBに登録.
+        // データベース追加.
+        $this->typingGameModel->insertData(
+            [
+                TypingGameTable::TYPE_TEXT => json_encode($captionData),
+                TypingGameTable::VIDEO_ID => $videoId,
+                TypingGameTable::TITLE => $title,
+                TypingGameTable::THUMBNAIL => $thumbnail
+            ]
+        );
+        // TODO: 編集画面へリダイレクト.
+        // リダイレクト.
+        $uri = $request->getUri()->withPath($this->router->pathFor('edit', [
+            'activeHeader' => 'edit',
+            'isAuth' => $this->session->get('isAuth'),
+            'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
+
+            'id' => $videoId,
+            'videoId' => $videoId,
+            'title' => $title
+        ]));
+        return $response->withRedirect((string)$uri, 301);
     }
 
     /**
@@ -125,13 +243,13 @@ class TypingGameController extends BaseController
      * @param array $args
      * @return \Psr\Http\Message\ResponseInterface
      */
-    function list(/** @noinspection PhpUnusedParameterInspection */
+    public function list(/** @noinspection PhpUnusedParameterInspection */
         Request $request,
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         // アカウント名.
         $accountName = $this->session->get('account');
         // ブックマーク舌動画のみでフィルターするか.
@@ -161,6 +279,7 @@ class TypingGameController extends BaseController
             'activeHeader' => 'list',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
             'videoList' => $videoList,
             'page' => $page,
@@ -177,13 +296,13 @@ class TypingGameController extends BaseController
      * @param array $args
      * @return \Psr\Http\Message\ResponseInterface
      */
-    function content(/** @noinspection PhpUnusedParameterInspection */
+    public function content(/** @noinspection PhpUnusedParameterInspection */
         Request $request,
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
         $title = $this->typingGameModel->searchVideoInfo($videoId)[TypingGameTable::TITLE];
@@ -212,13 +331,13 @@ class TypingGameController extends BaseController
      * @param array $args
      * @return \Psr\Http\Message\ResponseInterface
      */
-    function editView(/** @noinspection PhpUnusedParameterInspection */
+    public function editView(/** @noinspection PhpUnusedParameterInspection */
         Request $request,
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         // リクエストパラメータ受け取り.
         $videoId = $args['id'];
         $title = $this->typingGameModel->searchVideoInfo($videoId)[TypingGameTable::TITLE];
@@ -241,13 +360,13 @@ class TypingGameController extends BaseController
      * @param array $args
      * @return \Psr\Http\Message\ResponseInterface
      */
-    function saveContent(/** @noinspection PhpUnusedParameterInspection */
+    public function saveContent(/** @noinspection PhpUnusedParameterInspection */
         Request $request,
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         $videoId = $request->getParsedBody()['videoId'];
         $typeInfo = $request->getParsedBody()['typeInfo'];
         // jsonにしてDB保存.
@@ -263,7 +382,6 @@ class TypingGameController extends BaseController
             'videoId' => $videoId
         ]));
         return $response->withRedirect((string)$uri, 301);
-
     }
 
     /**
@@ -273,13 +391,13 @@ class TypingGameController extends BaseController
      * @param array $args
      * @return Response
      */
-    function getTypeTextApi(/** @noinspection PhpUnusedParameterInspection */
+    public function getTypeTextApi(/** @noinspection PhpUnusedParameterInspection */
         Request $request,
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         $videoId = $request->getQueryParams()['videoId'];
         $resultData = json_decode($this->typingGameModel->searchVideoInfo($videoId)[TypingGameTable::TYPE_TEXT]);
         return $response->withJson($resultData);

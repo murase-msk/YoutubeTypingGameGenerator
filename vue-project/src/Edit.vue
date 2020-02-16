@@ -1,5 +1,7 @@
 <template>
-  <div id="edit"><EditScript :videoId="videoId"></EditScript></div>
+  <div id="edit" class="common-style">
+    <EditScript :videoId="videoId"></EditScript>
+  </div>
 </template>
 
 <script>
@@ -23,12 +25,5 @@ export default {
 </script>
 
 <style>
-#edit {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import "./assets/css/common.css";
 </style>

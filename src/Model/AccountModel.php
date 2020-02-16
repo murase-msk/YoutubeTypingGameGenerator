@@ -8,7 +8,6 @@
 
 namespace src\Model;
 
-
 use \database\init\AccountTable;
 
 class AccountModel

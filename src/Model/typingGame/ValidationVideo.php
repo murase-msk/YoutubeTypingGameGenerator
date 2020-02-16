@@ -37,9 +37,11 @@ class ValidationVideo
                 $url,
                 $matchResult
             );
-            $this->videoId = $matchResult[3];
+            if (count($matchResult) >= 3) {
+                $this->videoId = $matchResult[3];
+            }
             $this->isYoutubeUrl = $isMatch === 1;
-        } else if ($type == 'videoId') {
+        } elseif ($type == 'videoId') {
             $this->videoId = $url;
             $this->isYoutubeUrl = true;
         } else {
@@ -58,16 +60,15 @@ class ValidationVideo
         TypingGameModel $typingGameModel,
         string $languageType,
         ScrappingTypeText $scrappingTypeText
-    ): array
-    {
+    ): array {
         $result = ['result' => 'ok', 'msg' => ''];
         if (!$this->isMatchYoutubeUrl()) {
             $result['result'] = 'error';
             $result['msg'] = 'URLが正しくありません';
-        } else if ($this->isAlreadyRegisteredUrl($typingGameModel)) {
+        } elseif ($this->isAlreadyRegisteredUrl($typingGameModel)) {
             $result['result'] = 'redirect';
             $result['msg'] = 'すでに登録されています';
-        } else if (!$this->isExistLanguageScript($languageType, $scrappingTypeText)) {
+        } elseif (!$this->isExistLanguageScript($languageType, $scrappingTypeText)) {
             $result['result'] = 'error';
             $result['msg'] = '対応する字幕データがありません';
         }

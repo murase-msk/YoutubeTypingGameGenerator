@@ -27,5 +27,4 @@ class AccountAuth
 
         return $next($request, $response);
     }
-
 }

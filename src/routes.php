@@ -26,6 +26,13 @@ $app->group('', function () use ($app) {
     $app->get('/typingGame/new', 'TypingGameController' . ':new')->setName('typingGameNew');
     // コンテンツ1にコンテンツ登録.
     $app->post('/typingGame/register', 'TypingGameController' . ':register')->setName('typingGameRegister');
+    // 歌詞候補選択画面
+    $app->get('/typingGame/lyricsCandidate/{id}', 'TypingGameController' . ':lyricsCandidate')->setName('typingGameLyricsCandidate');
+    // 歌詞選択
+    $app->post('/typingGame/selectLyrics', 'TypingGameController' . ':selectLyrics')->setName('typingGameSelectLyrics');
+    // タイトルから歌詞データを取得するAPI
+    $app->get('/typingGame/lyricsSearchApi', 'TypingGameController' . ':lyricsSearchApi')->setName('typingGameLyricsSearchApi');
+    // 一覧
     $app->get('/typingGame/list', 'TypingGameController' . ':list')->setName('contentsList');
     // タイピング画面
     $app->get('/typingGame/watch/{id}', 'TypingGameController' . ':content')->setName('watch');
@@ -45,8 +52,6 @@ $app->group('', function () use ($app) {
 
     // コンテンツ2.
     //$app->get('/content2', 'Content2' . ':index')->setName('content2');
-
-
 })->add($container->get('csrf'));
 
 // GitHubからWebHook.

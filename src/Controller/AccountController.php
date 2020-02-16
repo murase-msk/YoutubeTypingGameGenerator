@@ -26,14 +26,14 @@ class AccountController extends BaseController
     private $flash;
     private $session;
 
-    function __construct(
+    public function __construct(
         \Slim\Views\Twig $view,
         AccountModel $accountModel,
         \Slim\Router $router,
         \Slim\Csrf\Guard $csrf,
         \Slim\Flash\Messages $flash,
-        \src\SessionHelper $session)
-    {
+        \src\SessionHelper $session
+    ) {
         parent::__construct();
         $this->view = $view;
         $this->accountModel = $accountModel;
@@ -56,15 +56,18 @@ class AccountController extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         // フラッシュメッセージ取得.
         $flash = $this->flash->getMessages();
-        return $this->view->render($response, 'signIn.html.twig',
+        return $this->view->render(
+            $response,
+            'signIn.html.twig',
             [
                 'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
                 'flash' => $flash
-            ]);
+            ]
+        );
     }
 
     /**
@@ -80,9 +83,8 @@ class AccountController extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-
-    {
+        array $args
+    ) {
         // フラッシュメッセージ取得.
         $flash = $this->flash->getMessages();
         return $this->view->render(
@@ -108,9 +110,8 @@ class AccountController extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-
-    {
+        array $args
+    ) {
         // セッション削除して非ログイン状態を登録.
         $this->session->clear();
         $this->session->set('isAuth', false);
@@ -137,9 +138,8 @@ class AccountController extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-
-    {
+        array $args
+    ) {
         // リクエストパラメータ受け取り.
         $account = $request->getParsedBody()['account'];
         $password = $request->getParsedBody()['password'];
@@ -173,9 +173,8 @@ class AccountController extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-
-    {
+        array $args
+    ) {
         // CSRFチェック.
 //        if (false === $request->getAttribute('csrf_status')) {
 //            // 失敗したらホーム画面へ戻る
@@ -238,8 +237,9 @@ class AccountController extends BaseController
     private function setValidationErrMsg(
         /** @noinspection PhpUnusedParameterInspection */
         Request $request,
-        $index, $msg)
-    {
+        $index,
+        $msg
+    ) {
         $request = $request->withAttribute('has_errors', true);
         $errors = $request->getAttribute('errors');
         $errors = array_merge($errors, array($index => [$msg]));

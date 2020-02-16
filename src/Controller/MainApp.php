@@ -8,7 +8,6 @@ use Slim\Http\Request;
 
 class MainApp extends BaseController
 {
-
     private $view;
     private $session;
     private $csrf;
@@ -18,8 +17,8 @@ class MainApp extends BaseController
         \Slim\Views\Twig $view,
         \Slim\Csrf\Guard $csrf,
         \Slim\Flash\Messages $flash,
-        \src\SessionHelper $session)
-    {
+        \src\SessionHelper $session
+    ) {
         $this->view = $view;
         $this->csrf = $csrf;
         $this->flash = $flash;
@@ -32,8 +31,8 @@ class MainApp extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         Response $response,
         /** @noinspection PhpUnusedParameterInspection */
-        array $args)
-    {
+        array $args
+    ) {
         // フラッシュメッセージ取得.
         $flash = $this->flash->getMessages();
         //$result = $this->sampleModel->getData();
@@ -45,6 +44,4 @@ class MainApp extends BaseController
             'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
         ]);
     }
-
-
 }

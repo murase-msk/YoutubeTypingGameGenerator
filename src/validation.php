@@ -23,4 +23,3 @@ $validators = array(
     'account' => $accountValidator,
     'password' => $passwordValidator
 );
-
