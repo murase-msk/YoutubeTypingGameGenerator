@@ -16,9 +16,9 @@
       <form action="/typingGame/selectLyrics" method="post" name="selectLyrics">
         <input type="hidden" name="csrf_name" :value="csrf.csrf_name" />
         <input type="hidden" name="csrf_value" :value="csrf.csrf_value" />
-        <input type="hidden" name="video-id" :value="videoId"/>
-        <input type="hidden" name="title" :value="title"/>
-        <input type="hidden" name="thumbnail" :value="thumbnail"/>
+        <input type="hidden" name="video-id" :value="videoId" />
+        <input type="hidden" name="title" :value="title" />
+        <input type="hidden" name="thumbnail" :value="thumbnail" />
         <div class=".all-data">
           <div v-if="searchResultNum > 0">使用する歌詞を選択してください</div>
           <div v-if="searchResultNum === 0">
