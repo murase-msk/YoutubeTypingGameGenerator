@@ -29,7 +29,7 @@ $app->group('', function () use ($app) {
     // 歌詞候補選択画面
     $app->get('/typingGame/lyricsCandidate/{id}', 'TypingGameController' . ':lyricsCandidate')->setName('typingGameLyricsCandidate');
     // 歌詞選択
-    $app->get('/typingGame/selectLyrics', 'TypingGameController' . ':selectLyrics')->setName('typingGameSelectLyrics');
+    $app->post('/typingGame/selectLyrics', 'TypingGameController' . ':selectLyrics')->setName('typingGameSelectLyrics');
     // タイトルから歌詞データを取得するAPI
     $app->get('/typingGame/lyricsSearchApi', 'TypingGameController' . ':lyricsSearchApi')->setName('typingGameLyricsSearchApi');
     // 一覧

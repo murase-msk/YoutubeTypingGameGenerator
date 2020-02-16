@@ -9,6 +9,9 @@
         <div class="row">
             <div class="col-md-10 content" id="mainApp">
                 <br>
+                {# CSRF #}
+                <input type="hidden" name="{{ csrf.keys.name }}" value="{{ csrf.name }}">
+                <input type="hidden" name="{{ csrf.keys.value }}" value="{{ csrf.value }}">
                 <input type="hidden" name="videoId" value="{{ videoId }}">
                 <input type="hidden" name="title" value="{{ title }}">
                 <input type="hidden" name="thumbnail" value="{{ thumbnail }}">

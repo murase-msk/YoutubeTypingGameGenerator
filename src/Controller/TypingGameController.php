@@ -179,14 +179,13 @@ class TypingGameController extends BaseController
         //タイトル.
         $title = $request->getQueryParams()['title'];
         $scrapingLyrics = new scrapingLyrics();
-        $scrapingLyrics->findLyricsResult($title);
         //スクレイピングで歌詞情報を取得して返す(http://j-lyric.net/)
-        $searchResultData = $scrapingLyrics->findLyricsResult($title);
+        $searchResultData = $scrapingLyrics->searchLyricsCandidateFromTitle($title);
 //        $resultData = json_decode($searchResultData);
         return $response->withJson($searchResultData);
     }
     /**
-     * 歌詞候補から歌詞を選択し、編集画面へ
+     * 歌詞選択からデータ取得して、編集画面へ
      *
      * @param Request $request
      * @param Response $response
@@ -200,8 +199,41 @@ class TypingGameController extends BaseController
         /** @noinspection PhpUnusedParameterInspection */
         array $args
     ) {
-        // TODO: 動画を登録.
+        $settings = require __DIR__ . '/../settings.php';
+        // リクエストパラメータ取得.
+        $videoId = $request->getParsedBody()['video-id'];
+        $lyricsUrl = $request->getParsedBody()['lyrics-url'];
+        $title = $request->getParsedBody()['title'];
+        $thumbnail = $request->getParsedBody()['thumbnail'];
+
+        // 歌詞の取得
+        $scrapingLyrics = new scrapingLyrics();
+        $lyrics = $scrapingLyrics->getLyricsFromUrl($lyricsUrl);
+        // キャプションデータ生成.
+        $captionData = $scrapingLyrics->createCaptionData($lyrics, $settings['settings']['yahoo_api']['key']);
+        // TODO: 動画をDBに登録.
+        // データベース追加.
+        $this->typingGameModel->insertData(
+            [
+                TypingGameTable::TYPE_TEXT => json_encode($captionData),
+                TypingGameTable::VIDEO_ID => $videoId,
+                TypingGameTable::TITLE => $title,
+                TypingGameTable::THUMBNAIL => $thumbnail
+            ]
+        );
         // TODO: 編集画面へリダイレクト.
+        // リダイレクト.
+        $uri = $request->getUri()->withPath($this->router->pathFor('edit', [
+            'activeHeader' => 'edit',
+            'isAuth' => $this->session->get('isAuth'),
+            'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
+
+            'id' => $videoId,
+            'videoId' => $videoId,
+            'title' => $title
+        ]));
+        return $response->withRedirect((string)$uri, 301);
     }
 
     /**
@@ -247,6 +279,7 @@ class TypingGameController extends BaseController
             'activeHeader' => 'list',
             'isAuth' => $this->session->get('isAuth'),
             'account' => $this->session->get('account'),
+            'csrf' => parent::generateCsrfKeyValue($request, $this->csrf)['csrf'],
 
             'videoList' => $videoList,
             'page' => $page,

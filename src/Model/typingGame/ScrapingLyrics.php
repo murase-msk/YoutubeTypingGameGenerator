@@ -25,18 +25,7 @@ class ScrapingLyrics
      * @param String $title
      * @return void
      */
-    public function findLyricsResult(String $title) : array
-    {
-        return $this->getCrawlerResult($title);
-    }
-
-    /**
-     * タイトルを検索して必要なデータを取得
-     *
-     * @param String $title
-     * @return void
-     */
-    private function getCrawlerResult(String $title) : array
+    public function searchLyricsCandidateFromTitle(String $title) : array
     {
         $client = new Client();
 
@@ -76,5 +65,56 @@ class ScrapingLyrics
                 'foundIntroText' => $foundIntroText));
         }
         return $searchResultInfo;
+    }
+
+    /**
+     * 歌詞を取得する
+     *
+     * @param string $url 歌詞ページ
+     * @return array
+     */
+    public function getLyricsFromUrl(string $url): array
+    {
+        $client = new Client();
+
+        // URLアクセス
+        $crawler = $client->request('GET', $url);
+        $lyrics = $crawler->filter('#Lyric')->html();
+        // 歌詞を1行ずつ分割.
+        $lyrics = explode("<br>", $lyrics);
+        // 空白行を消す.
+        $arrayNum = count($lyrics);
+        for ($i =0; $i<$arrayNum; $i++) {
+            if ($lyrics[$i] == '') {
+                unset($lyrics[$i]);
+            }
+        }
+        // indexを詰める.
+        $lyrics = array_values($lyrics);
+        return $lyrics;
+    }
+
+    /**
+     * DB格納用のキャプションデータを生成する
+     *
+     * @param array $lyrics
+     * @return array
+     */
+    public function createCaptionData(array $lyrics, string $yahooApiKey): array
+    {
+        $captionData = array();
+        for ($i=0; $i<count($lyrics); $i++) {
+            array_push(
+                $captionData,
+                array(
+                    'index' => $i,
+                    'startTime' => 0,
+                    'endTime' => 0,
+                    'text' => $lyrics[$i],
+                    'Furigana' => ConvertTypeText::convertToHiragana((string)$lyrics[$i], $yahooApiKey)
+                )
+            );
+        }
+        return $captionData;
     }
 }
