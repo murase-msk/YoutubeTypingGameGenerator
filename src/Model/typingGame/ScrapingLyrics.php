@@ -107,7 +107,6 @@ class ScrapingLyrics
             array_push(
                 $captionData,
                 array(
-                    'index' => $i,
                     'startTime' => 0,
                     'endTime' => 0,
                     'text' => $lyrics[$i],
