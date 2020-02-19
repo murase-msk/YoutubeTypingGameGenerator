@@ -22,7 +22,7 @@
         <input
           type="hidden"
           name="select-lyrics-url"
-          :value="selectLyricsUrl"
+          v-bind:value="selectLyricsUrl"
         />
         <div class=".all-data">
           <div v-if="searchResultNum > 0">使用する歌詞を選択してください</div>
@@ -38,7 +38,7 @@
             <div>{{ oneData.foundIntroText }}</div>
             <input type="hidden" name="lyrics-url" :value="oneData.foundUrl" />
             <!-- <a href="javascript:document.selectLyrics.submit()"></a> -->
-            <a href="#" v-on:click="selectLyricsSubmit"></a>
+            <a v-on:click="selectLyricsSubmit"></a>
           </div>
         </div>
         <input type="submit" name="non-select" value="選択せず生成する" />
@@ -111,10 +111,12 @@ export default {
     },
     // 選択した要素の内容でサブミットする.
     selectLyricsSubmit(event) {
-      console.info(event.target.parentNode.children[2].getAttribute("value"));
-      this.selectLyricsUrl = event.target.parentNode.children[2].getAttribute(
-        "value"
-      );
+      document
+        .getElementsByName("select-lyrics-url")[0]
+        .setAttribute(
+          "value",
+          event.target.parentNode.children[2].getAttribute("value")
+        );
       document.selectLyrics.submit();
     }
   }
@@ -141,7 +143,8 @@ export default {
 }
 /** マウスホバーで背景色を変える */
 .one-data:hover {
-  background-color: #3d6e85;
+  background-color: #3d6e85; /** */
+  cursor: pointer; /**マウスポインタにする */
 }
 /** リンクをdiv全体にする */
 .one-data {

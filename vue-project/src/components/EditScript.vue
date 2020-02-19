@@ -46,7 +46,7 @@
               <td
                 class="start"
                 v-bind:class="[
-                  phraseData.index == activeFieldIndex / 2.0
+                  index == activeFieldIndex / 2.0
                     ? 'active'
                     : 'non-active'
                 ]"
@@ -62,7 +62,7 @@
               <td
                 class="end"
                 v-bind:class="[
-                  phraseData.index + 0.5 == activeFieldIndex / 2.0
+                  index + 0.5 == activeFieldIndex / 2.0
                     ? 'active'
                     : 'non-active'
                 ]"
@@ -110,7 +110,7 @@
         </table>
       </div>
     </form>
-    <!-- 再生時間に応じてそのタイミングの列を表示する -->
+    <!-- 記録しようとしている列を一番から3番目くらいにする -->
     <label
       ><input
         type="radio"
@@ -119,7 +119,7 @@
         v-model="mode"
       />編集モード</label
     >
-    <!-- 記録しようとしている列を一番から3番目くらいにする -->
+    <!-- 再生時間に応じてそのタイミングの列を表示する -->
     <label
       ><input
         type="radio"
@@ -128,6 +128,9 @@
         v-model="mode"
       />記録モード</label
     >
+    <button v-on:click="recordAndMoveNext" name="record-time">
+      タイミングの記録
+    </button>
   </div>
 </template>
 
@@ -171,7 +174,7 @@ export default {
     mode: function(newMode, oldMode) {
       if (newMode === "edit") {
         this.activeFieldIndex = -1;
-      } else if (newMode == "record") {
+      } else if (newMode === "record") {
         this.phraseNo = -1;
         this.activeFieldIndex = 0;
       }
