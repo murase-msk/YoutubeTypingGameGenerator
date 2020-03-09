@@ -14,7 +14,7 @@ use src\Model\typingGame\ValidationVideo;
 use src\Model\TypingGameModel;
 use database\init\TypingGameTable;
 use src\Model\typingGame\ScrappingTypeText;
-use src\Model\TypingGame\ScrapingLyrics;
+use src\Model\typingGame\ScrapingLyrics;
 
 /**
  * Class TypingGameController
