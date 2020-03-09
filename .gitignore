@@ -4,6 +4,6 @@
 /vue-project/node_modules/*
 
 # masterにプッシュするときはvueDistをignore(!)しない
-/public/asset/vueDist/*
+#/public/asset/vueDist/*
 
 !.gitignore
