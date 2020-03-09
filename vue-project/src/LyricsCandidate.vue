@@ -19,6 +19,11 @@
         <input type="hidden" name="video-id" :value="videoId" />
         <input type="hidden" name="title" :value="title" />
         <input type="hidden" name="thumbnail" :value="thumbnail" />
+        <input
+          type="hidden"
+          name="select-lyrics-url"
+          v-bind:value="selectLyricsUrl"
+        />
         <div class=".all-data">
           <div v-if="searchResultNum > 0">使用する歌詞を選択してください</div>
           <div v-if="searchResultNum === 0">
@@ -32,7 +37,8 @@
             <div>{{ oneData.foundTitle }}（{{ oneData.foundArtistName }}）</div>
             <div>{{ oneData.foundIntroText }}</div>
             <input type="hidden" name="lyrics-url" :value="oneData.foundUrl" />
-            <a href="javascript:document.selectLyrics.submit()"></a>
+            <!-- <a href="javascript:document.selectLyrics.submit()"></a> -->
+            <a v-on:click="selectLyricsSubmit"></a>
           </div>
         </div>
         <input type="submit" name="non-select" value="選択せず生成する" />
@@ -63,6 +69,8 @@ export default {
       searchResult: "",
       // 検索結果の数
       searchResultNum: false,
+      // 選択した歌詞のURL
+      selectLyricsUrl: "",
       // ポート.
       port: String
     };
@@ -100,6 +108,16 @@ export default {
           //ローディングGIF非表示.
           document.getElementById("now-loading").style.visibility = "collapse";
         });
+    },
+    // 選択した要素の内容でサブミットする.
+    selectLyricsSubmit(event) {
+      document
+        .getElementsByName("select-lyrics-url")[0]
+        .setAttribute(
+          "value",
+          event.target.parentNode.children[2].getAttribute("value")
+        );
+      document.selectLyrics.submit();
     }
   }
 };
@@ -125,7 +143,8 @@ export default {
 }
 /** マウスホバーで背景色を変える */
 .one-data:hover {
-  background-color: #3d6e85;
+  background-color: #3d6e85; /** */
+  cursor: pointer; /**マウスポインタにする */
 }
 /** リンクをdiv全体にする */
 .one-data {

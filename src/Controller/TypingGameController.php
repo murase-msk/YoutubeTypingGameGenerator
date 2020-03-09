@@ -202,26 +202,28 @@ class TypingGameController extends BaseController
         $settings = require __DIR__ . '/../settings.php';
         // リクエストパラメータ取得.
         $videoId = $request->getParsedBody()['video-id'];
-        $lyricsUrl = $request->getParsedBody()['lyrics-url'];
+        $lyricsUrl = $request->getParsedBody()['select-lyrics-url'];
         $title = $request->getParsedBody()['title'];
         $thumbnail = $request->getParsedBody()['thumbnail'];
 
-        // 歌詞の取得
-        $scrapingLyrics = new scrapingLyrics();
-        $lyrics = $scrapingLyrics->getLyricsFromUrl($lyricsUrl);
-        // キャプションデータ生成.
-        $captionData = $scrapingLyrics->createCaptionData($lyrics, $settings['settings']['yahoo_api']['key']);
-        // TODO: 動画をDBに登録.
-        // データベース追加.
-        $this->typingGameModel->insertData(
-            [
-                TypingGameTable::TYPE_TEXT => json_encode($captionData),
-                TypingGameTable::VIDEO_ID => $videoId,
-                TypingGameTable::TITLE => $title,
-                TypingGameTable::THUMBNAIL => $thumbnail
-            ]
-        );
-        // TODO: 編集画面へリダイレクト.
+        if($lyricsUrl !== ""){  // 歌詞を選択していれば取得する.
+            // 歌詞の取得
+            $scrapingLyrics = new scrapingLyrics();
+            $lyrics = $scrapingLyrics->getLyricsFromUrl($lyricsUrl);
+            // キャプションデータ生成.
+            $captionData = $scrapingLyrics->createCaptionData($lyrics, $settings['settings']['yahoo_api']['key']);
+        }else{// 歌詞を選択しない場合、空のデータをDBに追加.
+            $captionData = array(array('startTime' => 0,'endTime' => 0,'text' => "",'Furigana' => ""));
+        }
+            // データベース追加.
+            $this->typingGameModel->insertData(
+                [
+                    TypingGameTable::TYPE_TEXT => json_encode($captionData),
+                    TypingGameTable::VIDEO_ID => $videoId,
+                    TypingGameTable::TITLE => $title,
+                    TypingGameTable::THUMBNAIL => $thumbnail
+                ]
+            );
         // リダイレクト.
         $uri = $request->getUri()->withPath($this->router->pathFor('edit', [
             'activeHeader' => 'edit',

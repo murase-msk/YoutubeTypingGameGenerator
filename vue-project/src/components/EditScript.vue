@@ -31,6 +31,7 @@
               <th class="end">end</th>
               <th class="displayText">表示テキスト</th>
               <th class="inputText">入力文字</th>
+              <th></th>
             </tr>
           </thead>
           <tbody class="table_scroll">
@@ -38,16 +39,14 @@
             <tr
               v-for="(phraseData, index) in allPhraseData"
               v-bind:key="index"
-              v-bind:id="'phrase' + phraseData.index"
-              v-bind:class="[
-                phraseData.index === phraseNo ? 'active' : 'non-active'
-              ]"
+              v-bind:id="'phrase' + index"
+              v-bind:class="[index === phraseNo ? 'active' : 'non-active']"
             >
-              <td class="no">{{ phraseData.index }}</td>
+              <td class="no">{{ index }}</td>
               <td
                 class="start"
                 v-bind:class="[
-                  phraseData.index == activeFieldIndex / 2.0
+                  index == activeFieldIndex / 2.0
                     ? 'active'
                     : 'non-active'
                 ]"
@@ -63,7 +62,7 @@
               <td
                 class="end"
                 v-bind:class="[
-                  phraseData.index + 0.5 == activeFieldIndex / 2.0
+                  index + 0.5 == activeFieldIndex / 2.0
                     ? 'active'
                     : 'non-active'
                 ]"
@@ -92,12 +91,26 @@
                   size="40"
                 />
               </td>
+              <td>
+                <input
+                  type="button"
+                  class="delete-line"
+                  v-on:click="deleteLine"
+                  value="削除"
+                />
+                <input
+                  type="button"
+                  class="add-new-line"
+                  v-on:click="addNewLine"
+                  value="追加"
+                />
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </form>
-    <!-- 再生時間に応じてそのタイミングの列を表示する -->
+    <!-- 記録しようとしている列を一番から3番目くらいにする -->
     <label
       ><input
         type="radio"
@@ -106,7 +119,7 @@
         v-model="mode"
       />編集モード</label
     >
-    <!-- 記録しようとしている列を一番から3番目くらいにする -->
+    <!-- 再生時間に応じてそのタイミングの列を表示する -->
     <label
       ><input
         type="radio"
@@ -116,10 +129,8 @@
       />記録モード</label
     >
     <button v-on:click="recordAndMoveNext" name="record-time">
-      タイミングを記録
+      タイミングの記録
     </button>
-    <button name="delete-line">選択行を削除</button>
-    <button name="add-line">選択行の下に追加</button>
   </div>
 </template>
 
@@ -163,7 +174,7 @@ export default {
     mode: function(newMode, oldMode) {
       if (newMode === "edit") {
         this.activeFieldIndex = -1;
-      } else if (newMode == "record") {
+      } else if (newMode === "record") {
         this.phraseNo = -1;
         this.activeFieldIndex = 0;
       }
@@ -239,20 +250,19 @@ export default {
       requestAnimationFrame(this.checkPhraseNo);
     },
     // 記録モードのフォーカス設定.
-    setForcesForRecordMode() {
+    // event: 選択されたネイティブDOM
+    setForcesForRecordMode(event) {
       if (this.mode === "record") {
         // フォーカスがあたっているテキストボックスを強調表示する.
         if (document.activeElement.getAttribute("name") === "startTime") {
           this.activeFieldIndex =
             parseInt(
-              document.activeElement.parentNode.parentNode.firstElementChild
-                .textContent
+              event.target.parentNode.parentNode.firstElementChild.textContent
             ) * 2;
         } else if (document.activeElement.getAttribute("name") === "endTime") {
           this.activeFieldIndex =
             parseInt(
-              document.activeElement.parentNode.parentNode.firstElementChild
-                .textContent
+              event.target.parentNode.parentNode.firstElementChild.textContent
             ) *
               2 +
             1;
@@ -276,8 +286,39 @@ export default {
       // 次のテキストボックスをフォーカス.
       this.activeFieldIndex++;
       // スクロール.
+    },
+    // ボタンを押した行に新しい行を追加する.
+    addNewLine(event) {
+      // ボタンを押した行.
+      let index = parseInt(
+        event.target.parentNode.parentNode.firstElementChild.textContent
+      );
+      // データの追加.
+      this.allPhraseData.splice(index, 0, {
+        startTime: 0,
+        endTime: 0,
+        hurigana: "",
+        text: ""
+      });
+    },
+    // ボタンを押した行を削除する.
+    deleteLine(event) {
+      if (this.allPhraseData.length > 1) {
+        // 2行以上あればその行を削除する.
+        // 何列目のデータを削除するか.
+        let index = parseInt(
+          event.target.parentNode.parentNode.firstElementChild.textContent
+        );
+        // データの削除.
+        this.allPhraseData.splice(index, 1);
+      } else {
+        // 1行だけのときは空のデータのみにする.
+        this.allPhraseData = [
+          { startTime: 0, endEtime: 0, hurigana: "", text: "" }
+        ];
+      }
     }
-  }
+  } // methodここまで.
 };
 </script>
 
@@ -304,7 +345,7 @@ tr.active > td,
 tr.active > td > input,
 td.active > input {
   border: rgb(172, 122, 31);
-  background-color:rgb(172, 122, 31);
+  background-color: rgb(172, 122, 31);
 }
 
 /*幅調整*/
